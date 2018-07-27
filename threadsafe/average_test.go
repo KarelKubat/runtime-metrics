@@ -1,4 +1,4 @@
-package runtimemetrics
+package threadsafe
 
 import (
 	"github.com/stretchr/testify/assert"

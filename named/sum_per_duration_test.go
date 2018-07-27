@@ -1,4 +1,4 @@
-package runtimemetrics
+package named
 
 import (
 	"time"
@@ -8,32 +8,37 @@ import (
 	"testing"
 )
 
-func TestInternalCounterPerDuration(t *testing.T) {
+func TestSumPerDuration(t *testing.T) {
 	const DURATION = time.Duration(0.1 * float64(time.Second))
 
-	c := newCounterPerDuration(DURATION)
+	c, err := NewSumPerDuration("sumperduration", DURATION)
+	assert.NoError(t, err)
 
 	// First slice
-	c.mark()
-	c.mark()
-	count, _ := c.report()
+	c.Mark(1.0)
+	c.Mark(2.0)
+	sum, count, _ := c.Report()
 	assert.Equal(t, int64(0), count)
+	assert.Equal(t, 0.0, sum)
 
 	// Second slice
 	time.Sleep(time.Duration(DURATION))
-	c.mark()
-	c.mark()
-	c.mark()
-	count, _ = c.report()
+	c.Mark(3.0)
+	c.Mark(4.0)
+	c.Mark(5.0)
+	sum, count, _ = c.Report()
 	assert.Equal(t, int64(2), count)
+	assert.Equal(t, 3.0, sum)
 
 	// Third slice
 	time.Sleep(time.Duration(DURATION))
-	count, _ = c.report()
+	sum, count, _ = c.Report()
 	assert.Equal(t, int64(3), count)
+	assert.Equal(t, 12.0, sum)
 
 	// Fourth slice
 	time.Sleep(time.Duration(DURATION))
-	count, _ = c.report()
+	sum, count, _ = c.Report()
 	assert.Equal(t, int64(0), count)
+	assert.Equal(t, 0.0, sum)
 }

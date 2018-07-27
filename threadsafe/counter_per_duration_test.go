@@ -1,4 +1,4 @@
-package runtimemetrics
+package threadsafe
 
 import (
 	"sync"
@@ -8,28 +8,28 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-const THREADS = 1000
-const DURATION = time.Duration(0.1 * float64(time.Second))
-
-func makeMarks(c *CounterPerDuration) {
+func markCounterForDuration(c *CounterPerDuration, duration time.Duration) {
 	// First slice
 	c.Mark()
 	c.Mark()
 
 	// Second slice
-	time.Sleep(time.Duration(DURATION))
+	time.Sleep(time.Duration(duration))
 	c.Mark()
 	c.Mark()
 	c.Mark()
 
 	// Third slice
-	time.Sleep(time.Duration(DURATION))
+	time.Sleep(time.Duration(duration))
 
 	// Fourth slice
-	time.Sleep(time.Duration(DURATION))
+	time.Sleep(time.Duration(duration))
 }
 
 func TestCounterPerDuration(t *testing.T) {
+	const THREADS = 1000
+	const DURATION = time.Duration(0.1 * float64(time.Second))
+
 	c := NewCounterPerDuration(DURATION)
 
 	var wg sync.WaitGroup
@@ -37,7 +37,7 @@ func TestCounterPerDuration(t *testing.T) {
 		wg.Add(1)
 		go func() {
 			defer wg.Done()
-			makeMarks(c)
+			markCounterForDuration(c, DURATION)
 		}()
 	}
 

@@ -1,4 +1,4 @@
-package runtimemetrics
+package base
 
 import (
 	"time"
@@ -19,9 +19,9 @@ func (a *AveragePerDuration) Mark(val float64) {
 }
 
 func (a *AveragePerDuration) Report() (float64, int64, time.Time) {
-	sum, n, d := a.summer.Report()
+	sum, n, stamp := a.summer.Report()
 	if n == 0 {
-		return 0.0, n, d
+		return 0.0, 0, stamp
 	}
-	return sum / float64(n), n, d
+	return sum / float64(n), n, stamp
 }

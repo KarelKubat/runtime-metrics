@@ -1,18 +1,20 @@
-package runtimemetrics
+package threadsafe
 
 import (
 	"sync"
 	"time"
+
+	base "github.com/KarelKubat/runtime-metrics/base"
 )
 
 type SumPerDuration struct {
-	sum   *sumPerDuration
+	sum   *base.SumPerDuration
 	mutex *sync.Mutex
 }
 
 func NewSumPerDuration(d time.Duration) *SumPerDuration {
 	return &SumPerDuration{
-		sum:   newSumPerDuration(d),
+		sum:   base.NewSumPerDuration(d),
 		mutex: &sync.Mutex{},
 	}
 }
@@ -20,11 +22,11 @@ func NewSumPerDuration(d time.Duration) *SumPerDuration {
 func (s *SumPerDuration) Mark(val float64) {
 	s.mutex.Lock()
 	defer s.mutex.Unlock()
-	s.sum.mark(val)
+	s.sum.Mark(val)
 }
 
 func (s *SumPerDuration) Report() (float64, int64, time.Time) {
 	s.mutex.Lock()
 	defer s.mutex.Unlock()
-	return s.sum.report()
+	return s.sum.Report()
 }

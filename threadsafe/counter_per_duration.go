@@ -1,18 +1,20 @@
-package runtimemetrics
+package threadsafe
 
 import (
 	"sync"
 	"time"
+
+	base "github.com/KarelKubat/runtime-metrics/base"
 )
 
 type CounterPerDuration struct {
-	counter *counterPerDuration
+	counter *base.CounterPerDuration
 	mutex   *sync.Mutex
 }
 
 func NewCounterPerDuration(d time.Duration) *CounterPerDuration {
 	return &CounterPerDuration{
-		counter: newCounterPerDuration(d),
+		counter: base.NewCounterPerDuration(d),
 		mutex:   &sync.Mutex{},
 	}
 }
@@ -20,11 +22,11 @@ func NewCounterPerDuration(d time.Duration) *CounterPerDuration {
 func (c *CounterPerDuration) Mark() {
 	c.mutex.Lock()
 	defer c.mutex.Unlock()
-	c.counter.mark()
+	c.counter.Mark()
 }
 
 func (c *CounterPerDuration) Report() (int64, time.Time) {
 	c.mutex.Lock()
 	defer c.mutex.Unlock()
-	return c.counter.report()
+	return c.counter.Report()
 }
