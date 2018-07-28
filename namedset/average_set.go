@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"sort"
 
-	named "github.com/KarelKubat/runtime-metrics/named"
+	"github.com/KarelKubat/runtime-metrics/named"
 )
 
 type AverageSet struct {

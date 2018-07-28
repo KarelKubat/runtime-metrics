@@ -1,0 +1,72 @@
+syntax = "proto3";
+
+package reporter;
+
+import "google/protobuf/timestamp.proto";
+
+// Discovery of all the names
+message AllNamesRequest {
+}
+message AllNamesResponse {
+  repeated string AverageNames = 1;
+  repeated string AveragePerDurationNames = 2;
+  repeated string CounterNames = 3;
+  repeated string CounterPerDurationNames = 4;
+  repeated string SumNames = 5;
+  repeated string SumPerDurationNames = 6;
+  // Next free: 7
+}
+
+// Requesting a metric by name
+message NameRequest {
+  string Name = 1;
+  // Next free: 2
+}
+
+// Responding to an average
+message AverageResponse {
+  double Average = 1;
+  int64 N = 2;
+  // Next free: 3
+}
+
+// Responding to an average per duration
+message AveragePerDurationResponse {
+  double Average = 1;
+  int64 N = 2;
+  google.protobuf.Timestamp Until = 3;
+  // Next free: 4
+}
+
+message CounterResponse {
+  int64 Count = 1;
+  // Next free: 2
+}
+
+message CounterPerDurationResponse {
+  int64 Count = 1;
+  google.protobuf.Timestamp Until = 2;
+  // Next free: 3
+}
+
+message SumResponse {
+  double Sum = 1;
+  // Next free: 2
+}
+
+message SumPerDurationResponse {
+  double Sum = 1;
+  google.protobuf.Timestamp Until = 2;
+  // Next free: 3
+}
+  
+service Reporter {
+  rpc AllNames(AllNamesRequest) returns (AllNamesResponse) {}
+  
+  rpc Average(NameRequest) returns (AverageResponse) {}
+  rpc AveragePerDuration(NameRequest) returns (AveragePerDurationResponse) {}
+  rpc Counter(NameRequest) returns (CounterResponse) {}
+  rpc CounterPerDuration(NameRequest) returns (CounterPerDurationResponse) {}
+  rpc Sum(NameRequest) returns (SumResponse) {}
+  rpc SumPerDuration(NameRequest) returns (SumPerDurationResponse) {}
+}
