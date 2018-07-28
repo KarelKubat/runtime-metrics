@@ -38,3 +38,8 @@ func (s *SumPerDuration) Report() (float64, int64, time.Time) {
 	sum, n := s.previousSum.Report()
 	return sum, n, s.lastUpdate
 }
+
+func (s *SumPerDuration) Reset() {
+	s.previousSum.Reset()
+	s.currentSum.Reset()
+}

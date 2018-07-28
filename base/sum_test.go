@@ -14,7 +14,11 @@ func TestSum(t *testing.T) {
 	}
 
 	sum, n := s.Report()
-
 	assert.Equal(t, int64(10), n)
 	assert.Equal(t, 55.0, sum)
+
+	s.Reset()
+	sum, n = s.Report()
+	assert.Equal(t, int64(0), n)
+	assert.Equal(t, 0.0, sum)
 }

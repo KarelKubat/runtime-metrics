@@ -36,4 +36,23 @@ func TestCounterPerDuration(t *testing.T) {
 	time.Sleep(time.Duration(DURATION))
 	count, _ = c.Report()
 	assert.Equal(t, int64(0), count)
+
+	// Reset test
+	c.Reset()
+	assert.Equal(t, int64(0), count)
+	
+	// First slice
+	c.Mark()
+	c.Mark()
+	count, _ = c.Report()
+	assert.Equal(t, int64(0), count)
+
+	// Second slice
+	time.Sleep(time.Duration(DURATION))
+	c.Mark()
+	c.Mark()
+	c.Mark()
+	c.Reset()
+	count, _ = c.Report()
+	assert.Equal(t, int64(0), count)
 }

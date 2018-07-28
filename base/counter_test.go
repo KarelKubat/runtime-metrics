@@ -14,4 +14,7 @@ func TestCounter(t *testing.T) {
 		assert.Equal(t, int64(i), c.Report())
 		c.Mark()
 	}
+
+	c.Reset()
+	assert.Equal(t, int64(0), c.Report())
 }

@@ -17,3 +17,7 @@ func (c *Counter) Mark() {
 func (c *Counter) Report() int64 {
 	return c.counter
 }
+
+func (c *Counter) Reset() {
+	c.counter = 0
+}

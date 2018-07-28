@@ -37,3 +37,8 @@ func (c *CounterPerDuration) Report() (int64, time.Time) {
 	c.maybeShift()
 	return c.previousCounter.Report(), c.lastUpdate
 }
+
+func (c *CounterPerDuration) Reset() {
+	c.previousCounter.Reset()
+	c.currentCounter.Reset()
+}

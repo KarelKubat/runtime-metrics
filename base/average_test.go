@@ -17,4 +17,10 @@ func TestAverage(t *testing.T) {
 
 	assert.Equal(t, n, int64(3))
 	assert.Equal(t, avg, 2.0)
+
+	a.Reset()
+	avg, n = a.Report()
+	
+	assert.Equal(t, n, int64(0))
+	assert.Equal(t, avg, 0.0)
 }

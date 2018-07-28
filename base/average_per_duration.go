@@ -25,3 +25,7 @@ func (a *AveragePerDuration) Report() (float64, int64, time.Time) {
 	}
 	return sum / float64(n), n, stamp
 }
+
+func (a *AveragePerDuration) Reset() {
+	a.summer.Reset()
+}

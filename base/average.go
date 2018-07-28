@@ -21,3 +21,7 @@ func (a *Average) Report() (float64, int64) {
 	}
 	return sum / float64(n), n
 }
+
+func (a *Average) Reset() {
+	a.summer.Reset()
+}
