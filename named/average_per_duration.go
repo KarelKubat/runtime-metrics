@@ -16,7 +16,7 @@ func NewAveragePerDuration(n string, d time.Duration) (*AveragePerDuration, erro
 		handler: threadsafe.NewAveragePerDuration(d),
 		name:    n,
 	}
-	return metric, reg.registerAveragePerDuration(metric)
+	return metric, RegisterAveragePerDuration(metric)
 }
 
 func (a *AveragePerDuration) Mark(val float64) {
@@ -25,4 +25,12 @@ func (a *AveragePerDuration) Mark(val float64) {
 
 func (a *AveragePerDuration) Report() (float64, int64, time.Time) {
 	return a.handler.Report()
+}
+
+func (a *AveragePerDuration) Reset() {
+	a.handler.Reset()
+}
+
+func (a *AveragePerDuration) Name() string {
+	return a.name
 }

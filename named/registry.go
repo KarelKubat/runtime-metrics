@@ -1,6 +1,8 @@
 package named
 
-import "fmt"
+import (
+	"fmt"
+)
 
 type registry struct {
 	average            []*Average
@@ -11,8 +13,10 @@ type registry struct {
 	sumPerDuration     []*SumPerDuration
 }
 
-func newRegistry() *registry {
-	return &registry{
+var reg *registry
+
+func init() {
+	reg = &registry{
 		average:            []*Average{},
 		averagePerDuration: []*AveragePerDuration{},
 		counter:            []*Counter{},
@@ -20,12 +24,6 @@ func newRegistry() *registry {
 		sum:                []*Sum{},
 		sumPerDuration:     []*SumPerDuration{},
 	}
-}
-
-var reg *registry
-
-func init() {
-	reg = newRegistry()
 }
 
 func (reg *registry) checkName(n, kind string) error {
@@ -62,7 +60,7 @@ func (reg *registry) checkName(n, kind string) error {
 	return nil
 }
 
-func (reg *registry) registerAverage(avg *Average) error {
+func RegisterAverage(avg *Average) error {
 	if err := reg.checkName(avg.name, "Average"); err != nil {
 		return err
 	}
@@ -70,7 +68,7 @@ func (reg *registry) registerAverage(avg *Average) error {
 	return nil
 }
 
-func (reg *registry) registerAveragePerDuration(avg *AveragePerDuration) error {
+func RegisterAveragePerDuration(avg *AveragePerDuration) error {
 	if err := reg.checkName(avg.name, "AveragePerDuration"); err != nil {
 		return err
 	}
@@ -78,7 +76,7 @@ func (reg *registry) registerAveragePerDuration(avg *AveragePerDuration) error {
 	return nil
 }
 
-func (reg *registry) registerCounter(avg *Counter) error {
+func RegisterCounter(avg *Counter) error {
 	if err := reg.checkName(avg.name, "Counter"); err != nil {
 		return err
 	}
@@ -86,7 +84,7 @@ func (reg *registry) registerCounter(avg *Counter) error {
 	return nil
 }
 
-func (reg *registry) registerCounterPerDuration(avg *CounterPerDuration) error {
+func RegisterCounterPerDuration(avg *CounterPerDuration) error {
 	if err := reg.checkName(avg.name, "CounterPerDuration"); err != nil {
 		return err
 	}
@@ -94,7 +92,7 @@ func (reg *registry) registerCounterPerDuration(avg *CounterPerDuration) error {
 	return nil
 }
 
-func (reg *registry) registerSum(avg *Sum) error {
+func RegisterSum(avg *Sum) error {
 	if err := reg.checkName(avg.name, "Sum"); err != nil {
 		return err
 	}
@@ -102,7 +100,7 @@ func (reg *registry) registerSum(avg *Sum) error {
 	return nil
 }
 
-func (reg *registry) registerSumPerDuration(avg *SumPerDuration) error {
+func RegisterSumPerDuration(avg *SumPerDuration) error {
 	if err := reg.checkName(avg.name, "SumPerDuration"); err != nil {
 		return err
 	}

@@ -12,7 +12,7 @@ func NewSum(n string) (*Sum, error) {
 		handler: threadsafe.NewSum(),
 		name:    n,
 	}
-	return metric, reg.registerSum(metric)
+	return metric, RegisterSum(metric)
 }
 
 func (c *Sum) Mark(val float64) {
@@ -21,4 +21,12 @@ func (c *Sum) Mark(val float64) {
 
 func (c *Sum) Report() (float64, int64) {
 	return c.handler.Report()
+}
+
+func (c *Sum) Reset() {
+	c.handler.Reset()
+}
+
+func (c *Sum) Name() string {
+	return c.name
 }

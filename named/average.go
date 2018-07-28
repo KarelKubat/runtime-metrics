@@ -1,6 +1,8 @@
 package named
 
-import "github.com/KarelKubat/runtime-metrics/threadsafe"
+import (
+	"github.com/KarelKubat/runtime-metrics/threadsafe"
+)
 
 type Average struct {
 	handler *threadsafe.Average
@@ -12,7 +14,7 @@ func NewAverage(n string) (*Average, error) {
 		handler: threadsafe.NewAverage(),
 		name:    n,
 	}
-	return metric, reg.registerAverage(metric)
+	return metric, RegisterAverage(metric)
 }
 
 func (a *Average) Mark(val float64) {
@@ -21,4 +23,12 @@ func (a *Average) Mark(val float64) {
 
 func (a *Average) Report() (float64, int64) {
 	return a.handler.Report()
+}
+
+func (a *Average) Reset() {
+	a.handler.Reset()
+}
+
+func (a *Average) Name() string {
+	return a.name
 }

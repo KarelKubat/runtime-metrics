@@ -12,7 +12,7 @@ func NewCounter(n string) (*Counter, error) {
 		handler: threadsafe.NewCounter(),
 		name:    n,
 	}
-	return metric, reg.registerCounter(metric)
+	return metric, RegisterCounter(metric)
 }
 
 func (c *Counter) Mark() {
@@ -21,4 +21,12 @@ func (c *Counter) Mark() {
 
 func (c *Counter) Report() int64 {
 	return c.handler.Report()
+}
+
+func (c *Counter) Reset() {
+	c.handler.Reset()
+}
+
+func (c *Counter) Name() string {
+	return c.name
 }

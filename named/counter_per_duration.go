@@ -16,7 +16,7 @@ func NewCounterPerDuration(n string, d time.Duration) (*CounterPerDuration, erro
 		handler: threadsafe.NewCounterPerDuration(d),
 		name:    n,
 	}
-	return metric, reg.registerCounterPerDuration(metric)
+	return metric, RegisterCounterPerDuration(metric)
 }
 
 func (c *CounterPerDuration) Mark() {
@@ -25,4 +25,12 @@ func (c *CounterPerDuration) Mark() {
 
 func (c *CounterPerDuration) Report() (int64, time.Time) {
 	return c.handler.Report()
+}
+
+func (c *CounterPerDuration) Reset() {
+	c.handler.Reset()
+}
+
+func (c *CounterPerDuration) Name() string {
+	return c.name
 }

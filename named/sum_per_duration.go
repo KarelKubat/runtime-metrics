@@ -16,7 +16,7 @@ func NewSumPerDuration(n string, d time.Duration) (*SumPerDuration, error) {
 		handler: threadsafe.NewSumPerDuration(d),
 		name:    n,
 	}
-	return metric, reg.registerSumPerDuration(metric)
+	return metric, RegisterSumPerDuration(metric)
 }
 
 func (c *SumPerDuration) Mark(val float64) {
@@ -25,4 +25,12 @@ func (c *SumPerDuration) Mark(val float64) {
 
 func (c *SumPerDuration) Report() (float64, int64, time.Time) {
 	return c.handler.Report()
+}
+
+func (c *SumPerDuration) Reset() {
+	c.handler.Reset()
+}
+
+func (c *SumPerDuration) Name() string {
+	return c.name
 }
