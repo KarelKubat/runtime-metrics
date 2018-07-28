@@ -29,3 +29,10 @@ func (c *Counter) Report() int64 {
 	defer c.mutex.Unlock()
 	return c.counter.Report()
 }
+
+func (c *Counter) Reset() {
+	c.mutex.Lock()
+	defer c.mutex.Unlock()
+	c.counter.Reset()
+}
+

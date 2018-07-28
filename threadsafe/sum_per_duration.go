@@ -30,3 +30,10 @@ func (s *SumPerDuration) Report() (float64, int64, time.Time) {
 	defer s.mutex.Unlock()
 	return s.sum.Report()
 }
+
+func (s *SumPerDuration) Reset() {
+	s.mutex.Lock()
+	defer s.mutex.Unlock()
+	s.sum.Reset()
+}
+

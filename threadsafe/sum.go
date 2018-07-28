@@ -29,3 +29,9 @@ func (s *Sum) Report() (float64, int64) {
 	defer s.mutex.Unlock()
 	return s.summer.Report()
 }
+
+func (s *Sum) Reset() {
+	s.mutex.Lock()
+	defer s.mutex.Unlock()
+	s.summer.Reset()
+}

@@ -30,3 +30,9 @@ func (a *AveragePerDuration) Report() (float64, int64, time.Time) {
 	defer a.mutex.Unlock()
 	return a.avg.Report()
 }
+
+func (a *AveragePerDuration) Reset() {
+	a.mutex.Lock()
+	defer a.mutex.Unlock()
+	a.avg.Reset()
+}

@@ -30,3 +30,9 @@ func (c *CounterPerDuration) Report() (int64, time.Time) {
 	defer c.mutex.Unlock()
 	return c.counter.Report()
 }
+
+func (c *CounterPerDuration) Reset() {
+	c.mutex.Lock()
+	defer c.mutex.Unlock()
+	c.counter.Reset()
+}

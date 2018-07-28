@@ -29,3 +29,9 @@ func (a *Average) Report() (float64, int64) {
 	defer a.mutex.Unlock()
 	return a.avg.Report()
 }
+
+func (a *Average) Reset() {
+	a.mutex.Lock()
+	defer a.mutex.Unlock()
+	a.Reset()
+}
