@@ -7,12 +7,11 @@ type Counter struct {
 	name    string
 }
 
-func NewCounter(n string) (*Counter, error) {
-	metric := &Counter{
+func NewCounter(n string) *Counter {
+	return &Counter{
 		handler: threadsafe.NewCounter(),
 		name:    n,
 	}
-	return metric, RegisterCounter(metric)
 }
 
 func (c *Counter) Mark() {

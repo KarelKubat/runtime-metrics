@@ -9,8 +9,7 @@ import (
 func TestCounter(t *testing.T) {
 	const HIGHEST = 10000
 
-	c, err := NewCounter("counter")
-	assert.NoError(t, err)
+	c := NewCounter("counter")
 
 	for i := 0; i < HIGHEST; i++ {
 		assert.Equal(t, int64(i), c.Report())

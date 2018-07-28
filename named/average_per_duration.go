@@ -11,12 +11,11 @@ type AveragePerDuration struct {
 	name    string
 }
 
-func NewAveragePerDuration(n string, d time.Duration) (*AveragePerDuration, error) {
-	metric := &AveragePerDuration{
+func NewAveragePerDuration(n string, d time.Duration) *AveragePerDuration {
+	return &AveragePerDuration{
 		handler: threadsafe.NewAveragePerDuration(d),
 		name:    n,
 	}
-	return metric, RegisterAveragePerDuration(metric)
 }
 
 func (a *AveragePerDuration) Mark(val float64) {

@@ -11,8 +11,7 @@ import (
 func TestCounterPerDuration(t *testing.T) {
 	const DURATION = time.Duration(0.1 * float64(time.Second))
 
-	c, err := NewCounterPerDuration("counterperduration", DURATION)
-	assert.NoError(t, err)
+	c := NewCounterPerDuration("counterperduration", DURATION)
 
 	// First slice
 	c.Mark()

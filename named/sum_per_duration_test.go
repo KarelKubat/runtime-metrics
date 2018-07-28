@@ -11,8 +11,7 @@ import (
 func TestSumPerDuration(t *testing.T) {
 	const DURATION = time.Duration(0.1 * float64(time.Second))
 
-	c, err := NewSumPerDuration("sumperduration", DURATION)
-	assert.NoError(t, err)
+	c := NewSumPerDuration("sumperduration", DURATION)
 
 	// First slice
 	c.Mark(1.0)

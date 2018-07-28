@@ -11,12 +11,11 @@ type SumPerDuration struct {
 	name    string
 }
 
-func NewSumPerDuration(n string, d time.Duration) (*SumPerDuration, error) {
-	metric := &SumPerDuration{
+func NewSumPerDuration(n string, d time.Duration) *SumPerDuration {
+	return &SumPerDuration{
 		handler: threadsafe.NewSumPerDuration(d),
 		name:    n,
 	}
-	return metric, RegisterSumPerDuration(metric)
 }
 
 func (c *SumPerDuration) Mark(val float64) {

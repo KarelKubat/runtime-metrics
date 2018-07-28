@@ -11,8 +11,7 @@ import (
 func TestAveragePerDuration(t *testing.T) {
 	const DURATION = time.Duration(0.1 * float64(time.Second))
 
-	c, err := NewAveragePerDuration("averageperduration", DURATION)
-	assert.NoError(t, err)
+	c := NewAveragePerDuration("averageperduration", DURATION)
 
 	// First slice
 	c.Mark(1.0)

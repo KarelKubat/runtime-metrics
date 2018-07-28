@@ -11,12 +11,11 @@ type CounterPerDuration struct {
 	name    string
 }
 
-func NewCounterPerDuration(n string, d time.Duration) (*CounterPerDuration, error) {
-	metric := &CounterPerDuration{
+func NewCounterPerDuration(n string, d time.Duration) *CounterPerDuration {
+	return &CounterPerDuration{
 		handler: threadsafe.NewCounterPerDuration(d),
 		name:    n,
 	}
-	return metric, RegisterCounterPerDuration(metric)
 }
 
 func (c *CounterPerDuration) Mark() {

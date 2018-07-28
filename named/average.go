@@ -9,12 +9,11 @@ type Average struct {
 	name    string
 }
 
-func NewAverage(n string) (*Average, error) {
-	metric := &Average{
+func NewAverage(n string) *Average {
+	return &Average{
 		handler: threadsafe.NewAverage(),
 		name:    n,
 	}
-	return metric, RegisterAverage(metric)
 }
 
 func (a *Average) Mark(val float64) {

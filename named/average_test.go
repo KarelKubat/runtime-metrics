@@ -7,8 +7,7 @@ import (
 )
 
 func TestAverage(t *testing.T) {
-	a, err := NewAverage("average")
-	assert.NoError(t, err)
+	a := NewAverage("average")
 
 	a.Mark(1.0)
 	a.Mark(2.0)

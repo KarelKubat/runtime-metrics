@@ -7,12 +7,11 @@ type Sum struct {
 	name    string
 }
 
-func NewSum(n string) (*Sum, error) {
-	metric := &Sum{
+func NewSum(n string) *Sum {
+	return &Sum{
 		handler: threadsafe.NewSum(),
 		name:    n,
 	}
-	return metric, RegisterSum(metric)
 }
 
 func (c *Sum) Mark(val float64) {
