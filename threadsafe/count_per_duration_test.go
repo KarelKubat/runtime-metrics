@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func markCounterForDuration(c *CounterPerDuration, duration time.Duration) {
+func markCountForDuration(c *CountPerDuration, duration time.Duration) {
 	// First slice
 	c.Mark()
 	c.Mark()
@@ -26,18 +26,18 @@ func markCounterForDuration(c *CounterPerDuration, duration time.Duration) {
 	time.Sleep(time.Duration(duration))
 }
 
-func TestCounterPerDuration(t *testing.T) {
+func TestCountPerDuration(t *testing.T) {
 	const THREADS = 1000
 	const DURATION = time.Duration(0.1 * float64(time.Second))
 
-	c := NewCounterPerDuration(DURATION)
+	c := NewCountPerDuration(DURATION)
 
 	var wg sync.WaitGroup
 	for t := 0; t < THREADS; t++ {
 		wg.Add(1)
 		go func() {
 			defer wg.Done()
-			markCounterForDuration(c, DURATION)
+			markCountForDuration(c, DURATION)
 		}()
 	}
 

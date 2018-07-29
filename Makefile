@@ -1,4 +1,5 @@
 test:
 	for d in `find * -type d | grep -v tools`; do \
-	  make -C $$d test; \
+	  echo "------- Running tests in $$d -------"; \
+	  make -C $$d test || exit 1; \
 	done

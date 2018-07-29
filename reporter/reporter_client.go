@@ -35,8 +35,8 @@ func (c *Client) Close() {
 type AllNamesReturn struct {
 	Averages            []string
 	AveragesPerDuration []string
-	Counters            []string
-	CountersPerDuration []string
+	Counts              []string
+	CountsPerDuration   []string
 	Sums                []string
 	SumsPerDuration     []string
 }
@@ -49,8 +49,8 @@ func (c *Client) AllNames() (*AllNamesReturn, error) {
 	return &AllNamesReturn{
 		Averages:            resp.GetAverageNames(),
 		AveragesPerDuration: resp.GetAveragePerDurationNames(),
-		Counters:            resp.GetCounterNames(),
-		CountersPerDuration: resp.GetCounterPerDurationNames(),
+		Counts:              resp.GetCountNames(),
+		CountsPerDuration:   resp.GetCountPerDurationNames(),
 		Sums:                resp.GetSumNames(),
 		SumsPerDuration:     resp.GetSumPerDurationNames(),
 	}, nil
@@ -67,7 +67,7 @@ func (c *Client) Average(name string) (float64, int64, error) {
 func (c *Client) AveragePerDuration(name string) (float64, int64, time.Time, error) {
 	resp, err := c.client.AveragePerDuration(context.Background(), &NameRequest{Name: name})
 	if err != nil {
-		return 0.0, int64(0), time.Now(), fmt.Errorf("failed at Average service: %v", err)
+		return 0.0, int64(0), time.Now(), fmt.Errorf("failed at AveragePerDuration service: %v", err)
 	}
 	ts, err := ptypes.Timestamp(resp.GetUntil())
 	if err != nil {
@@ -79,7 +79,7 @@ func (c *Client) AveragePerDuration(name string) (float64, int64, time.Time, err
 func (c *Client) Count(name string) (int64, error) {
 	resp, err := c.client.Count(context.Background(), &NameRequest{Name: name})
 	if err != nil {
-		return int64(0), fmt.Errorf("failed at Counter service: %v", err)
+		return int64(0), fmt.Errorf("failed at Count service: %v", err)
 	}
 	return resp.GetCount(), nil
 }
@@ -87,11 +87,31 @@ func (c *Client) Count(name string) (int64, error) {
 func (c *Client) CountPerDuration(name string) (int64, time.Time, error) {
 	resp, err := c.client.CountPerDuration(context.Background(), &NameRequest{Name: name})
 	if err != nil {
-		return int64(0), time.Now(), fmt.Errorf("failed at Counter service: %v", err)
+		return int64(0), time.Now(), fmt.Errorf("failed at CountPerDuration service: %v", err)
 	}
 	ts, err := ptypes.Timestamp(resp.GetUntil())
 	if err != nil {
 		return int64(0), time.Now(), fmt.Errorf("timestamp conversion failed: %v", err)
 	}
 	return resp.GetCount(), ts, nil
+}
+
+func (c *Client) Sum(name string) (float64, int64, error) {
+	resp, err := c.client.Sum(context.Background(), &NameRequest{Name: name})
+	if err != nil {
+		return 0.0, int64(0), fmt.Errorf("failed at Sum service: %v", err)
+	}
+	return resp.GetSum(), resp.GetN(), nil
+}
+
+func (c *Client) SumPerDuration(name string) (float64, int64, time.Time, error) {
+	resp, err := c.client.SumPerDuration(context.Background(), &NameRequest{Name: name})
+	if err != nil {
+		return 0.0, int64(0), time.Now(), fmt.Errorf("failed at SumPerDuration service: %v", err)
+	}
+	ts, err := ptypes.Timestamp(resp.GetUntil())
+	if err != nil {
+		return 0.0, int64(0), time.Now(), fmt.Errorf("timestamp conversion failed: %v", err)
+	}
+	return resp.GetSum(), resp.GetN(), ts, nil
 }

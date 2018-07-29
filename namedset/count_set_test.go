@@ -8,22 +8,22 @@ import (
 	"testing"
 )
 
-func TestCounterSet(t *testing.T) {
+func TestCountSet(t *testing.T) {
 	var NAMES = []string{
 		"a", "b", "c", "d", "e",
 	}
 
-	set := NewCounterSet()
+	set := NewCountSet()
 
 	// Create and add some named metrics
 	for _, name := range NAMES {
-		err := set.Add(named.NewCounter(name))
+		err := set.Add(named.NewCount(name))
 		assert.NoError(t, err)
 	}
 
 	// Re-adding won't work
 	for _, name := range NAMES {
-		err := set.Add(named.NewCounter(name))
+		err := set.Add(named.NewCount(name))
 		assert.Error(t, err)
 	}
 

@@ -8,10 +8,10 @@ import (
 	"testing"
 )
 
-func TestCounterPerDuration(t *testing.T) {
+func TestCountPerDuration(t *testing.T) {
 	const DURATION = time.Duration(0.1 * float64(time.Second))
 
-	c := NewCounterPerDuration(DURATION)
+	c := NewCountPerDuration(DURATION)
 
 	// First slice
 	c.Mark()

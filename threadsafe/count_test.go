@@ -7,11 +7,11 @@ import (
 	"testing"
 )
 
-func TestCounter(t *testing.T) {
+func TestCount(t *testing.T) {
 	const THREADS = 1000
 	const COUNTS_PER_THREAD = 10000
 
-	c := NewCounter()
+	c := NewCount()
 
 	var wg sync.WaitGroup
 	for t := 0; t < THREADS; t++ {

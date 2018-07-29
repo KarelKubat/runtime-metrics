@@ -20,11 +20,11 @@ func TestRegistry(t *testing.T) {
 	err = AddAveragePerDuration(
 		named.NewAveragePerDuration("testname-average-per-duration", D))
 	assert.NoError(t, err)
-	err = AddCounter(
-		named.NewCounter("testname-counter"))
+	err = AddCount(
+		named.NewCount("testname-counter"))
 	assert.NoError(t, err)
-	err = AddCounterPerDuration(
-		named.NewCounterPerDuration("testname-counter-per-duration", D))
+	err = AddCountPerDuration(
+		named.NewCountPerDuration("testname-counter-per-duration", D))
 	assert.NoError(t, err)
 	err = AddSum(
 		named.NewSum("testname-sum"))
@@ -40,11 +40,11 @@ func TestRegistry(t *testing.T) {
 	err = AddAveragePerDuration(
 		named.NewAveragePerDuration("testname-average-per-duration", D))
 	assert.Error(t, err)
-	err = AddCounter(
-		named.NewCounter("testname-counter"))
+	err = AddCount(
+		named.NewCount("testname-counter"))
 	assert.Error(t, err)
-	err = AddCounterPerDuration(
-		named.NewCounterPerDuration("testname-counter-per-duration", D))
+	err = AddCountPerDuration(
+		named.NewCountPerDuration("testname-counter-per-duration", D))
 	assert.Error(t, err)
 	err = AddSum(
 		named.NewSum("testname-sum"))

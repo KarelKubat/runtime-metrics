@@ -1,4 +1,4 @@
-package base
+package named
 
 import (
 	"testing"
@@ -6,15 +6,13 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestCounter(t *testing.T) {
+func TestCount(t *testing.T) {
 	const HIGHEST = 10000
 
-	c := NewCounter()
+	c := NewCount("counter")
+
 	for i := 0; i < HIGHEST; i++ {
 		assert.Equal(t, int64(i), c.Report())
 		c.Mark()
 	}
-
-	c.Reset()
-	assert.Equal(t, int64(0), c.Report())
 }

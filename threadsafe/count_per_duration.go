@@ -7,31 +7,31 @@ import (
 	base "github.com/KarelKubat/runtime-metrics/base"
 )
 
-type CounterPerDuration struct {
-	counter *base.CounterPerDuration
+type CountPerDuration struct {
+	counter *base.CountPerDuration
 	mutex   *sync.Mutex
 }
 
-func NewCounterPerDuration(d time.Duration) *CounterPerDuration {
-	return &CounterPerDuration{
-		counter: base.NewCounterPerDuration(d),
+func NewCountPerDuration(d time.Duration) *CountPerDuration {
+	return &CountPerDuration{
+		counter: base.NewCountPerDuration(d),
 		mutex:   &sync.Mutex{},
 	}
 }
 
-func (c *CounterPerDuration) Mark() {
+func (c *CountPerDuration) Mark() {
 	c.mutex.Lock()
 	defer c.mutex.Unlock()
 	c.counter.Mark()
 }
 
-func (c *CounterPerDuration) Report() (int64, time.Time) {
+func (c *CountPerDuration) Report() (int64, time.Time) {
 	c.mutex.Lock()
 	defer c.mutex.Unlock()
 	return c.counter.Report()
 }
 
-func (c *CounterPerDuration) Reset() {
+func (c *CountPerDuration) Reset() {
 	c.mutex.Lock()
 	defer c.mutex.Unlock()
 	c.counter.Reset()

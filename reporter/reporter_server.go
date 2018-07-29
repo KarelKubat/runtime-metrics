@@ -17,8 +17,8 @@ func (s *server) AllNames(ctx context.Context, in *AllNamesRequest) (*AllNamesRe
 	return &AllNamesResponse{
 		AverageNames:            registry.AverageNames(),
 		AveragePerDurationNames: registry.AveragePerDurationNames(),
-		CounterNames:            registry.CounterNames(),
-		CounterPerDurationNames: registry.CounterPerDurationNames(),
+		CountNames:            registry.CountNames(),
+		CountPerDurationNames: registry.CountPerDurationNames(),
 		SumNames:                registry.SumNames(),
 		SumPerDurationNames:     registry.SumPerDurationNames(),
 	}, nil
@@ -54,7 +54,7 @@ func (s *server) AveragePerDuration(ctx context.Context, in *NameRequest) (*Aver
 }
 
 func (s *server) Count(ctx context.Context, in *NameRequest) (*CountResponse, error) {
-	av, err := registry.GetCounter(in.GetName())
+	av, err := registry.GetCount(in.GetName())
 	if err != nil {
 		return nil, err
 	}
@@ -64,7 +64,7 @@ func (s *server) Count(ctx context.Context, in *NameRequest) (*CountResponse, er
 }
 
 func (s *server) CountPerDuration(ctx context.Context, in *NameRequest) (*CountPerDurationResponse, error) {
-	av, err := registry.GetCounterPerDuration(in.GetName())
+	av, err := registry.GetCountPerDuration(in.GetName())
 	if err != nil {
 		return nil, err
 	}

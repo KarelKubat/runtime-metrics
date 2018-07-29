@@ -10,8 +10,8 @@ message AllNamesRequest {
 message AllNamesResponse {
   repeated string AverageNames = 1;
   repeated string AveragePerDurationNames = 2;
-  repeated string CounterNames = 3;
-  repeated string CounterPerDurationNames = 4;
+  repeated string CountNames = 3;
+  repeated string CountPerDurationNames = 4;
   repeated string SumNames = 5;
   repeated string SumPerDurationNames = 6;
   // Next free: 7

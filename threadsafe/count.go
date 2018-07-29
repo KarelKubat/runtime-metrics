@@ -6,31 +6,31 @@ import (
 	base "github.com/KarelKubat/runtime-metrics/base"
 )
 
-type Counter struct {
-	counter *base.Counter
+type Count struct {
+	counter *base.Count
 	mutex   *sync.Mutex
 }
 
-func NewCounter() *Counter {
-	return &Counter{
-		counter: base.NewCounter(),
+func NewCount() *Count {
+	return &Count{
+		counter: base.NewCount(),
 		mutex:   &sync.Mutex{},
 	}
 }
 
-func (c *Counter) Mark() {
+func (c *Count) Mark() {
 	c.mutex.Lock()
 	defer c.mutex.Unlock()
 	c.counter.Mark()
 }
 
-func (c *Counter) Report() int64 {
+func (c *Count) Report() int64 {
 	c.mutex.Lock()
 	defer c.mutex.Unlock()
 	return c.counter.Report()
 }
 
-func (c *Counter) Reset() {
+func (c *Count) Reset() {
 	c.mutex.Lock()
 	defer c.mutex.Unlock()
 	c.counter.Reset()

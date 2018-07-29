@@ -7,30 +7,33 @@ import (
 
 var averageSet *namedset.AverageSet
 var averagePerDurationSet *namedset.AveragePerDurationSet
-var counterSet *namedset.CounterSet
-var counterPerDurationSet *namedset.CounterPerDurationSet
+var counterSet *namedset.CountSet
+var counterPerDurationSet *namedset.CountPerDurationSet
 var sumSet *namedset.SumSet
 var sumPerDurationSet *namedset.SumPerDurationSet
 
 func init() {
 	averageSet = namedset.NewAverageSet()
 	averagePerDurationSet = namedset.NewAveragePerDurationSet()
-	counterSet = namedset.NewCounterSet()
-	counterPerDurationSet = namedset.NewCounterPerDurationSet()
+	counterSet = namedset.NewCountSet()
+	counterPerDurationSet = namedset.NewCountPerDurationSet()
 	sumSet = namedset.NewSumSet()
 	sumPerDurationSet = namedset.NewSumPerDurationSet()
 }
 
+// AddAverage adds a reference to a named Average to the registry,
+// or returns an error when a name collision occurs with an other
+// metric.
 func AddAverage(a *named.Average) error {
 	return averageSet.Add(a)
 }
 func AddAveragePerDuration(a *named.AveragePerDuration) error {
 	return averagePerDurationSet.Add(a)
 }
-func AddCounter(a *named.Counter) error {
+func AddCount(a *named.Count) error {
 	return counterSet.Add(a)
 }
-func AddCounterPerDuration(a *named.CounterPerDuration) error {
+func AddCountPerDuration(a *named.CountPerDuration) error {
 	return counterPerDurationSet.Add(a)
 }
 func AddSum(a *named.Sum) error {
@@ -46,10 +49,10 @@ func GetAverage(name string) (*named.Average, error) {
 func GetAveragePerDuration(name string) (*named.AveragePerDuration, error) {
 	return averagePerDurationSet.Get(name)
 }
-func GetCounter(name string) (*named.Counter, error) {
+func GetCount(name string) (*named.Count, error) {
 	return counterSet.Get(name)
 }
-func GetCounterPerDuration(name string) (*named.CounterPerDuration, error) {
+func GetCountPerDuration(name string) (*named.CountPerDuration, error) {
 	return counterPerDurationSet.Get(name)
 }
 func GetSum(name string) (*named.Sum, error) {
@@ -65,10 +68,10 @@ func AverageNames() []string {
 func AveragePerDurationNames() []string {
 	return averagePerDurationSet.Names()
 }
-func CounterNames() []string {
+func CountNames() []string {
 	return counterSet.Names()
 }
-func CounterPerDurationNames() []string {
+func CountPerDurationNames() []string {
 	return counterPerDurationSet.Names()
 }
 func SumNames() []string {
