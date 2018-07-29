@@ -2,8 +2,9 @@ package reporter
 
 import (
 	"fmt"
+	"time"
 
-	timestamp "github.com/golang/protobuf/ptypes/timestamp"
+	"github.com/golang/protobuf/ptypes"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 )
@@ -56,7 +57,7 @@ func (c *Client) AllNames() (*AllNamesReturn, error) {
 }
 
 func (c *Client) Average(name string) (float64, int64, error) {
-	resp, err := c.client.Average(&NameRequest{Name: name})
+	resp, err := c.client.Average(context.Background(), &NameRequest{Name: name})
 	if err != nil {
 		return 0.0, int64(0), fmt.Errorf("failed at Average service: %v", err)
 	}
@@ -64,13 +65,33 @@ func (c *Client) Average(name string) (float64, int64, error) {
 }
 
 func (c *Client) AveragePerDuration(name string) (float64, int64, time.Time, error) {
-	resp, err := c.client.AveragePerDuration(&NameRequest{Name: name})
+	resp, err := c.client.AveragePerDuration(context.Background(), &NameRequest{Name: name})
 	if err != nil {
 		return 0.0, int64(0), time.Now(), fmt.Errorf("failed at Average service: %v", err)
 	}
-	ts, err := timestamp.Timestamp(resp.GetUntil())
+	ts, err := ptypes.Timestamp(resp.GetUntil())
 	if err != nil {
-		return 0.0, int64(0), time.Now(), fmt.Errorf("failed to convert timestamp: %v", err)
+		return 0.0, int64(0), time.Now(), fmt.Errorf("timestamp conversion failed: %v", err)
 	}
 	return resp.GetAverage(), resp.GetN(), ts, nil
+}
+
+func (c *Client) Count(name string) (int64, error) {
+	resp, err := c.client.Count(context.Background(), &NameRequest{Name: name})
+	if err != nil {
+		return int64(0), fmt.Errorf("failed at Counter service: %v", err)
+	}
+	return resp.GetCount(), nil
+}
+
+func (c *Client) CountPerDuration(name string) (int64, time.Time, error) {
+	resp, err := c.client.CountPerDuration(context.Background(), &NameRequest{Name: name})
+	if err != nil {
+		return int64(0), time.Now(), fmt.Errorf("failed at Counter service: %v", err)
+	}
+	ts, err := ptypes.Timestamp(resp.GetUntil())
+	if err != nil {
+		return int64(0), time.Now(), fmt.Errorf("timestamp conversion failed: %v", err)
+	}
+	return resp.GetCount(), ts, nil
 }

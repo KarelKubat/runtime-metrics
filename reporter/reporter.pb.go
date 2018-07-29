@@ -24,38 +24,38 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.ProtoPackageIsVersion2 // please upgrade the proto package
 
-// Discovery
-type DiscoverRequest struct {
+// Discovery of all the names
+type AllNamesRequest struct {
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *DiscoverRequest) Reset()         { *m = DiscoverRequest{} }
-func (m *DiscoverRequest) String() string { return proto.CompactTextString(m) }
-func (*DiscoverRequest) ProtoMessage()    {}
-func (*DiscoverRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_reporter_41a5be73b7b1da2b, []int{0}
+func (m *AllNamesRequest) Reset()         { *m = AllNamesRequest{} }
+func (m *AllNamesRequest) String() string { return proto.CompactTextString(m) }
+func (*AllNamesRequest) ProtoMessage()    {}
+func (*AllNamesRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_reporter_b4ad6f9b52e79cb8, []int{0}
 }
-func (m *DiscoverRequest) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_DiscoverRequest.Unmarshal(m, b)
+func (m *AllNamesRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_AllNamesRequest.Unmarshal(m, b)
 }
-func (m *DiscoverRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_DiscoverRequest.Marshal(b, m, deterministic)
+func (m *AllNamesRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_AllNamesRequest.Marshal(b, m, deterministic)
 }
-func (dst *DiscoverRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_DiscoverRequest.Merge(dst, src)
+func (dst *AllNamesRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_AllNamesRequest.Merge(dst, src)
 }
-func (m *DiscoverRequest) XXX_Size() int {
-	return xxx_messageInfo_DiscoverRequest.Size(m)
+func (m *AllNamesRequest) XXX_Size() int {
+	return xxx_messageInfo_AllNamesRequest.Size(m)
 }
-func (m *DiscoverRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_DiscoverRequest.DiscardUnknown(m)
+func (m *AllNamesRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_AllNamesRequest.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_DiscoverRequest proto.InternalMessageInfo
+var xxx_messageInfo_AllNamesRequest proto.InternalMessageInfo
 
-type DiscoverResponse struct {
+type AllNamesResponse struct {
 	AverageNames            []string `protobuf:"bytes,1,rep,name=AverageNames,proto3" json:"AverageNames,omitempty"`
 	AveragePerDurationNames []string `protobuf:"bytes,2,rep,name=AveragePerDurationNames,proto3" json:"AveragePerDurationNames,omitempty"`
 	CounterNames            []string `protobuf:"bytes,3,rep,name=CounterNames,proto3" json:"CounterNames,omitempty"`
@@ -67,66 +67,66 @@ type DiscoverResponse struct {
 	XXX_sizecache           int32    `json:"-"`
 }
 
-func (m *DiscoverResponse) Reset()         { *m = DiscoverResponse{} }
-func (m *DiscoverResponse) String() string { return proto.CompactTextString(m) }
-func (*DiscoverResponse) ProtoMessage()    {}
-func (*DiscoverResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_reporter_41a5be73b7b1da2b, []int{1}
+func (m *AllNamesResponse) Reset()         { *m = AllNamesResponse{} }
+func (m *AllNamesResponse) String() string { return proto.CompactTextString(m) }
+func (*AllNamesResponse) ProtoMessage()    {}
+func (*AllNamesResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_reporter_b4ad6f9b52e79cb8, []int{1}
 }
-func (m *DiscoverResponse) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_DiscoverResponse.Unmarshal(m, b)
+func (m *AllNamesResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_AllNamesResponse.Unmarshal(m, b)
 }
-func (m *DiscoverResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_DiscoverResponse.Marshal(b, m, deterministic)
+func (m *AllNamesResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_AllNamesResponse.Marshal(b, m, deterministic)
 }
-func (dst *DiscoverResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_DiscoverResponse.Merge(dst, src)
+func (dst *AllNamesResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_AllNamesResponse.Merge(dst, src)
 }
-func (m *DiscoverResponse) XXX_Size() int {
-	return xxx_messageInfo_DiscoverResponse.Size(m)
+func (m *AllNamesResponse) XXX_Size() int {
+	return xxx_messageInfo_AllNamesResponse.Size(m)
 }
-func (m *DiscoverResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_DiscoverResponse.DiscardUnknown(m)
+func (m *AllNamesResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_AllNamesResponse.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_DiscoverResponse proto.InternalMessageInfo
+var xxx_messageInfo_AllNamesResponse proto.InternalMessageInfo
 
-func (m *DiscoverResponse) GetAverageNames() []string {
+func (m *AllNamesResponse) GetAverageNames() []string {
 	if m != nil {
 		return m.AverageNames
 	}
 	return nil
 }
 
-func (m *DiscoverResponse) GetAveragePerDurationNames() []string {
+func (m *AllNamesResponse) GetAveragePerDurationNames() []string {
 	if m != nil {
 		return m.AveragePerDurationNames
 	}
 	return nil
 }
 
-func (m *DiscoverResponse) GetCounterNames() []string {
+func (m *AllNamesResponse) GetCounterNames() []string {
 	if m != nil {
 		return m.CounterNames
 	}
 	return nil
 }
 
-func (m *DiscoverResponse) GetCounterPerDurationNames() []string {
+func (m *AllNamesResponse) GetCounterPerDurationNames() []string {
 	if m != nil {
 		return m.CounterPerDurationNames
 	}
 	return nil
 }
 
-func (m *DiscoverResponse) GetSumNames() []string {
+func (m *AllNamesResponse) GetSumNames() []string {
 	if m != nil {
 		return m.SumNames
 	}
 	return nil
 }
 
-func (m *DiscoverResponse) GetSumPerDurationNames() []string {
+func (m *AllNamesResponse) GetSumPerDurationNames() []string {
 	if m != nil {
 		return m.SumPerDurationNames
 	}
@@ -145,7 +145,7 @@ func (m *NameRequest) Reset()         { *m = NameRequest{} }
 func (m *NameRequest) String() string { return proto.CompactTextString(m) }
 func (*NameRequest) ProtoMessage()    {}
 func (*NameRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_reporter_41a5be73b7b1da2b, []int{2}
+	return fileDescriptor_reporter_b4ad6f9b52e79cb8, []int{2}
 }
 func (m *NameRequest) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_NameRequest.Unmarshal(m, b)
@@ -185,7 +185,7 @@ func (m *AverageResponse) Reset()         { *m = AverageResponse{} }
 func (m *AverageResponse) String() string { return proto.CompactTextString(m) }
 func (*AverageResponse) ProtoMessage()    {}
 func (*AverageResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_reporter_41a5be73b7b1da2b, []int{3}
+	return fileDescriptor_reporter_b4ad6f9b52e79cb8, []int{3}
 }
 func (m *AverageResponse) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_AverageResponse.Unmarshal(m, b)
@@ -233,7 +233,7 @@ func (m *AveragePerDurationResponse) Reset()         { *m = AveragePerDurationRe
 func (m *AveragePerDurationResponse) String() string { return proto.CompactTextString(m) }
 func (*AveragePerDurationResponse) ProtoMessage()    {}
 func (*AveragePerDurationResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_reporter_41a5be73b7b1da2b, []int{4}
+	return fileDescriptor_reporter_b4ad6f9b52e79cb8, []int{4}
 }
 func (m *AveragePerDurationResponse) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_AveragePerDurationResponse.Unmarshal(m, b)
@@ -274,45 +274,45 @@ func (m *AveragePerDurationResponse) GetUntil() *timestamp.Timestamp {
 	return nil
 }
 
-type CounterResponse struct {
+type CountResponse struct {
 	Count                int64    `protobuf:"varint,1,opt,name=Count,proto3" json:"Count,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *CounterResponse) Reset()         { *m = CounterResponse{} }
-func (m *CounterResponse) String() string { return proto.CompactTextString(m) }
-func (*CounterResponse) ProtoMessage()    {}
-func (*CounterResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_reporter_41a5be73b7b1da2b, []int{5}
+func (m *CountResponse) Reset()         { *m = CountResponse{} }
+func (m *CountResponse) String() string { return proto.CompactTextString(m) }
+func (*CountResponse) ProtoMessage()    {}
+func (*CountResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_reporter_b4ad6f9b52e79cb8, []int{5}
 }
-func (m *CounterResponse) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_CounterResponse.Unmarshal(m, b)
+func (m *CountResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_CountResponse.Unmarshal(m, b)
 }
-func (m *CounterResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_CounterResponse.Marshal(b, m, deterministic)
+func (m *CountResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_CountResponse.Marshal(b, m, deterministic)
 }
-func (dst *CounterResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_CounterResponse.Merge(dst, src)
+func (dst *CountResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_CountResponse.Merge(dst, src)
 }
-func (m *CounterResponse) XXX_Size() int {
-	return xxx_messageInfo_CounterResponse.Size(m)
+func (m *CountResponse) XXX_Size() int {
+	return xxx_messageInfo_CountResponse.Size(m)
 }
-func (m *CounterResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_CounterResponse.DiscardUnknown(m)
+func (m *CountResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_CountResponse.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_CounterResponse proto.InternalMessageInfo
+var xxx_messageInfo_CountResponse proto.InternalMessageInfo
 
-func (m *CounterResponse) GetCount() int64 {
+func (m *CountResponse) GetCount() int64 {
 	if m != nil {
 		return m.Count
 	}
 	return 0
 }
 
-type CounterPerDurationResponse struct {
+type CountPerDurationResponse struct {
 	Count                int64                `protobuf:"varint,1,opt,name=Count,proto3" json:"Count,omitempty"`
 	Until                *timestamp.Timestamp `protobuf:"bytes,2,opt,name=Until,proto3" json:"Until,omitempty"`
 	XXX_NoUnkeyedLiteral struct{}             `json:"-"`
@@ -320,38 +320,38 @@ type CounterPerDurationResponse struct {
 	XXX_sizecache        int32                `json:"-"`
 }
 
-func (m *CounterPerDurationResponse) Reset()         { *m = CounterPerDurationResponse{} }
-func (m *CounterPerDurationResponse) String() string { return proto.CompactTextString(m) }
-func (*CounterPerDurationResponse) ProtoMessage()    {}
-func (*CounterPerDurationResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_reporter_41a5be73b7b1da2b, []int{6}
+func (m *CountPerDurationResponse) Reset()         { *m = CountPerDurationResponse{} }
+func (m *CountPerDurationResponse) String() string { return proto.CompactTextString(m) }
+func (*CountPerDurationResponse) ProtoMessage()    {}
+func (*CountPerDurationResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_reporter_b4ad6f9b52e79cb8, []int{6}
 }
-func (m *CounterPerDurationResponse) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_CounterPerDurationResponse.Unmarshal(m, b)
+func (m *CountPerDurationResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_CountPerDurationResponse.Unmarshal(m, b)
 }
-func (m *CounterPerDurationResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_CounterPerDurationResponse.Marshal(b, m, deterministic)
+func (m *CountPerDurationResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_CountPerDurationResponse.Marshal(b, m, deterministic)
 }
-func (dst *CounterPerDurationResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_CounterPerDurationResponse.Merge(dst, src)
+func (dst *CountPerDurationResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_CountPerDurationResponse.Merge(dst, src)
 }
-func (m *CounterPerDurationResponse) XXX_Size() int {
-	return xxx_messageInfo_CounterPerDurationResponse.Size(m)
+func (m *CountPerDurationResponse) XXX_Size() int {
+	return xxx_messageInfo_CountPerDurationResponse.Size(m)
 }
-func (m *CounterPerDurationResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_CounterPerDurationResponse.DiscardUnknown(m)
+func (m *CountPerDurationResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_CountPerDurationResponse.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_CounterPerDurationResponse proto.InternalMessageInfo
+var xxx_messageInfo_CountPerDurationResponse proto.InternalMessageInfo
 
-func (m *CounterPerDurationResponse) GetCount() int64 {
+func (m *CountPerDurationResponse) GetCount() int64 {
 	if m != nil {
 		return m.Count
 	}
 	return 0
 }
 
-func (m *CounterPerDurationResponse) GetUntil() *timestamp.Timestamp {
+func (m *CountPerDurationResponse) GetUntil() *timestamp.Timestamp {
 	if m != nil {
 		return m.Until
 	}
@@ -360,6 +360,7 @@ func (m *CounterPerDurationResponse) GetUntil() *timestamp.Timestamp {
 
 type SumResponse struct {
 	Sum                  float64  `protobuf:"fixed64,1,opt,name=Sum,proto3" json:"Sum,omitempty"`
+	N                    int64    `protobuf:"varint,2,opt,name=N,proto3" json:"N,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -369,7 +370,7 @@ func (m *SumResponse) Reset()         { *m = SumResponse{} }
 func (m *SumResponse) String() string { return proto.CompactTextString(m) }
 func (*SumResponse) ProtoMessage()    {}
 func (*SumResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_reporter_41a5be73b7b1da2b, []int{7}
+	return fileDescriptor_reporter_b4ad6f9b52e79cb8, []int{7}
 }
 func (m *SumResponse) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_SumResponse.Unmarshal(m, b)
@@ -396,9 +397,17 @@ func (m *SumResponse) GetSum() float64 {
 	return 0
 }
 
+func (m *SumResponse) GetN() int64 {
+	if m != nil {
+		return m.N
+	}
+	return 0
+}
+
 type SumPerDurationResponse struct {
 	Sum                  float64              `protobuf:"fixed64,1,opt,name=Sum,proto3" json:"Sum,omitempty"`
-	Until                *timestamp.Timestamp `protobuf:"bytes,2,opt,name=Until,proto3" json:"Until,omitempty"`
+	N                    int64                `protobuf:"varint,2,opt,name=N,proto3" json:"N,omitempty"`
+	Until                *timestamp.Timestamp `protobuf:"bytes,3,opt,name=Until,proto3" json:"Until,omitempty"`
 	XXX_NoUnkeyedLiteral struct{}             `json:"-"`
 	XXX_unrecognized     []byte               `json:"-"`
 	XXX_sizecache        int32                `json:"-"`
@@ -408,7 +417,7 @@ func (m *SumPerDurationResponse) Reset()         { *m = SumPerDurationResponse{}
 func (m *SumPerDurationResponse) String() string { return proto.CompactTextString(m) }
 func (*SumPerDurationResponse) ProtoMessage()    {}
 func (*SumPerDurationResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_reporter_41a5be73b7b1da2b, []int{8}
+	return fileDescriptor_reporter_b4ad6f9b52e79cb8, []int{8}
 }
 func (m *SumPerDurationResponse) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_SumPerDurationResponse.Unmarshal(m, b)
@@ -435,6 +444,13 @@ func (m *SumPerDurationResponse) GetSum() float64 {
 	return 0
 }
 
+func (m *SumPerDurationResponse) GetN() int64 {
+	if m != nil {
+		return m.N
+	}
+	return 0
+}
+
 func (m *SumPerDurationResponse) GetUntil() *timestamp.Timestamp {
 	if m != nil {
 		return m.Until
@@ -443,13 +459,13 @@ func (m *SumPerDurationResponse) GetUntil() *timestamp.Timestamp {
 }
 
 func init() {
-	proto.RegisterType((*DiscoverRequest)(nil), "reporter.DiscoverRequest")
-	proto.RegisterType((*DiscoverResponse)(nil), "reporter.DiscoverResponse")
+	proto.RegisterType((*AllNamesRequest)(nil), "reporter.AllNamesRequest")
+	proto.RegisterType((*AllNamesResponse)(nil), "reporter.AllNamesResponse")
 	proto.RegisterType((*NameRequest)(nil), "reporter.NameRequest")
 	proto.RegisterType((*AverageResponse)(nil), "reporter.AverageResponse")
 	proto.RegisterType((*AveragePerDurationResponse)(nil), "reporter.AveragePerDurationResponse")
-	proto.RegisterType((*CounterResponse)(nil), "reporter.CounterResponse")
-	proto.RegisterType((*CounterPerDurationResponse)(nil), "reporter.CounterPerDurationResponse")
+	proto.RegisterType((*CountResponse)(nil), "reporter.CountResponse")
+	proto.RegisterType((*CountPerDurationResponse)(nil), "reporter.CountPerDurationResponse")
 	proto.RegisterType((*SumResponse)(nil), "reporter.SumResponse")
 	proto.RegisterType((*SumPerDurationResponse)(nil), "reporter.SumPerDurationResponse")
 }
@@ -466,11 +482,11 @@ const _ = grpc.SupportPackageIsVersion4
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type ReporterClient interface {
-	Discover(ctx context.Context, in *DiscoverRequest, opts ...grpc.CallOption) (*DiscoverResponse, error)
+	AllNames(ctx context.Context, in *AllNamesRequest, opts ...grpc.CallOption) (*AllNamesResponse, error)
 	Average(ctx context.Context, in *NameRequest, opts ...grpc.CallOption) (*AverageResponse, error)
 	AveragePerDuration(ctx context.Context, in *NameRequest, opts ...grpc.CallOption) (*AveragePerDurationResponse, error)
-	Counter(ctx context.Context, in *NameRequest, opts ...grpc.CallOption) (*CounterResponse, error)
-	CounterPerDuration(ctx context.Context, in *NameRequest, opts ...grpc.CallOption) (*CounterPerDurationResponse, error)
+	Count(ctx context.Context, in *NameRequest, opts ...grpc.CallOption) (*CountResponse, error)
+	CountPerDuration(ctx context.Context, in *NameRequest, opts ...grpc.CallOption) (*CountPerDurationResponse, error)
 	Sum(ctx context.Context, in *NameRequest, opts ...grpc.CallOption) (*SumResponse, error)
 	SumPerDuration(ctx context.Context, in *NameRequest, opts ...grpc.CallOption) (*SumPerDurationResponse, error)
 }
@@ -483,9 +499,9 @@ func NewReporterClient(cc *grpc.ClientConn) ReporterClient {
 	return &reporterClient{cc}
 }
 
-func (c *reporterClient) Discover(ctx context.Context, in *DiscoverRequest, opts ...grpc.CallOption) (*DiscoverResponse, error) {
-	out := new(DiscoverResponse)
-	err := c.cc.Invoke(ctx, "/reporter.Reporter/Discover", in, out, opts...)
+func (c *reporterClient) AllNames(ctx context.Context, in *AllNamesRequest, opts ...grpc.CallOption) (*AllNamesResponse, error) {
+	out := new(AllNamesResponse)
+	err := c.cc.Invoke(ctx, "/reporter.Reporter/AllNames", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -510,18 +526,18 @@ func (c *reporterClient) AveragePerDuration(ctx context.Context, in *NameRequest
 	return out, nil
 }
 
-func (c *reporterClient) Counter(ctx context.Context, in *NameRequest, opts ...grpc.CallOption) (*CounterResponse, error) {
-	out := new(CounterResponse)
-	err := c.cc.Invoke(ctx, "/reporter.Reporter/Counter", in, out, opts...)
+func (c *reporterClient) Count(ctx context.Context, in *NameRequest, opts ...grpc.CallOption) (*CountResponse, error) {
+	out := new(CountResponse)
+	err := c.cc.Invoke(ctx, "/reporter.Reporter/Count", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *reporterClient) CounterPerDuration(ctx context.Context, in *NameRequest, opts ...grpc.CallOption) (*CounterPerDurationResponse, error) {
-	out := new(CounterPerDurationResponse)
-	err := c.cc.Invoke(ctx, "/reporter.Reporter/CounterPerDuration", in, out, opts...)
+func (c *reporterClient) CountPerDuration(ctx context.Context, in *NameRequest, opts ...grpc.CallOption) (*CountPerDurationResponse, error) {
+	out := new(CountPerDurationResponse)
+	err := c.cc.Invoke(ctx, "/reporter.Reporter/CountPerDuration", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -548,11 +564,11 @@ func (c *reporterClient) SumPerDuration(ctx context.Context, in *NameRequest, op
 
 // ReporterServer is the server API for Reporter service.
 type ReporterServer interface {
-	Discover(context.Context, *DiscoverRequest) (*DiscoverResponse, error)
+	AllNames(context.Context, *AllNamesRequest) (*AllNamesResponse, error)
 	Average(context.Context, *NameRequest) (*AverageResponse, error)
 	AveragePerDuration(context.Context, *NameRequest) (*AveragePerDurationResponse, error)
-	Counter(context.Context, *NameRequest) (*CounterResponse, error)
-	CounterPerDuration(context.Context, *NameRequest) (*CounterPerDurationResponse, error)
+	Count(context.Context, *NameRequest) (*CountResponse, error)
+	CountPerDuration(context.Context, *NameRequest) (*CountPerDurationResponse, error)
 	Sum(context.Context, *NameRequest) (*SumResponse, error)
 	SumPerDuration(context.Context, *NameRequest) (*SumPerDurationResponse, error)
 }
@@ -561,20 +577,20 @@ func RegisterReporterServer(s *grpc.Server, srv ReporterServer) {
 	s.RegisterService(&_Reporter_serviceDesc, srv)
 }
 
-func _Reporter_Discover_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DiscoverRequest)
+func _Reporter_AllNames_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AllNamesRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ReporterServer).Discover(ctx, in)
+		return srv.(ReporterServer).AllNames(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/reporter.Reporter/Discover",
+		FullMethod: "/reporter.Reporter/AllNames",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ReporterServer).Discover(ctx, req.(*DiscoverRequest))
+		return srv.(ReporterServer).AllNames(ctx, req.(*AllNamesRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -615,38 +631,38 @@ func _Reporter_AveragePerDuration_Handler(srv interface{}, ctx context.Context, 
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Reporter_Counter_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Reporter_Count_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(NameRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ReporterServer).Counter(ctx, in)
+		return srv.(ReporterServer).Count(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/reporter.Reporter/Counter",
+		FullMethod: "/reporter.Reporter/Count",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ReporterServer).Counter(ctx, req.(*NameRequest))
+		return srv.(ReporterServer).Count(ctx, req.(*NameRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Reporter_CounterPerDuration_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Reporter_CountPerDuration_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(NameRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ReporterServer).CounterPerDuration(ctx, in)
+		return srv.(ReporterServer).CountPerDuration(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/reporter.Reporter/CounterPerDuration",
+		FullMethod: "/reporter.Reporter/CountPerDuration",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ReporterServer).CounterPerDuration(ctx, req.(*NameRequest))
+		return srv.(ReporterServer).CountPerDuration(ctx, req.(*NameRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -692,8 +708,8 @@ var _Reporter_serviceDesc = grpc.ServiceDesc{
 	HandlerType: (*ReporterServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "Discover",
-			Handler:    _Reporter_Discover_Handler,
+			MethodName: "AllNames",
+			Handler:    _Reporter_AllNames_Handler,
 		},
 		{
 			MethodName: "Average",
@@ -704,12 +720,12 @@ var _Reporter_serviceDesc = grpc.ServiceDesc{
 			Handler:    _Reporter_AveragePerDuration_Handler,
 		},
 		{
-			MethodName: "Counter",
-			Handler:    _Reporter_Counter_Handler,
+			MethodName: "Count",
+			Handler:    _Reporter_Count_Handler,
 		},
 		{
-			MethodName: "CounterPerDuration",
-			Handler:    _Reporter_CounterPerDuration_Handler,
+			MethodName: "CountPerDuration",
+			Handler:    _Reporter_CountPerDuration_Handler,
 		},
 		{
 			MethodName: "Sum",
@@ -724,37 +740,38 @@ var _Reporter_serviceDesc = grpc.ServiceDesc{
 	Metadata: "reporter.proto",
 }
 
-func init() { proto.RegisterFile("reporter.proto", fileDescriptor_reporter_41a5be73b7b1da2b) }
+func init() { proto.RegisterFile("reporter.proto", fileDescriptor_reporter_b4ad6f9b52e79cb8) }
 
-var fileDescriptor_reporter_41a5be73b7b1da2b = []byte{
-	// 458 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x94, 0x53, 0xcf, 0x6f, 0xd3, 0x30,
-	0x14, 0xae, 0x9b, 0x75, 0x74, 0xaf, 0xd3, 0x3a, 0x1e, 0xbf, 0x82, 0x2f, 0x0b, 0x16, 0x12, 0x3d,
-	0x65, 0xd3, 0x10, 0x12, 0x1c, 0x38, 0xa0, 0xed, 0x86, 0x54, 0x21, 0x07, 0x6e, 0x5c, 0x3a, 0x30,
-	0x55, 0xa5, 0x25, 0x0e, 0x8e, 0xdd, 0xbf, 0x86, 0xff, 0x94, 0x0b, 0x8a, 0xed, 0xa4, 0x49, 0x93,
-	0xa0, 0xee, 0xe6, 0xf7, 0xf9, 0xcb, 0xe7, 0x2f, 0xef, 0x7d, 0x0f, 0xce, 0x94, 0xc8, 0xa5, 0xd2,
-	0x42, 0xc5, 0xb9, 0x92, 0x5a, 0xe2, 0xb4, 0xaa, 0xe9, 0xc5, 0x5a, 0xca, 0xf5, 0xbd, 0xb8, 0xb4,
-	0xf8, 0x9d, 0xf9, 0x75, 0xa9, 0x37, 0xa9, 0x28, 0xf4, 0x2a, 0xcd, 0x1d, 0x95, 0x3d, 0x86, 0xf9,
-	0xed, 0xa6, 0xf8, 0x21, 0xb7, 0x42, 0x71, 0xf1, 0xdb, 0x88, 0x42, 0xb3, 0x3f, 0x63, 0x38, 0xdf,
-	0x61, 0x45, 0x2e, 0xb3, 0x42, 0x20, 0x83, 0xd3, 0x4f, 0x5b, 0xa1, 0x56, 0x6b, 0xb1, 0x5c, 0xa5,
-	0xa2, 0x08, 0x49, 0x14, 0x2c, 0x4e, 0x78, 0x0b, 0xc3, 0xf7, 0xf0, 0xc2, 0xd7, 0x5f, 0x84, 0xba,
-	0x35, 0x6a, 0xa5, 0x37, 0x32, 0x73, 0xf4, 0xb1, 0xa5, 0x0f, 0x5d, 0x97, 0xea, 0x37, 0xd2, 0x64,
-	0x5a, 0x28, 0x47, 0x0f, 0x9c, 0x7a, 0x13, 0x2b, 0xd5, 0x7d, 0xdd, 0x51, 0x3f, 0x72, 0xea, 0x03,
-	0xd7, 0x48, 0x61, 0x9a, 0x98, 0xd4, 0x51, 0x27, 0x96, 0x5a, 0xd7, 0x78, 0x05, 0x4f, 0x12, 0x93,
-	0x76, 0x14, 0x8f, 0x2d, 0xad, 0xef, 0x8a, 0xbd, 0x82, 0x59, 0x79, 0xf0, 0xdd, 0x42, 0x84, 0xa3,
-	0xb2, 0x0c, 0x49, 0x44, 0x16, 0x27, 0xdc, 0x9e, 0xd9, 0x07, 0x98, 0xfb, 0x3f, 0xad, 0xfb, 0x17,
-	0xc2, 0x23, 0x0f, 0x59, 0x26, 0xe1, 0x55, 0x89, 0xa7, 0x40, 0x96, 0xe1, 0x38, 0x22, 0x8b, 0x80,
-	0x93, 0x25, 0xdb, 0x02, 0xed, 0x36, 0xe9, 0xa1, 0x2a, 0x78, 0x05, 0x93, 0x6f, 0x99, 0xde, 0xdc,
-	0x87, 0x41, 0x44, 0x16, 0xb3, 0x6b, 0x1a, 0xbb, 0x18, 0xc4, 0x55, 0x0c, 0xe2, 0xaf, 0x55, 0x0c,
-	0xb8, 0x23, 0xb2, 0x37, 0x30, 0xf7, 0xed, 0xab, 0x1f, 0x7b, 0x0a, 0x13, 0x0b, 0xd9, 0xa7, 0x02,
-	0xee, 0x0a, 0xf6, 0x13, 0x68, 0xb7, 0xcf, 0xff, 0xff, 0x66, 0x67, 0x67, 0x7c, 0xa8, 0x9d, 0x0b,
-	0x98, 0x25, 0x26, 0xad, 0x65, 0xcf, 0x21, 0x48, 0x4c, 0xea, 0xff, 0xb9, 0x3c, 0xb2, 0xef, 0xf0,
-	0xbc, 0x3d, 0x9c, 0x61, 0xee, 0xc3, 0x9f, 0xbf, 0xfe, 0x1b, 0xc0, 0x94, 0xfb, 0x1d, 0xc2, 0x1b,
-	0x98, 0x56, 0xeb, 0x80, 0x2f, 0xe3, 0x7a, 0xd5, 0xf6, 0xd6, 0x86, 0xd2, 0xbe, 0x2b, 0xe7, 0x89,
-	0x8d, 0xf0, 0x63, 0x3d, 0x39, 0x7c, 0xb6, 0x23, 0x36, 0x82, 0x44, 0x1b, 0xd2, 0x7b, 0xe1, 0x61,
-	0x23, 0x4c, 0x00, 0xbb, 0xb1, 0x18, 0x52, 0x7a, 0xdd, 0x51, 0xea, 0xe9, 0x93, 0xf3, 0xe4, 0x47,
-	0x79, 0x80, 0xa7, 0xbd, 0x74, 0x38, 0x4f, 0xdd, 0x24, 0x1c, 0xe0, 0x69, 0x38, 0x3e, 0x6c, 0x84,
-	0xef, 0xec, 0xf4, 0x86, 0x54, 0x1a, 0x70, 0x23, 0x1e, 0x6c, 0x84, 0x9f, 0xe1, 0xac, 0x1d, 0x87,
-	0x21, 0x85, 0xa8, 0xa5, 0xd0, 0xeb, 0xe1, 0xee, 0xd8, 0x06, 0xe3, 0xed, 0xbf, 0x00, 0x00, 0x00,
-	0xff, 0xff, 0x5e, 0x93, 0xbf, 0xbd, 0x57, 0x05, 0x00, 0x00,
+var fileDescriptor_reporter_b4ad6f9b52e79cb8 = []byte{
+	// 465 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x94, 0x93, 0xdf, 0x6e, 0xd3, 0x30,
+	0x14, 0xc6, 0xe3, 0x66, 0x1d, 0xdd, 0xe9, 0xd8, 0xca, 0xe1, 0xcf, 0x42, 0x6e, 0x08, 0x16, 0x48,
+	0xbd, 0x21, 0x9b, 0x86, 0x90, 0xd8, 0x05, 0x17, 0xd3, 0xb8, 0x43, 0x2a, 0xc8, 0x81, 0x07, 0x68,
+	0x25, 0x53, 0x15, 0x35, 0x75, 0x71, 0xec, 0x3d, 0x0d, 0x6f, 0xc9, 0x0b, 0x4c, 0xb1, 0x9d, 0xff,
+	0x89, 0xb4, 0xde, 0xf9, 0x7c, 0xfe, 0xf2, 0xcb, 0xf1, 0xf1, 0x67, 0x38, 0x93, 0x7c, 0x2f, 0xa4,
+	0xe2, 0x32, 0xde, 0x4b, 0xa1, 0x04, 0x4e, 0x8a, 0x3a, 0x7c, 0xb3, 0x16, 0x62, 0xbd, 0xe5, 0x97,
+	0x46, 0x5f, 0xe9, 0xdf, 0x97, 0x6a, 0x93, 0xf2, 0x4c, 0x2d, 0xd3, 0xbd, 0xb5, 0xd2, 0x67, 0x70,
+	0x7e, 0xbb, 0xdd, 0x2e, 0x96, 0x29, 0xcf, 0x18, 0xff, 0xab, 0x79, 0xa6, 0xe8, 0xbf, 0x11, 0xcc,
+	0x2a, 0x2d, 0xdb, 0x8b, 0x5d, 0xc6, 0x91, 0xc2, 0xe9, 0xed, 0x3d, 0x97, 0xcb, 0x35, 0x37, 0x7a,
+	0x40, 0x22, 0x7f, 0x7e, 0xc2, 0x1a, 0x1a, 0x7e, 0x86, 0x0b, 0x57, 0xff, 0xe0, 0xf2, 0xab, 0x96,
+	0x4b, 0xb5, 0x11, 0x3b, 0x6b, 0x1f, 0x19, 0xfb, 0xd0, 0x76, 0x4e, 0xbf, 0x13, 0x7a, 0xa7, 0xb8,
+	0xb4, 0x76, 0xdf, 0xd2, 0xeb, 0x5a, 0x4e, 0x77, 0x75, 0x87, 0x7e, 0x64, 0xe9, 0x03, 0xdb, 0x18,
+	0xc2, 0x24, 0xd1, 0xa9, 0xb5, 0x8e, 0x8d, 0xb5, 0xac, 0xf1, 0x0a, 0x9e, 0x27, 0x3a, 0xed, 0x10,
+	0x8f, 0x8d, 0xad, 0x6f, 0x8b, 0xbe, 0x85, 0x69, 0xbe, 0x70, 0xd3, 0x42, 0x84, 0xa3, 0xbc, 0x0c,
+	0x48, 0x44, 0xe6, 0x27, 0xcc, 0xac, 0xe9, 0x0d, 0x9c, 0xbb, 0x93, 0x96, 0xf3, 0x0b, 0xe0, 0x89,
+	0x93, 0x8c, 0x93, 0xb0, 0xa2, 0xc4, 0x53, 0x20, 0x8b, 0x60, 0x14, 0x91, 0xb9, 0xcf, 0xc8, 0x82,
+	0xde, 0x43, 0xd8, 0x1d, 0xd2, 0xa1, 0x14, 0xbc, 0x82, 0xf1, 0xaf, 0x9d, 0xda, 0x6c, 0x03, 0x3f,
+	0x22, 0xf3, 0xe9, 0x75, 0x18, 0xdb, 0x18, 0xc4, 0x45, 0x0c, 0xe2, 0x9f, 0x45, 0x0c, 0x98, 0x35,
+	0xd2, 0xf7, 0xf0, 0xd4, 0x8c, 0xaf, 0xfc, 0xd5, 0x0b, 0x18, 0x1b, 0xc1, 0xfc, 0xc8, 0x67, 0xb6,
+	0xa0, 0x2b, 0x08, 0xcc, 0xa2, 0xaf, 0xb9, 0xde, 0x2f, 0xaa, 0x56, 0x46, 0x8f, 0x6d, 0xe5, 0x03,
+	0x4c, 0x13, 0x9d, 0x96, 0xd8, 0x19, 0xf8, 0x89, 0x4e, 0xdd, 0x79, 0xf3, 0x65, 0x6b, 0x62, 0x7f,
+	0xe0, 0x55, 0xf3, 0x9a, 0x1e, 0xfb, 0xe5, 0xe1, 0x53, 0xba, 0xfe, 0xef, 0xc3, 0x84, 0xb9, 0xb7,
+	0x85, 0x77, 0x30, 0x29, 0x9e, 0x09, 0xbe, 0x8e, 0xcb, 0x27, 0xd8, 0x7a, 0x4e, 0x61, 0xd8, 0xb7,
+	0x65, 0x3b, 0xa4, 0x1e, 0x7e, 0x29, 0x6f, 0x14, 0x5f, 0x56, 0xc6, 0x5a, 0xc0, 0xc2, 0x3a, 0xba,
+	0x19, 0x2a, 0xea, 0x61, 0x02, 0xd8, 0x8d, 0xcb, 0x10, 0xe9, 0x5d, 0x87, 0xd4, 0x33, 0x35, 0xea,
+	0xe1, 0x8d, 0xbb, 0xc8, 0x21, 0xce, 0x45, 0x25, 0x37, 0x32, 0x43, 0x3d, 0xfc, 0x0e, 0xb3, 0x76,
+	0x3e, 0x86, 0x28, 0xb4, 0x45, 0xe9, 0xef, 0xe5, 0x93, 0xb9, 0xc3, 0x21, 0x46, 0x4d, 0xae, 0x45,
+	0x86, 0x7a, 0xf8, 0x0d, 0xce, 0x9a, 0xa1, 0x18, 0x22, 0x44, 0x0d, 0x42, 0x6f, 0x0f, 0xab, 0x63,
+	0x13, 0x88, 0x8f, 0x0f, 0x01, 0x00, 0x00, 0xff, 0xff, 0xb7, 0x3f, 0xc0, 0x9b, 0x67, 0x05, 0x00,
+	0x00,
 }
