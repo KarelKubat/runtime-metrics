@@ -54,99 +54,134 @@ error when a name collision occurs with an other metric.
 ```go
 func AddAveragePerDuration(a *named.AveragePerDuration) error
 ```
+AddAveragePerDuration adds a reference to a named AveragePerDuration to the
+registry, or returns an error when a name collision occurs with an other metric.
 
 #### func  AddCount
 
 ```go
 func AddCount(a *named.Count) error
 ```
+AddCount adds a reference to a named Count to the registry, or returns an error
+when a name collision occurs with an other metric.
 
 #### func  AddCountPerDuration
 
 ```go
 func AddCountPerDuration(a *named.CountPerDuration) error
 ```
+AddCountPerDuration adds a reference to a named CountPerDuration to the
+registry, or returns an error when a name collision occurs with an other metric.
 
 #### func  AddSum
 
 ```go
 func AddSum(a *named.Sum) error
 ```
+AddSum adds a reference to a named Sum to the registry, or returns an error when
+a name collision occurs with an other metric.
 
 #### func  AddSumPerDuration
 
 ```go
 func AddSumPerDuration(a *named.SumPerDuration) error
 ```
+AddSumPerDuration adds a reference to a named SumPerDuration to the registry, or
+returns an error when a name collision occurs with an other metric.
 
 #### func  AverageNames
 
 ```go
 func AverageNames() []string
 ```
+AverageNames returns a list of sorted strings of all named Averages in the
+registry.
 
 #### func  AveragePerDurationNames
 
 ```go
 func AveragePerDurationNames() []string
 ```
+AveragePerDurationNames returns a list of sorted strings of all named
+AveragePerDurations in the registry.
 
 #### func  CountNames
 
 ```go
 func CountNames() []string
 ```
+CountNames returns a list of sorted strings of all named Counts in the registry.
 
 #### func  CountPerDurationNames
 
 ```go
 func CountPerDurationNames() []string
 ```
+CountPerDurationNames returns a list of sorted strings of all named
+CountPerDurations in the registry.
 
 #### func  GetAverage
 
 ```go
 func GetAverage(name string) (*named.Average, error)
 ```
+GetAverage returns a reference to a registered named.Average, or a non-nil error
+when the metric wasn't registered. The argument is the name to lookup.
 
 #### func  GetAveragePerDuration
 
 ```go
 func GetAveragePerDuration(name string) (*named.AveragePerDuration, error)
 ```
+GetAveragePerDuration returns a reference to a registered
+named.AveragePerDuration, or a non-nil error when the metric wasn't registered.
+The argument is the name to lookup.
 
 #### func  GetCount
 
 ```go
 func GetCount(name string) (*named.Count, error)
 ```
+GetCount returns a reference to a registered named.Count, or a non-nil error
+when the metric wasn't registered. The argument is the name to lookup.
 
 #### func  GetCountPerDuration
 
 ```go
 func GetCountPerDuration(name string) (*named.CountPerDuration, error)
 ```
+GetCountPerDuration returns a reference to a registered named.CountPerDuration,
+or a non-nil error when the metric wasn't registered. The argument is the name
+to lookup.
 
 #### func  GetSum
 
 ```go
 func GetSum(name string) (*named.Sum, error)
 ```
+GetSum returns a reference to a registered named.Sum, or a non-nil error when
+the metric wasn't registered. The argument is the name to lookup.
 
 #### func  GetSumPerDuration
 
 ```go
 func GetSumPerDuration(name string) (*named.SumPerDuration, error)
 ```
+GetSumPerDuration returns a reference to a registered named.SumPerDuration, or a
+non-nil error when the metric wasn't registered. The argument is the name to
+lookup.
 
 #### func  SumNames
 
 ```go
 func SumNames() []string
 ```
+SumNames returns a list of sorted strings of all named Sums in the registry.
 
 #### func  SumPerDurationNames
 
 ```go
 func SumPerDurationNames() []string
 ```
+SumPerDurationNames returns a list of sorted strings of all named
+SumPerDurations in the registry.
