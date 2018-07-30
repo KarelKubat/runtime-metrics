@@ -16,8 +16,8 @@ minute).
 
 It cannot handle multi-dimensional data, such as lists of numbers or strings. It
 doesn't retain series; it's designed so that the impact of a metric is known
-a-priori. If you need to retain historical counters, sums or averages, scrape
-them with an external client and retain there.
+a-priori. If you need to retain lists of counters, sums or averages (e.g., to
+analyze trends), then scrape them with an external client and retain there.
 
 
 ### Basic In-Program Usage
@@ -31,7 +31,7 @@ seconds.
     import "github.com/KarelKubat/runtime-metrics/base"
     ...
 
-    // Create some metrics. We have:
+    // Create the metrics. We have:
     // - NewCount() for incremental counting
     // - NewSum() for totalling float64 values
     // - NewAverage() for averaging float64 values
@@ -39,12 +39,12 @@ seconds.
     // - NewCountPerDuration(d time.Duration)
     // - NewSumPerDuration(d time.Duration)
     // - NewAveragePerDuration(d time.Duration)
-    errorAverage = base.NewAveragePerDuration(30 * time.Second)
+    errorRatio = base.NewAveragePerDuration(30 * time.Second)
 
     // Check failures vs. totals and do something when there is >= 1% failures.
     // Poll every 10 seconds.
     go func() {
-      average, n, until := errorAverage.Report()
+      average, n, until := errorRatio.Report()
       if average >= 0.01 {
         log.Printf("WARNING %v percent of lookups is failing " +
           "over a period of 30 seconds until %v, %v cases ",
@@ -58,9 +58,9 @@ seconds.
     for {
       err := lookupSomething()  // hypothetical function
       if err != nil {
-        errorAverage.Mark(1.0)  // mark error (and increase #-cases)
+        errorRatio.Mark(1.0)  // mark error (and increase #-cases)
       } else {
-        errorAverage.Mark(0.0)  // mark success (only increase #-cases)
+        errorRatio.Mark(0.0)  // mark success (only increase #-cases)
     }
 
 It should be noted here that there are different ways to solve this. One could
@@ -87,8 +87,8 @@ started:
     import "github.com/KarelKubat/runtime-metrics/reporter"
     ...
 
-    errorAverage := base.NewAveragePerDuration(30 * time.Second)
-    err := registry.AddCount("lookup-error-ratio-per-30-sec", errorAverage)
+    errorRatio := base.NewAveragePerDuration(30 * time.Second)
+    err := registry.AddCount("lookup-error-ratio-per-30-sec", errorRatio)
     if err != nil { ... }                 // collision of name
 
     go func() {

@@ -2,7 +2,7 @@ package registry
 
 import (
 	"github.com/KarelKubat/runtime-metrics/base"
-	namedset "github.com/KarelKubat/runtime-metrics/namedset"
+	"github.com/KarelKubat/runtime-metrics/namedset"
 )
 
 var averageSet *namedset.AverageSet

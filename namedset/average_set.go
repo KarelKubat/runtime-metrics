@@ -1,4 +1,4 @@
-package baseset
+package namedset
 
 import (
 	"fmt"
