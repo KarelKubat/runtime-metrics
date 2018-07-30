@@ -3,7 +3,7 @@
 runtime-metrics implements the collection of in-program metrics, a
 server to publish these, and a client to collect them.
 
-What it is and what not
+What is it
 
 The design principle of runtime-metrics is that it's light-weight
 enough to be embedded into a server, and that it won't hinder
@@ -21,7 +21,9 @@ Basic In-Program Usage
 
 To collect metrics inside a program and to act on changes; i.e.,
 without publishing the metrics using a server and without scraping
-them using a client, the following can be used:
+them using a client, the following can be used. As an example, we
+wish to track the ratio of failures, and log something when this
+ratio exceeds 1% over a period of 30 seconds.
 
   import "github.com/KarelKubat/runtime-metrics/base"
   ...
@@ -34,56 +36,58 @@ them using a client, the following can be used:
   // - NewCountPerDuration(d time.Duration)
   // - NewSumPerDuration(d time.Duration)
   // - NewAveragePerDuration(d time.Duration)
-  totals = base.NewCount()
-  failures = base.NewCount()
+  errorAverage = base.NewAveragePerDuration(30 * time.Second)
 
   // Check failures vs. totals and do something when there is >= 1% failures.
   // Poll every 10 seconds.
   go func() {
-    tot := totals.Report()
-    fail := failures.Report()
-    if tot > 0 {
-      ratio = float(fail) / float(tot)
-      if ratio > 1.0
-        log.Printf("WARNING %v percent of lookups is failing", ratio / 100.0)
+    average, n, until := errorAverage.Report()
+    if average >= 0.01 {
+      log.Printf("WARNING %v percent of lookups is failing " +
+        "over a period of 30 seconds until %v, %v cases ",
+        ratio * 100.0, until, n)
       }
     }
-    time.Sleep(time.Second * 10)
+    time.Sleep(time.Second * 30)
   }()
 
   // Loop and track totals and failures
   for {
     err := lookupSomething() // hypothetical function
-    totals.Mark()
     if err != nil {
-      failures.Mark()
-    }
+      errorAverage.Mark(1.0)
+    } else {
+      errorAverage.Mark(0.0)
   }
+
+It should be noted here that there are different ways to solve this.
+One could also use two counters, one for the total loops and one for
+the failures. In this case, it's good to limit the collection of
+metrics and their reporting to a given duration; otherwise, a long run
+of successes might mask suddenly occurring errors until it's too late.
 
 The metric types all have a somewhat similar API: New*() instantiates
 a metric, Mark() registers an event, and Report() returns some result.
-In the case of a counter, as above, neither Mark() nor Report() have
-arguments, and Report() returns an int64. Besides counters, there are
-metrics for storing sums and averages.
+In the case of an average, Mark() expects one float64 argument, and
+returns three values: average, number of cases, and a timestamp.
 
-Thread-safe or not
+Threadsafe or not
 
 The base metrics are not thread-safe. When this is needed, then the same
 types can be used from package threadsafe:
 
   import "github.com/KarelKubat/runtime-metrics/threadsafe"
   ...
-  totals = threadsafe.NewCount()
+  totals = threadsafe.NewAveragePerDuration(30 * time.Second)
 
 Publishing Metrics
 
 When publishing metrics (to be scraped by a client), metrics are
-instantiated with a unique name:
+instantiated with a unique name using package named:
 
   import "github.com/KarelKubat/runtime-metrics/named"
   ...
-  totals = named.Count("total-lookups")
-  failures = named.Count("failed-lookups")
+  errorAverage := named.AveragePerDuration(30 * time.Second)
 
 Marking events is identical to the non-client-server example above.
 In order to publish these metrics, they are added to a registry,
@@ -92,10 +96,14 @@ and a server is started:
   import "github.com/KarelKubat/runtime-metrics/registry"
   import "github.com/KarelKubat/runtime-metrics/reporter"
   ...
-  err := registry.AddCount(totals)
-  if err != nil { ... }   // collision of name "total-lookups"
-  err = registry.AddCount(failures)
-  if err != nil { ... {   // collision of name "total-failures"
+
+  errorAverage := named.NewAveragePerDuration(
+    "lookup-error-ratio-per-30-sec",    // uniquely identifying name
+    30 * time.Second)				    // standard argument
+
+  err := registry.AddCount(errorAverage)
+  if err != nil { ... }                 // collision of name
+
   go func() {
     err := reporter.StartReporter(":1234")
     if err != nil { ... } // probably port 1234 is already in use
@@ -110,16 +118,11 @@ Published metrics can be scraped by a client:
   c, err := reporter.NewClient(":1234")
   if err != nil { ... }  // connection error
 
-  tot, err := c.Count("total-lookups")
-  if err != nil { ... }  // counter doesn't exist
-  fail, err := c.count("failed-lookups")
-  if err != nil { ... }
+  av, n, until, err := c.AveragePerDuration("lookup-error-ratio-per-30-sec")
+  if err != nil { ... }  // metric doesn't exist
 
-  if tot > 0 {
-    percentage = float(fail) / float(tot) / 100
-    if percentage > 0.01 {
-      log.Printf("WARNING %v percent of lookups is failing", average)
-    }
+  if av > 0.01 {
+    log.Printf("WARNING %v percent of lookups is failing", av * 100)
   }
 
 There is also discovery: a client can get a list of all the names

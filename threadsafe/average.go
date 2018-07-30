@@ -11,6 +11,7 @@ type Average struct {
 	mutex *sync.Mutex
 }
 
+// NewAverage returns a reference to an initialized threadsafe.Average.
 func NewAverage() *Average {
 	return &Average{
 		avg:   base.NewAverage(),
@@ -18,18 +19,21 @@ func NewAverage() *Average {
 	}
 }
 
+// Mark registers a float64 observation.
 func (a *Average) Mark(val float64) {
 	a.mutex.Lock()
 	defer a.mutex.Unlock()
 	a.avg.Mark(val)
 }
 
+// Report returns the average over all observations and the number of cases.
 func (a *Average) Report() (float64, int64) {
 	a.mutex.Lock()
 	defer a.mutex.Unlock()
 	return a.avg.Report()
 }
 
+// Reset resets the metric.
 func (a *Average) Reset() {
 	a.mutex.Lock()
 	defer a.mutex.Unlock()

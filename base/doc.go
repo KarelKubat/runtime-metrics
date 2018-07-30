@@ -45,15 +45,18 @@ simple diagram:
   T=0s
    |                  av.Mark(1.0)
    |                  av.Mark(2.0)
-   |                  val0, n0, until := av.Report()   // until is T=0
+   |                  val0, n0, until0 := av.Report()   // state until T=0
   T=1s
    |                  av.Mark(20.0)
    |                  av.Mark(10.0)
-   |                  val1, n1, until := av.Report()   // until is T=1
+   |                  val1, n1, until1 := av.Report()   // state between T=0 and T=1
   T=2s
    |                  av.Mark(200.0)
    |                  av.Mark(100.0)
-   |                  val2, n2, until := av.Report()   // until is T=2
+   |                  val2, n2, until2 := av.Report()   // state between T=1 and T=2
+  T=3
+   |                  val3, n3, until3 := av.Report     // state between T=2 and T=3
+   |                                                    // val3 == 150.0
 
 Here, val0 and n0 will both be zero, because the very first period is
 not finished yet when Report() is called. Once one second has expired
