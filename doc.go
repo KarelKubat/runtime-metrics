@@ -62,9 +62,11 @@ ratio exceeds 1% over a period of 30 seconds.
 
 It should be noted here that there are different ways to solve this.
 One could also use two counters, one for the total loops and one for
-the failures. In this case, it's good to limit the collection of
-metrics and their reporting to a given duration; otherwise, a long run
-of successes might mask suddenly occurring errors until it's too late.
+the failures, and divide them to get a ratio.
+
+In this case, it's also good to limit the collection of metrics and
+their reporting to a given duration; otherwise, a long run of
+successes might mask suddenly occurring errors until it's too late.
 
 The metric types all have a somewhat similar API: New*() instantiates
 a metric, Mark() registers an event, and Report() returns some result.
