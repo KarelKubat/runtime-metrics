@@ -1,5 +1,5 @@
 /*
-registry implements singleton named sets.
+registry implements singletons of named sets.
 
 The purpose of this is to uniquely register named metrics using
 singletons of named sets. The metrics are then not only unique per

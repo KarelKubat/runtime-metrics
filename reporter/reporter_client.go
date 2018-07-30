@@ -52,7 +52,7 @@ type AllNamesReturn struct {
 //
 // Example:
 //
-//  overview, err := client.AllNameS()
+//  overview, err := client.AllNames()
 //  if err != nil { ... }
 //  for _, n := range overview.Averages {
 //    fmt.Printf("There is a named average metric called %s\n", n)
