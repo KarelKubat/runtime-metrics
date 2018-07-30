@@ -1,18 +1,18 @@
 /*
 base defines the most basic metric types.
 
-The types are:
+The most basic types are:
 
- base.Count        // records ticks
- base.Sum          // adds float64 values
- base.Average      // just a complimentary type very similar to Sum
+ base.Count                // records ticks
+ base.Sum                  // adds float64 values
+ base.Average              // just a complimentary type very similar to Sum
 
 Besides these, *PerDuration exist, to record over a given period, which gives
 the additional:
 
- base.CountPerDuration
- base.SumPerDuration
- base.AveragePerDuration
+ base.CountPerDuration     // count over a period
+ base.SumPerDuration       // sum over a period
+ base.AveragePerDuration   // average over a period
 
 New metric instances are created using New*, such as NewCount(),
 NewSum(), and so on. Marking an event in a metric is done using the
@@ -45,7 +45,7 @@ simple diagram:
   T=0s
    |                  av.Mark(1.0)
    |                  av.Mark(2.0)
-   |                  val0, n0, until0 := av.Report()   // state until T=0
+   |                  val0, n0, until0 := av.Report()   // state before T=0
   T=1s
    |                  av.Mark(20.0)
    |                  av.Mark(10.0)

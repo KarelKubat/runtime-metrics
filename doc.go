@@ -55,9 +55,9 @@ ratio exceeds 1% over a period of 30 seconds.
   for {
     err := lookupSomething()  // hypothetical function
     if err != nil {
-      errorRatio.Mark(1.0)  // mark error (and increase #-cases)
+      errorRatio.Mark(1.0)    // mark error (and increase #-cases)
     } else {
-      errorRatio.Mark(0.0)  // mark success (only increase #-cases)
+      errorRatio.Mark(0.0)    // mark success (only increase #-cases)
   }
 
 It should be noted here that there are different ways to solve this.
@@ -85,7 +85,7 @@ server is started:
 
 
   errorRatio := base.NewAveragePerDuration(30 * time.Second)
-  err := registry.AddCount("lookup-error-ratio-per-30-sec", errorRatio)
+  err := registry.AddAveragePerDuration("lookup-error-ratio-per-30-sec", errorRatio)
   if err != nil { ... }                 // collision of name
 
   go func() {

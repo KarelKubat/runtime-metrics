@@ -2,7 +2,7 @@
 --
     import "github.com/KarelKubat/runtime-metrics/registry"
 
-registry implements singleton named sets.
+registry implements singletons of named sets.
 
 The purpose of this is to uniquely register named metrics using singletons of
 named sets. The metrics are then not only unique per named set, but also per

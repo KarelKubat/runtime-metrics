@@ -13,23 +13,23 @@ IP and port to listen, separated by :. The IP can be left out. Example:
     err := reporter.StartReporter(":9000")    // bind to TCP port 9000
     if err != nil { ... }                     // probably port already taken
 
-Typically this will be wrapped in a go function, and colocated with
-instantiating metrics:
-
-    func checkErr(err) {
-      if err != nil {
-        handleError()
-      }
-    }
-
-    ...
-
-    checkErr(registry.AddAverage(named.NewAverage("average-metric")))
-    checkErr(registry.AddSumPerDuration(named.NewSumPerDuration("sum-per-minute", 30 * time.Minute)))
+Typically this will be wrapped in a go function, so that the reporting server
+runs in its own thread:
 
     go func() {
-      checkErr(reporter.StartReporter(":9000")
+      if err := reporter.StartReporter(":9000"); err != nil {
+        ... // probably port 9000 is already taken
+      }
     }()
+
+Any metrics that are registered are available for the server to be published:
+
+    func checkErr(err) {
+      if err != nil { ... } // name collision
+    }
+    ...
+    checkErr(registry.AddAverage("average-metric", base.NewAverage()))
+    checkErr(registry.AddSumPerDuration("sum-per-minute", base.NewSumPerDuration(30 * time.Minute)))
 
 
 ### The Client
@@ -115,7 +115,7 @@ AllNames returns a list of server-registered named metrics, or a non-nil error.
 
 Example:
 
-    overview, err := client.AllNameS()
+    overview, err := client.AllNames()
     if err != nil { ... }
     for _, n := range overview.Averages {
       fmt.Printf("There is a named average metric called %s\n", n)
