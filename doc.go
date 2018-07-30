@@ -3,7 +3,7 @@
 runtime-metrics implements the collection of in-program metrics, a
 server to publish these, and a client to collect them.
 
-What is it
+What Is It
 
 The design principle of runtime-metrics is that it's light-weight
 enough to be embedded into a server, and that it won't hinder
