@@ -2,17 +2,18 @@
 registry implements singleton named sets.
 
 The purpose of this is to uniquely register named metrics using
-singletons of named sets. The named metrics are then not only unique
-per named set, but also per binary. This way, the reporter can
-pinpoint a metric by its name and be sure that the metric is unique.
+singletons of named sets. The metrics are then not only unique per
+named set, but also per binary. This way, the reporter can pinpoint a
+metric by its name and be sure that the metric is unique.
 
-The typical usage is to create named metrics, register them, and start
-a reporting server. This is also shown in demo/server.go:
+The typical usage is to create base metrics, register them using a
+unique name, and start a reporting server. This is also shown in
+demo/server.go:
 
-  err := registry.AddAverage(named.NewAverage("my_average"))
+  err := registry.AddAverage("my_average", base.NewAverage())
   if err != nil { ... } // name collision
 
-  err := registry.AddSum(named.NewSum("my_sum"))
+  err := registry.AddSum("my_sum", base.NewSum())
   if err != nil { ... } // name collision
 
 There are methods to retrieve metrics by their name, which return an

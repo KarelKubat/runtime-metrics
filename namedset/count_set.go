@@ -1,31 +1,38 @@
-package namedset
+package baseset
 
 import (
 	"fmt"
 	"sort"
+	"sync"
 
-	named "github.com/KarelKubat/runtime-metrics/named"
+	"github.com/KarelKubat/runtime-metrics/base"
 )
 
 type CountSet struct {
-	set map[string]*named.Count
+	set   map[string]*base.Count
+	mutex *sync.Mutex
 }
 
 func NewCountSet() *CountSet {
 	return &CountSet{
-		set: map[string]*named.Count{},
+		set:   map[string]*base.Count{},
+		mutex: &sync.Mutex{},
 	}
 }
 
-func (set *CountSet) Add(a *named.Count) error {
-	if _, ok := set.set[a.Name()]; ok {
-		return fmt.Errorf("Count %q already in set", a.Name())
+func (set *CountSet) Add(name string, a *base.Count) error {
+	set.mutex.Lock()
+	defer set.mutex.Unlock()
+	if _, ok := set.set[name]; ok {
+		return fmt.Errorf("Count %q already in set", name)
 	}
-	set.set[a.Name()] = a
+	set.set[name] = a
 	return nil
 }
 
 func (set *CountSet) Names() []string {
+	set.mutex.Lock()
+	defer set.mutex.Unlock()
 	names := []string{}
 	for name := range set.set {
 		names = append(names, name)
@@ -34,7 +41,9 @@ func (set *CountSet) Names() []string {
 	return names
 }
 
-func (set *CountSet) Get(name string) (*named.Count, error) {
+func (set *CountSet) Get(name string) (*base.Count, error) {
+	set.mutex.Lock()
+	defer set.mutex.Unlock()
 	ret, ok := set.set[name]
 	if !ok {
 		return nil, fmt.Errorf("Count %q not in set", name)

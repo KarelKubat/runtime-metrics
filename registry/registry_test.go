@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/KarelKubat/runtime-metrics/named"
+	"github.com/KarelKubat/runtime-metrics/base"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -14,42 +14,42 @@ func TestRegistry(t *testing.T) {
 	var err error
 
 	// Add some metrics. No errors expected.
-	err = AddAverage(
-		named.NewAverage("testname-average"))
+	err = AddAverage("testname-average",
+		base.NewAverage())
 	assert.NoError(t, err)
-	err = AddAveragePerDuration(
-		named.NewAveragePerDuration("testname-average-per-duration", D))
+	err = AddAveragePerDuration("testname-average-per-duration",
+		base.NewAveragePerDuration(D))
 	assert.NoError(t, err)
-	err = AddCount(
-		named.NewCount("testname-counter"))
+	err = AddCount("testname-counter",
+		base.NewCount())
 	assert.NoError(t, err)
-	err = AddCountPerDuration(
-		named.NewCountPerDuration("testname-counter-per-duration", D))
+	err = AddCountPerDuration("testname-counter-per-duration",
+		base.NewCountPerDuration(D))
 	assert.NoError(t, err)
-	err = AddSum(
-		named.NewSum("testname-sum"))
+	err = AddSum("testname-sum",
+		base.NewSum())
 	assert.NoError(t, err)
-	err = AddSumPerDuration(
-		named.NewSumPerDuration("testname-sum-per-duration", D))
+	err = AddSumPerDuration("testname-sum-per-duration",
+		base.NewSumPerDuration(D))
 	assert.NoError(t, err)
 
 	// Redo, errors expected.
-	err = AddAverage(
-		named.NewAverage("testname-average"))
+	err = AddAverage("testname-average",
+		base.NewAverage())
 	assert.Error(t, err)
-	err = AddAveragePerDuration(
-		named.NewAveragePerDuration("testname-average-per-duration", D))
+	err = AddAveragePerDuration("testname-average-per-duration",
+		base.NewAveragePerDuration(D))
 	assert.Error(t, err)
-	err = AddCount(
-		named.NewCount("testname-counter"))
+	err = AddCount("testname-counter",
+		base.NewCount())
 	assert.Error(t, err)
-	err = AddCountPerDuration(
-		named.NewCountPerDuration("testname-counter-per-duration", D))
+	err = AddCountPerDuration("testname-counter-per-duration",
+		base.NewCountPerDuration(D))
 	assert.Error(t, err)
-	err = AddSum(
-		named.NewSum("testname-sum"))
+	err = AddSum("testname-sum",
+		base.NewSum())
 	assert.Error(t, err)
-	err = AddSumPerDuration(
-		named.NewSumPerDuration("testname-sum-per-duration", D))
+	err = AddSumPerDuration("testname-sum-per-duration",
+		base.NewSumPerDuration(D))
 	assert.Error(t, err)
 }

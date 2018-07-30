@@ -1,27 +1,30 @@
-package namedset
+package baseset
 
 import (
 	"fmt"
 	"sort"
+	"sync"
 
-	named "github.com/KarelKubat/runtime-metrics/named"
+	"github.com/KarelKubat/runtime-metrics/base"
 )
 
 type AveragePerDurationSet struct {
-	set map[string]*named.AveragePerDuration
+	set   map[string]*base.AveragePerDuration
+	mutex *sync.Mutex
 }
 
 func NewAveragePerDurationSet() *AveragePerDurationSet {
 	return &AveragePerDurationSet{
-		set: map[string]*named.AveragePerDuration{},
+		set:   map[string]*base.AveragePerDuration{},
+		mutex: &sync.Mutex{},
 	}
 }
 
-func (set *AveragePerDurationSet) Add(a *named.AveragePerDuration) error {
-	if _, ok := set.set[a.Name()]; ok {
-		return fmt.Errorf("AveragePerDuration %q already in set", a.Name())
+func (set *AveragePerDurationSet) Add(name string, a *base.AveragePerDuration) error {
+	if _, ok := set.set[name]; ok {
+		return fmt.Errorf("AveragePerDuration %q already in set", name)
 	}
-	set.set[a.Name()] = a
+	set.set[name] = a
 	return nil
 }
 
@@ -34,7 +37,7 @@ func (set *AveragePerDurationSet) Names() []string {
 	return names
 }
 
-func (set *AveragePerDurationSet) Get(name string) (*named.AveragePerDuration, error) {
+func (set *AveragePerDurationSet) Get(name string) (*base.AveragePerDuration, error) {
 	ret, ok := set.set[name]
 	if !ok {
 		return nil, fmt.Errorf("AveragePerDuration %q not in set", name)

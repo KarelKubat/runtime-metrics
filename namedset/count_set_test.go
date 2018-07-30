@@ -1,9 +1,9 @@
-package namedset
+package baseset
 
 import (
 	"github.com/stretchr/testify/assert"
 
-	named "github.com/KarelKubat/runtime-metrics/named"
+	"github.com/KarelKubat/runtime-metrics/base"
 
 	"testing"
 )
@@ -15,15 +15,15 @@ func TestCountSet(t *testing.T) {
 
 	set := NewCountSet()
 
-	// Create and add some named metrics
+	// Create and add some base metrics
 	for _, name := range NAMES {
-		err := set.Add(named.NewCount(name))
+		err := set.Add(name, base.NewCount())
 		assert.NoError(t, err)
 	}
 
 	// Re-adding won't work
 	for _, name := range NAMES {
-		err := set.Add(named.NewCount(name))
+		err := set.Add(name, base.NewCount())
 		assert.Error(t, err)
 	}
 

@@ -1,9 +1,9 @@
-package namedset
+package baseset
 
 import (
 	"github.com/stretchr/testify/assert"
 
-	named "github.com/KarelKubat/runtime-metrics/named"
+	"github.com/KarelKubat/runtime-metrics/base"
 
 	"testing"
 	"time"
@@ -17,15 +17,15 @@ func TestAveragePerDurationSet(t *testing.T) {
 
 	set := NewAveragePerDurationSet()
 
-	// Create and add some named metrics
+	// Create and add some base metrics
 	for _, name := range NAMES {
-		err := set.Add(named.NewAveragePerDuration(name, DURATION))
+		err := set.Add(name, base.NewAveragePerDuration(DURATION))
 		assert.NoError(t, err)
 	}
 
 	// Re-adding won't work
 	for _, name := range NAMES {
-		err := set.Add(named.NewAveragePerDuration(name, DURATION))
+		err := set.Add(name, base.NewAveragePerDuration(DURATION))
 		assert.Error(t, err)
 	}
 

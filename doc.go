@@ -53,11 +53,11 @@ ratio exceeds 1% over a period of 30 seconds.
 
   // Loop and track totals and failures
   for {
-    err := lookupSomething() // hypothetical function
+    err := lookupSomething()  // hypothetical function
     if err != nil {
-      errorAverage.Mark(1.0)
+      errorAverage.Mark(1.0)  // mark error (and increase #-cases)
     } else {
-      errorAverage.Mark(0.0)
+      errorAverage.Mark(0.0)  // mark success (only increase #-cases)
   }
 
 It should be noted here that there are different ways to solve this.
@@ -73,42 +73,24 @@ a metric, Mark() registers an event, and Report() returns some result.
 In the case of an average, Mark() expects one float64 argument, and
 returns three values: average, number of cases, and a timestamp.
 
-Threadsafe or not
-
-The base metrics are not thread-safe. When this is needed, then the same
-types can be used from package threadsafe:
-
-  import "github.com/KarelKubat/runtime-metrics/threadsafe"
-  ...
-  totals = threadsafe.NewAveragePerDuration(30 * time.Second)
-
 Publishing Metrics
 
-When publishing metrics (to be scraped by a client), metrics are
-instantiated with a unique name using package named:
+In order to publish metrics, they are added to a registry, and a
+server is started:
 
-  import "github.com/KarelKubat/runtime-metrics/named"
-  ...
-  errorAverage := named.AveragePerDuration(30 * time.Second)
-
-Marking events is identical to the non-client-server example above.
-In order to publish these metrics, they are added to a registry,
-and a server is started:
-
+  import "github.com/KarelKubat/runtime-metrics/base"
   import "github.com/KarelKubat/runtime-metrics/registry"
   import "github.com/KarelKubat/runtime-metrics/reporter"
   ...
 
-  errorAverage := named.NewAveragePerDuration(
-    "lookup-error-ratio-per-30-sec",    // uniquely identifying name
-    30 * time.Second)				    // standard argument
 
-  err := registry.AddCount(errorAverage)
+  errorAverage := base.NewAveragePerDuration(30 * time.Second)
+  err := registry.AddCount("lookup-error-ratio-per-30-sec", errorAverage)
   if err != nil { ... }                 // collision of name
 
   go func() {
     err := reporter.StartReporter(":1234")
-    if err != nil { ... } // probably port 1234 is already in use
+    if err != nil { ... }               // probably port 1234 is already in use
   }()
 
 Scraping Metrics
@@ -130,6 +112,19 @@ Published metrics can be scraped by a client:
 There is also discovery: a client can get a list of all the names
 of counts, sums, and averages, and query these. See demo/client.go
 for an example.
+
+Further Reading
+
+Be sure to read the docs of the base/ package to understand what the
+metrics do. Particularly make sure you understand how *PerDuration
+metrics work, they always report results that "lag" a
+duration.
+
+For information how to publish metrics, read the server section in
+package reporter/. For scraping, read the client section. An example is
+provided in demo/.
+
+Packages tools/, namedset/ and api/ are for internal usage.
 
 */
 package foo
