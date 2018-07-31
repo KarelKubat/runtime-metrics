@@ -52,7 +52,7 @@ func (s *server) FullDump(ctx context.Context, in *api.EmptyRequest) (*api.FullD
 		}
 		val, n, until := metric.Report()
 		ts, err := ptypes.TimestampProto(until)
-		if ts != nil {
+		if err != nil {
 			return nil, fmt.Errorf("timestamp conversion failed: %v", err)
 		}
 		ret.NamedAveragesPerDuration = append(
@@ -83,7 +83,7 @@ func (s *server) FullDump(ctx context.Context, in *api.EmptyRequest) (*api.FullD
 		}
 		val, until := metric.Report()
 		ts, err := ptypes.TimestampProto(until)
-		if ts != nil {
+		if err != nil {
 			return nil, fmt.Errorf("timestamp conversion failed: %v", err)
 		}
 		ret.NamedCountsPerDuration = append(
@@ -114,7 +114,7 @@ func (s *server) FullDump(ctx context.Context, in *api.EmptyRequest) (*api.FullD
 		}
 		val, n, until := metric.Report()
 		ts, err := ptypes.TimestampProto(until)
-		if ts != nil {
+		if err != nil {
 			return nil, fmt.Errorf("timestamp conversion failed: %v", err)
 		}
 		ret.NamedSumsPerDuration = append(
