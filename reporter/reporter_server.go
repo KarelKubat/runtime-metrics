@@ -16,7 +16,7 @@ type server struct {
 
 // AllNames uses the API to return registered named metrics.
 // This is wrapped in the client, this function isn't for public consumption.
-func (s *server) AllNames(ctx context.Context, in *api.AllNamesRequest) (*api.AllNamesResponse, error) {
+func (s *server) AllNames(ctx context.Context, in *api.EmptyRequest) (*api.AllNamesResponse, error) {
 	return &api.AllNamesResponse{
 		AverageNames:            registry.AverageNames(),
 		AveragePerDurationNames: registry.AveragePerDurationNames(),

@@ -5,7 +5,7 @@ package api;
 import "google/protobuf/timestamp.proto";
 
 // Discovery of all the names
-message AllNamesRequest {
+message EmptyRequest {
 }
 message AllNamesResponse {
   repeated string AverageNames = 1;
@@ -61,10 +61,10 @@ message SumPerDurationResponse {
   google.protobuf.Timestamp Until = 3;
   // Next free: 4
 }
-  
+
 service Reporter {
-  rpc AllNames(AllNamesRequest) returns (AllNamesResponse) {}
-  
+  rpc AllNames(EmptyRequest) returns (AllNamesResponse) {}
+
   rpc Average(NameRequest) returns (AverageResponse) {}
   rpc AveragePerDuration(NameRequest) returns (AveragePerDurationResponse) {}
   rpc Count(NameRequest) returns (CountResponse) {}

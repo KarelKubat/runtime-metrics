@@ -60,7 +60,7 @@ type AllNamesReturn struct {
 //  // and so on with overview.AveragesPerDuration, overview.Counts,
 //  // overview.CountsPerDuration, overview.Sums, overview.SumsPerDuration
 func (c *Client) AllNames() (*AllNamesReturn, error) {
-	resp, err := c.client.AllNames(context.Background(), &api.AllNamesRequest{})
+	resp, err := c.client.AllNames(context.Background(), &api.EmptyRequest{})
 	if err != nil {
 		return nil, fmt.Errorf("failed at AllNames service: %v", err)
 	}
