@@ -41,7 +41,7 @@ func main() {
 	checkErr(registry.AddSumPerDuration("my_sum_per_30_sec", sumPer30Sec))
 
 	// Do stuff to the metrics so that server may report and the client may scrape them.
-	for i := 0; ; i++ {
+	for i := 0; i < 40; i++ {
 		avg.Mark(float64(i % 10))
 		avgPerSec.Mark(float64(i % 10))
 		cntr.Mark()
