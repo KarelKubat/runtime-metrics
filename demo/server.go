@@ -37,8 +37,8 @@ func main() {
 	sum := base.NewSum()
 	checkErr(registry.AddSum("my_sum", sum))
 
-	sumPer30Sec := base.NewSumPerDuration(time.Duration(30 * time.Second))
-	checkErr(registry.AddSumPerDuration("my_sum_per_30_sec", sumPer30Sec))
+	sumPer3Sec := base.NewSumPerDuration(time.Duration(3 * time.Second))
+	checkErr(registry.AddSumPerDuration("my_sum_per_3_sec", sumPer3Sec))
 
 	// Do stuff to the metrics so that server may report and the client may scrape them.
 	for i := 0; i < 40; i++ {
@@ -47,7 +47,7 @@ func main() {
 		cntr.Mark()
 		cntrPer5Sec.Mark()
 		sum.Mark(float64(i))
-		sumPer30Sec.Mark(float64(i))
+		sumPer3Sec.Mark(float64(i))
 		time.Sleep(500 * time.Millisecond)
 	}
 }
