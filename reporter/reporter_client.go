@@ -74,6 +74,127 @@ func (c *Client) AllNames() (*AllNamesReturn, error) {
 	}, nil
 }
 
+type averageDump struct {
+	Name  string
+	Value float64
+	N     int64
+}
+type averagePerDurationDump struct {
+	Name  string
+	Value float64
+	N     int64
+	Until time.Time
+}
+type countDump struct {
+	Name  string
+	Value int64
+}
+type countPerDurationDump struct {
+	Name  string
+	Value int64
+	Until time.Time
+}
+type sumDump struct {
+	Name  string
+	Value float64
+	N     int64
+}
+type sumPerDurationDump struct {
+	Name  string
+	Value float64
+	N     int64
+	Until time.Time
+}
+
+// FullDumpReturn is returned by FullDump and lists all averages, averages per duration, etc.,
+// each including their name and reported state.
+type FullDumpReturn struct {
+	Averages            []averageDump
+	AveragesPerDuration []averagePerDurationDump
+	Counts              []countDump
+	CountsPerDuration   []countPerDurationDump
+	Sums                []sumDump
+	SumsPerDuration     []sumPerDurationDump
+}
+
+// FullDump returns all names and states of server-known metrics. The return value is a
+// (reference to a) structure with the fields:
+//
+// Averages: an array of structs with a Name (string), Value (float64), N (int64)
+// AveragesPerDuration: similar to the above, but the fields also have Until (time.Time)
+// Counts: an array of structs with a Name (string), Value (int64)
+// CountsPerDuration: similar to the above, but the fields also have Until (time.Time)
+// Sums: an array of structs with a Name (string), Value (float64), N (int64)
+// SumsPerDuration: similar to the above, but the fields also have Until (time.Time)
+func (c *Client) FullDump() (*FullDumpReturn, error) {
+	resp, err := c.client.FullDump(context.Background(), &api.EmptyRequest{})
+	if err != nil {
+		return nil, fmt.Errorf("failed at FullDump service: %v", err)
+	}
+
+	ret := &FullDumpReturn{}
+
+	for _, named := range resp.GetNamedAverages() {
+		ret.Averages = append(ret.Averages, averageDump{
+			Name:  named.GetName(),
+			Value: named.GetValue(),
+			N:     named.GetN(),
+		})
+	}
+	for _, named := range resp.GetNamedAveragesPerDuration() {
+		ts, err := ptypes.Timestamp(named.GetUntil())
+		if err != nil {
+			return nil, fmt.Errorf("timestamp conversion failed: %v", err)
+		}
+		ret.AveragesPerDuration = append(ret.AveragesPerDuration, averagePerDurationDump{
+			Name:  named.GetName(),
+			Value: named.GetValue(),
+			N:     named.GetN(),
+			Until: ts,
+		})
+	}
+
+	for _, named := range resp.GetNamedCounts() {
+		ret.Counts = append(ret.Counts, countDump{
+			Name:  named.GetName(),
+			Value: named.GetValue(),
+		})
+	}
+	for _, named := range resp.GetNamedCountsPerDuration() {
+		ts, err := ptypes.Timestamp(named.GetUntil())
+		if err != nil {
+			return nil, fmt.Errorf("timestamp conversion failed: %v", err)
+		}
+		ret.CountsPerDuration = append(ret.CountsPerDuration, countPerDurationDump{
+			Name:  named.GetName(),
+			Value: named.GetValue(),
+			Until: ts,
+		})
+	}
+
+	for _, named := range resp.GetNamedSums() {
+		ret.Sums = append(ret.Sums, sumDump{
+			Name:  named.GetName(),
+			Value: named.GetValue(),
+			N:     named.GetN(),
+		})
+	}
+	for _, named := range resp.GetNamedSumsPerDuration() {
+		ts, err := ptypes.Timestamp(named.GetUntil())
+		if err != nil {
+			return nil, fmt.Errorf("timestamp conversion failed: %v", err)
+		}
+		ret.SumsPerDuration = append(ret.SumsPerDuration, sumPerDurationDump{
+			Name:  named.GetName(),
+			Value: named.GetValue(),
+			N:     named.GetN(),
+			Until: ts,
+		})
+	}
+
+	return ret, nil
+}
+
 // Average returns the average value (float64) and number of cases (int64) of a named
 // server-side Average metric; or a non-nil error.
 func (c *Client) Average(name string) (float64, int64, error) {

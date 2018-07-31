@@ -62,8 +62,63 @@ message SumPerDurationResponse {
   // Next free: 4
 }
 
+message NamedAverage {
+  string Name = 1;
+  double Value = 2;
+  int64 N = 3;
+  // Next free: 4
+}
+
+message NamedAveragePerDuration {
+  string Name = 1;
+  double Value = 2;
+  int64 N = 3;
+  google.protobuf.Timestamp Until = 4;
+  // Next free: 5
+}
+
+message NamedCount {
+  string Name = 1;
+  int64 Value = 2;
+  // Next free: 3
+}
+
+message NamedCountPerDuration {
+  string Name = 1;
+  int64 Value = 2;
+  google.protobuf.Timestamp Until = 3;
+  // Next free: 4
+}
+
+message NamedSum {
+  string Name = 1;
+  double Value = 2;
+  int64 N = 3;
+  // Next free: 4
+}
+
+message NamedSumPerDuration {
+  string Name = 1;
+  double Value = 2;
+  int64 N = 3;
+  google.protobuf.Timestamp Until = 4;
+  // Next free: 5
+}
+
+message FullDumpResponse {
+  repeated NamedAverage NamedAverages = 1;
+  repeated NamedAveragePerDuration NamedAveragesPerDuration = 2;
+  repeated NamedCount NamedCounts = 3;
+  repeated NamedCountPerDuration NamedCountsPerDuration = 4;
+  repeated NamedSum NamedSums = 5;
+  repeated NamedSumPerDuration NamedSumsPerDuration = 6;
+  // Next free: 7
+}
+
 service Reporter {
   rpc AllNames(EmptyRequest) returns (AllNamesResponse) {}
+
+  rpc FullDump(EmptyRequest) returns (FullDumpResponse) {}
 
   rpc Average(NameRequest) returns (AverageResponse) {}
   rpc AveragePerDuration(NameRequest) returns (AveragePerDurationResponse) {}

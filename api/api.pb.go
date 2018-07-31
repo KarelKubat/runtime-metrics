@@ -35,7 +35,7 @@ func (m *EmptyRequest) Reset()         { *m = EmptyRequest{} }
 func (m *EmptyRequest) String() string { return proto.CompactTextString(m) }
 func (*EmptyRequest) ProtoMessage()    {}
 func (*EmptyRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_api_9e0a0979172ad30a, []int{0}
+	return fileDescriptor_api_609420909ea7318b, []int{0}
 }
 func (m *EmptyRequest) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_EmptyRequest.Unmarshal(m, b)
@@ -71,7 +71,7 @@ func (m *AllNamesResponse) Reset()         { *m = AllNamesResponse{} }
 func (m *AllNamesResponse) String() string { return proto.CompactTextString(m) }
 func (*AllNamesResponse) ProtoMessage()    {}
 func (*AllNamesResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_api_9e0a0979172ad30a, []int{1}
+	return fileDescriptor_api_609420909ea7318b, []int{1}
 }
 func (m *AllNamesResponse) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_AllNamesResponse.Unmarshal(m, b)
@@ -145,7 +145,7 @@ func (m *NameRequest) Reset()         { *m = NameRequest{} }
 func (m *NameRequest) String() string { return proto.CompactTextString(m) }
 func (*NameRequest) ProtoMessage()    {}
 func (*NameRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_api_9e0a0979172ad30a, []int{2}
+	return fileDescriptor_api_609420909ea7318b, []int{2}
 }
 func (m *NameRequest) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_NameRequest.Unmarshal(m, b)
@@ -185,7 +185,7 @@ func (m *AverageResponse) Reset()         { *m = AverageResponse{} }
 func (m *AverageResponse) String() string { return proto.CompactTextString(m) }
 func (*AverageResponse) ProtoMessage()    {}
 func (*AverageResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_api_9e0a0979172ad30a, []int{3}
+	return fileDescriptor_api_609420909ea7318b, []int{3}
 }
 func (m *AverageResponse) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_AverageResponse.Unmarshal(m, b)
@@ -233,7 +233,7 @@ func (m *AveragePerDurationResponse) Reset()         { *m = AveragePerDurationRe
 func (m *AveragePerDurationResponse) String() string { return proto.CompactTextString(m) }
 func (*AveragePerDurationResponse) ProtoMessage()    {}
 func (*AveragePerDurationResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_api_9e0a0979172ad30a, []int{4}
+	return fileDescriptor_api_609420909ea7318b, []int{4}
 }
 func (m *AveragePerDurationResponse) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_AveragePerDurationResponse.Unmarshal(m, b)
@@ -285,7 +285,7 @@ func (m *CountResponse) Reset()         { *m = CountResponse{} }
 func (m *CountResponse) String() string { return proto.CompactTextString(m) }
 func (*CountResponse) ProtoMessage()    {}
 func (*CountResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_api_9e0a0979172ad30a, []int{5}
+	return fileDescriptor_api_609420909ea7318b, []int{5}
 }
 func (m *CountResponse) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_CountResponse.Unmarshal(m, b)
@@ -324,7 +324,7 @@ func (m *CountPerDurationResponse) Reset()         { *m = CountPerDurationRespon
 func (m *CountPerDurationResponse) String() string { return proto.CompactTextString(m) }
 func (*CountPerDurationResponse) ProtoMessage()    {}
 func (*CountPerDurationResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_api_9e0a0979172ad30a, []int{6}
+	return fileDescriptor_api_609420909ea7318b, []int{6}
 }
 func (m *CountPerDurationResponse) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_CountPerDurationResponse.Unmarshal(m, b)
@@ -370,7 +370,7 @@ func (m *SumResponse) Reset()         { *m = SumResponse{} }
 func (m *SumResponse) String() string { return proto.CompactTextString(m) }
 func (*SumResponse) ProtoMessage()    {}
 func (*SumResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_api_9e0a0979172ad30a, []int{7}
+	return fileDescriptor_api_609420909ea7318b, []int{7}
 }
 func (m *SumResponse) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_SumResponse.Unmarshal(m, b)
@@ -417,7 +417,7 @@ func (m *SumPerDurationResponse) Reset()         { *m = SumPerDurationResponse{}
 func (m *SumPerDurationResponse) String() string { return proto.CompactTextString(m) }
 func (*SumPerDurationResponse) ProtoMessage()    {}
 func (*SumPerDurationResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_api_9e0a0979172ad30a, []int{8}
+	return fileDescriptor_api_609420909ea7318b, []int{8}
 }
 func (m *SumPerDurationResponse) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_SumPerDurationResponse.Unmarshal(m, b)
@@ -458,6 +458,416 @@ func (m *SumPerDurationResponse) GetUntil() *timestamp.Timestamp {
 	return nil
 }
 
+type NamedAverage struct {
+	Name                 string   `protobuf:"bytes,1,opt,name=Name,proto3" json:"Name,omitempty"`
+	Value                float64  `protobuf:"fixed64,2,opt,name=Value,proto3" json:"Value,omitempty"`
+	N                    int64    `protobuf:"varint,3,opt,name=N,proto3" json:"N,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *NamedAverage) Reset()         { *m = NamedAverage{} }
+func (m *NamedAverage) String() string { return proto.CompactTextString(m) }
+func (*NamedAverage) ProtoMessage()    {}
+func (*NamedAverage) Descriptor() ([]byte, []int) {
+	return fileDescriptor_api_609420909ea7318b, []int{9}
+}
+func (m *NamedAverage) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_NamedAverage.Unmarshal(m, b)
+}
+func (m *NamedAverage) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_NamedAverage.Marshal(b, m, deterministic)
+}
+func (dst *NamedAverage) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_NamedAverage.Merge(dst, src)
+}
+func (m *NamedAverage) XXX_Size() int {
+	return xxx_messageInfo_NamedAverage.Size(m)
+}
+func (m *NamedAverage) XXX_DiscardUnknown() {
+	xxx_messageInfo_NamedAverage.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_NamedAverage proto.InternalMessageInfo
+
+func (m *NamedAverage) GetName() string {
+	if m != nil {
+		return m.Name
+	}
+	return ""
+}
+
+func (m *NamedAverage) GetValue() float64 {
+	if m != nil {
+		return m.Value
+	}
+	return 0
+}
+
+func (m *NamedAverage) GetN() int64 {
+	if m != nil {
+		return m.N
+	}
+	return 0
+}
+
+type NamedAveragePerDuration struct {
+	Name                 string               `protobuf:"bytes,1,opt,name=Name,proto3" json:"Name,omitempty"`
+	Value                float64              `protobuf:"fixed64,2,opt,name=Value,proto3" json:"Value,omitempty"`
+	N                    int64                `protobuf:"varint,3,opt,name=N,proto3" json:"N,omitempty"`
+	Until                *timestamp.Timestamp `protobuf:"bytes,4,opt,name=Until,proto3" json:"Until,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}             `json:"-"`
+	XXX_unrecognized     []byte               `json:"-"`
+	XXX_sizecache        int32                `json:"-"`
+}
+
+func (m *NamedAveragePerDuration) Reset()         { *m = NamedAveragePerDuration{} }
+func (m *NamedAveragePerDuration) String() string { return proto.CompactTextString(m) }
+func (*NamedAveragePerDuration) ProtoMessage()    {}
+func (*NamedAveragePerDuration) Descriptor() ([]byte, []int) {
+	return fileDescriptor_api_609420909ea7318b, []int{10}
+}
+func (m *NamedAveragePerDuration) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_NamedAveragePerDuration.Unmarshal(m, b)
+}
+func (m *NamedAveragePerDuration) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_NamedAveragePerDuration.Marshal(b, m, deterministic)
+}
+func (dst *NamedAveragePerDuration) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_NamedAveragePerDuration.Merge(dst, src)
+}
+func (m *NamedAveragePerDuration) XXX_Size() int {
+	return xxx_messageInfo_NamedAveragePerDuration.Size(m)
+}
+func (m *NamedAveragePerDuration) XXX_DiscardUnknown() {
+	xxx_messageInfo_NamedAveragePerDuration.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_NamedAveragePerDuration proto.InternalMessageInfo
+
+func (m *NamedAveragePerDuration) GetName() string {
+	if m != nil {
+		return m.Name
+	}
+	return ""
+}
+
+func (m *NamedAveragePerDuration) GetValue() float64 {
+	if m != nil {
+		return m.Value
+	}
+	return 0
+}
+
+func (m *NamedAveragePerDuration) GetN() int64 {
+	if m != nil {
+		return m.N
+	}
+	return 0
+}
+
+func (m *NamedAveragePerDuration) GetUntil() *timestamp.Timestamp {
+	if m != nil {
+		return m.Until
+	}
+	return nil
+}
+
+type NamedCount struct {
+	Name                 string   `protobuf:"bytes,1,opt,name=Name,proto3" json:"Name,omitempty"`
+	Value                int64    `protobuf:"varint,2,opt,name=Value,proto3" json:"Value,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *NamedCount) Reset()         { *m = NamedCount{} }
+func (m *NamedCount) String() string { return proto.CompactTextString(m) }
+func (*NamedCount) ProtoMessage()    {}
+func (*NamedCount) Descriptor() ([]byte, []int) {
+	return fileDescriptor_api_609420909ea7318b, []int{11}
+}
+func (m *NamedCount) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_NamedCount.Unmarshal(m, b)
+}
+func (m *NamedCount) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_NamedCount.Marshal(b, m, deterministic)
+}
+func (dst *NamedCount) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_NamedCount.Merge(dst, src)
+}
+func (m *NamedCount) XXX_Size() int {
+	return xxx_messageInfo_NamedCount.Size(m)
+}
+func (m *NamedCount) XXX_DiscardUnknown() {
+	xxx_messageInfo_NamedCount.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_NamedCount proto.InternalMessageInfo
+
+func (m *NamedCount) GetName() string {
+	if m != nil {
+		return m.Name
+	}
+	return ""
+}
+
+func (m *NamedCount) GetValue() int64 {
+	if m != nil {
+		return m.Value
+	}
+	return 0
+}
+
+type NamedCountPerDuration struct {
+	Name                 string               `protobuf:"bytes,1,opt,name=Name,proto3" json:"Name,omitempty"`
+	Value                int64                `protobuf:"varint,2,opt,name=Value,proto3" json:"Value,omitempty"`
+	Until                *timestamp.Timestamp `protobuf:"bytes,3,opt,name=Until,proto3" json:"Until,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}             `json:"-"`
+	XXX_unrecognized     []byte               `json:"-"`
+	XXX_sizecache        int32                `json:"-"`
+}
+
+func (m *NamedCountPerDuration) Reset()         { *m = NamedCountPerDuration{} }
+func (m *NamedCountPerDuration) String() string { return proto.CompactTextString(m) }
+func (*NamedCountPerDuration) ProtoMessage()    {}
+func (*NamedCountPerDuration) Descriptor() ([]byte, []int) {
+	return fileDescriptor_api_609420909ea7318b, []int{12}
+}
+func (m *NamedCountPerDuration) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_NamedCountPerDuration.Unmarshal(m, b)
+}
+func (m *NamedCountPerDuration) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_NamedCountPerDuration.Marshal(b, m, deterministic)
+}
+func (dst *NamedCountPerDuration) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_NamedCountPerDuration.Merge(dst, src)
+}
+func (m *NamedCountPerDuration) XXX_Size() int {
+	return xxx_messageInfo_NamedCountPerDuration.Size(m)
+}
+func (m *NamedCountPerDuration) XXX_DiscardUnknown() {
+	xxx_messageInfo_NamedCountPerDuration.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_NamedCountPerDuration proto.InternalMessageInfo
+
+func (m *NamedCountPerDuration) GetName() string {
+	if m != nil {
+		return m.Name
+	}
+	return ""
+}
+
+func (m *NamedCountPerDuration) GetValue() int64 {
+	if m != nil {
+		return m.Value
+	}
+	return 0
+}
+
+func (m *NamedCountPerDuration) GetUntil() *timestamp.Timestamp {
+	if m != nil {
+		return m.Until
+	}
+	return nil
+}
+
+type NamedSum struct {
+	Name                 string   `protobuf:"bytes,1,opt,name=Name,proto3" json:"Name,omitempty"`
+	Value                float64  `protobuf:"fixed64,2,opt,name=Value,proto3" json:"Value,omitempty"`
+	N                    int64    `protobuf:"varint,3,opt,name=N,proto3" json:"N,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *NamedSum) Reset()         { *m = NamedSum{} }
+func (m *NamedSum) String() string { return proto.CompactTextString(m) }
+func (*NamedSum) ProtoMessage()    {}
+func (*NamedSum) Descriptor() ([]byte, []int) {
+	return fileDescriptor_api_609420909ea7318b, []int{13}
+}
+func (m *NamedSum) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_NamedSum.Unmarshal(m, b)
+}
+func (m *NamedSum) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_NamedSum.Marshal(b, m, deterministic)
+}
+func (dst *NamedSum) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_NamedSum.Merge(dst, src)
+}
+func (m *NamedSum) XXX_Size() int {
+	return xxx_messageInfo_NamedSum.Size(m)
+}
+func (m *NamedSum) XXX_DiscardUnknown() {
+	xxx_messageInfo_NamedSum.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_NamedSum proto.InternalMessageInfo
+
+func (m *NamedSum) GetName() string {
+	if m != nil {
+		return m.Name
+	}
+	return ""
+}
+
+func (m *NamedSum) GetValue() float64 {
+	if m != nil {
+		return m.Value
+	}
+	return 0
+}
+
+func (m *NamedSum) GetN() int64 {
+	if m != nil {
+		return m.N
+	}
+	return 0
+}
+
+type NamedSumPerDuration struct {
+	Name                 string               `protobuf:"bytes,1,opt,name=Name,proto3" json:"Name,omitempty"`
+	Value                float64              `protobuf:"fixed64,2,opt,name=Value,proto3" json:"Value,omitempty"`
+	N                    int64                `protobuf:"varint,3,opt,name=N,proto3" json:"N,omitempty"`
+	Until                *timestamp.Timestamp `protobuf:"bytes,4,opt,name=Until,proto3" json:"Until,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}             `json:"-"`
+	XXX_unrecognized     []byte               `json:"-"`
+	XXX_sizecache        int32                `json:"-"`
+}
+
+func (m *NamedSumPerDuration) Reset()         { *m = NamedSumPerDuration{} }
+func (m *NamedSumPerDuration) String() string { return proto.CompactTextString(m) }
+func (*NamedSumPerDuration) ProtoMessage()    {}
+func (*NamedSumPerDuration) Descriptor() ([]byte, []int) {
+	return fileDescriptor_api_609420909ea7318b, []int{14}
+}
+func (m *NamedSumPerDuration) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_NamedSumPerDuration.Unmarshal(m, b)
+}
+func (m *NamedSumPerDuration) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_NamedSumPerDuration.Marshal(b, m, deterministic)
+}
+func (dst *NamedSumPerDuration) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_NamedSumPerDuration.Merge(dst, src)
+}
+func (m *NamedSumPerDuration) XXX_Size() int {
+	return xxx_messageInfo_NamedSumPerDuration.Size(m)
+}
+func (m *NamedSumPerDuration) XXX_DiscardUnknown() {
+	xxx_messageInfo_NamedSumPerDuration.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_NamedSumPerDuration proto.InternalMessageInfo
+
+func (m *NamedSumPerDuration) GetName() string {
+	if m != nil {
+		return m.Name
+	}
+	return ""
+}
+
+func (m *NamedSumPerDuration) GetValue() float64 {
+	if m != nil {
+		return m.Value
+	}
+	return 0
+}
+
+func (m *NamedSumPerDuration) GetN() int64 {
+	if m != nil {
+		return m.N
+	}
+	return 0
+}
+
+func (m *NamedSumPerDuration) GetUntil() *timestamp.Timestamp {
+	if m != nil {
+		return m.Until
+	}
+	return nil
+}
+
+type FullDumpResponse struct {
+	NamedAverages            []*NamedAverage            `protobuf:"bytes,1,rep,name=NamedAverages,proto3" json:"NamedAverages,omitempty"`
+	NamedAveragesPerDuration []*NamedAveragePerDuration `protobuf:"bytes,2,rep,name=NamedAveragesPerDuration,proto3" json:"NamedAveragesPerDuration,omitempty"`
+	NamedCounts              []*NamedCount              `protobuf:"bytes,3,rep,name=NamedCounts,proto3" json:"NamedCounts,omitempty"`
+	NamedCountsPerDuration   []*NamedCountPerDuration   `protobuf:"bytes,4,rep,name=NamedCountsPerDuration,proto3" json:"NamedCountsPerDuration,omitempty"`
+	NamedSums                []*NamedSum                `protobuf:"bytes,5,rep,name=NamedSums,proto3" json:"NamedSums,omitempty"`
+	NamedSumsPerDuration     []*NamedSumPerDuration     `protobuf:"bytes,6,rep,name=NamedSumsPerDuration,proto3" json:"NamedSumsPerDuration,omitempty"`
+	XXX_NoUnkeyedLiteral     struct{}                   `json:"-"`
+	XXX_unrecognized         []byte                     `json:"-"`
+	XXX_sizecache            int32                      `json:"-"`
+}
+
+func (m *FullDumpResponse) Reset()         { *m = FullDumpResponse{} }
+func (m *FullDumpResponse) String() string { return proto.CompactTextString(m) }
+func (*FullDumpResponse) ProtoMessage()    {}
+func (*FullDumpResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_api_609420909ea7318b, []int{15}
+}
+func (m *FullDumpResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_FullDumpResponse.Unmarshal(m, b)
+}
+func (m *FullDumpResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_FullDumpResponse.Marshal(b, m, deterministic)
+}
+func (dst *FullDumpResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_FullDumpResponse.Merge(dst, src)
+}
+func (m *FullDumpResponse) XXX_Size() int {
+	return xxx_messageInfo_FullDumpResponse.Size(m)
+}
+func (m *FullDumpResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_FullDumpResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_FullDumpResponse proto.InternalMessageInfo
+
+func (m *FullDumpResponse) GetNamedAverages() []*NamedAverage {
+	if m != nil {
+		return m.NamedAverages
+	}
+	return nil
+}
+
+func (m *FullDumpResponse) GetNamedAveragesPerDuration() []*NamedAveragePerDuration {
+	if m != nil {
+		return m.NamedAveragesPerDuration
+	}
+	return nil
+}
+
+func (m *FullDumpResponse) GetNamedCounts() []*NamedCount {
+	if m != nil {
+		return m.NamedCounts
+	}
+	return nil
+}
+
+func (m *FullDumpResponse) GetNamedCountsPerDuration() []*NamedCountPerDuration {
+	if m != nil {
+		return m.NamedCountsPerDuration
+	}
+	return nil
+}
+
+func (m *FullDumpResponse) GetNamedSums() []*NamedSum {
+	if m != nil {
+		return m.NamedSums
+	}
+	return nil
+}
+
+func (m *FullDumpResponse) GetNamedSumsPerDuration() []*NamedSumPerDuration {
+	if m != nil {
+		return m.NamedSumsPerDuration
+	}
+	return nil
+}
+
 func init() {
 	proto.RegisterType((*EmptyRequest)(nil), "api.EmptyRequest")
 	proto.RegisterType((*AllNamesResponse)(nil), "api.AllNamesResponse")
@@ -468,6 +878,13 @@ func init() {
 	proto.RegisterType((*CountPerDurationResponse)(nil), "api.CountPerDurationResponse")
 	proto.RegisterType((*SumResponse)(nil), "api.SumResponse")
 	proto.RegisterType((*SumPerDurationResponse)(nil), "api.SumPerDurationResponse")
+	proto.RegisterType((*NamedAverage)(nil), "api.NamedAverage")
+	proto.RegisterType((*NamedAveragePerDuration)(nil), "api.NamedAveragePerDuration")
+	proto.RegisterType((*NamedCount)(nil), "api.NamedCount")
+	proto.RegisterType((*NamedCountPerDuration)(nil), "api.NamedCountPerDuration")
+	proto.RegisterType((*NamedSum)(nil), "api.NamedSum")
+	proto.RegisterType((*NamedSumPerDuration)(nil), "api.NamedSumPerDuration")
+	proto.RegisterType((*FullDumpResponse)(nil), "api.FullDumpResponse")
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -483,6 +900,7 @@ const _ = grpc.SupportPackageIsVersion4
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type ReporterClient interface {
 	AllNames(ctx context.Context, in *EmptyRequest, opts ...grpc.CallOption) (*AllNamesResponse, error)
+	FullDump(ctx context.Context, in *EmptyRequest, opts ...grpc.CallOption) (*FullDumpResponse, error)
 	Average(ctx context.Context, in *NameRequest, opts ...grpc.CallOption) (*AverageResponse, error)
 	AveragePerDuration(ctx context.Context, in *NameRequest, opts ...grpc.CallOption) (*AveragePerDurationResponse, error)
 	Count(ctx context.Context, in *NameRequest, opts ...grpc.CallOption) (*CountResponse, error)
@@ -502,6 +920,15 @@ func NewReporterClient(cc *grpc.ClientConn) ReporterClient {
 func (c *reporterClient) AllNames(ctx context.Context, in *EmptyRequest, opts ...grpc.CallOption) (*AllNamesResponse, error) {
 	out := new(AllNamesResponse)
 	err := c.cc.Invoke(ctx, "/api.Reporter/AllNames", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *reporterClient) FullDump(ctx context.Context, in *EmptyRequest, opts ...grpc.CallOption) (*FullDumpResponse, error) {
+	out := new(FullDumpResponse)
+	err := c.cc.Invoke(ctx, "/api.Reporter/FullDump", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -565,6 +992,7 @@ func (c *reporterClient) SumPerDuration(ctx context.Context, in *NameRequest, op
 // ReporterServer is the server API for Reporter service.
 type ReporterServer interface {
 	AllNames(context.Context, *EmptyRequest) (*AllNamesResponse, error)
+	FullDump(context.Context, *EmptyRequest) (*FullDumpResponse, error)
 	Average(context.Context, *NameRequest) (*AverageResponse, error)
 	AveragePerDuration(context.Context, *NameRequest) (*AveragePerDurationResponse, error)
 	Count(context.Context, *NameRequest) (*CountResponse, error)
@@ -591,6 +1019,24 @@ func _Reporter_AllNames_Handler(srv interface{}, ctx context.Context, dec func(i
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ReporterServer).AllNames(ctx, req.(*EmptyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Reporter_FullDump_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(EmptyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ReporterServer).FullDump(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.Reporter/FullDump",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ReporterServer).FullDump(ctx, req.(*EmptyRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -712,6 +1158,10 @@ var _Reporter_serviceDesc = grpc.ServiceDesc{
 			Handler:    _Reporter_AllNames_Handler,
 		},
 		{
+			MethodName: "FullDump",
+			Handler:    _Reporter_FullDump_Handler,
+		},
+		{
 			MethodName: "Average",
 			Handler:    _Reporter_Average_Handler,
 		},
@@ -740,38 +1190,51 @@ var _Reporter_serviceDesc = grpc.ServiceDesc{
 	Metadata: "api.proto",
 }
 
-func init() { proto.RegisterFile("api.proto", fileDescriptor_api_9e0a0979172ad30a) }
+func init() { proto.RegisterFile("api.proto", fileDescriptor_api_609420909ea7318b) }
 
-var fileDescriptor_api_9e0a0979172ad30a = []byte{
-	// 467 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x94, 0x53, 0xd1, 0x6e, 0xd3, 0x30,
-	0x14, 0x4d, 0x9a, 0x75, 0xb4, 0xb7, 0x65, 0x94, 0xcb, 0x06, 0x51, 0x10, 0xac, 0x58, 0x42, 0xaa,
-	0x84, 0x48, 0xa7, 0x0d, 0x21, 0x78, 0xac, 0x60, 0x0f, 0xbc, 0x54, 0xc8, 0x85, 0x0f, 0x48, 0x25,
-	0x53, 0x05, 0xd5, 0x75, 0x48, 0xec, 0x49, 0xfc, 0x07, 0x5f, 0xc1, 0x57, 0xa2, 0x5e, 0x27, 0x59,
-	0xd2, 0x9a, 0x69, 0x7d, 0xf3, 0x3d, 0x3e, 0xc7, 0x37, 0x39, 0xe7, 0x5e, 0xe8, 0x27, 0x59, 0x1a,
-	0x67, 0xb9, 0xd2, 0x0a, 0x83, 0x24, 0x4b, 0xa3, 0xf3, 0x95, 0x52, 0xab, 0xb5, 0x98, 0x12, 0xb4,
-	0x34, 0x3f, 0xa6, 0x3a, 0x95, 0xa2, 0xd0, 0x89, 0xcc, 0x2c, 0x8b, 0x9d, 0xc0, 0xf0, 0x5a, 0x66,
-	0xfa, 0x37, 0x17, 0xbf, 0x8c, 0x28, 0x34, 0xfb, 0xd3, 0x81, 0xd1, 0x6c, 0xbd, 0x9e, 0x27, 0x52,
-	0x14, 0x5c, 0x14, 0x99, 0xda, 0x14, 0x02, 0x19, 0x0c, 0x67, 0x37, 0x22, 0x4f, 0x56, 0x82, 0xf0,
-	0xd0, 0x1f, 0x07, 0x93, 0x3e, 0x6f, 0x61, 0xf8, 0x01, 0x9e, 0x95, 0xf5, 0x57, 0x91, 0x7f, 0x36,
-	0x79, 0xa2, 0x53, 0xb5, 0xb1, 0xf4, 0x0e, 0xd1, 0xff, 0x77, 0x8d, 0x2f, 0x01, 0x3e, 0x29, 0xb3,
-	0xd1, 0x96, 0x1c, 0x10, 0xb9, 0x81, 0xe0, 0x3b, 0x38, 0xa3, 0x6a, 0xef, 0xdd, 0x23, 0xa2, 0xba,
-	0x2f, 0x31, 0x82, 0xde, 0xc2, 0x48, 0x4b, 0xec, 0x12, 0xb1, 0xae, 0xf1, 0x02, 0x9e, 0x2c, 0x8c,
-	0xdc, 0x7b, 0xef, 0x98, 0x68, 0xae, 0x2b, 0xf6, 0x0a, 0x06, 0xdb, 0x43, 0xe9, 0x12, 0x22, 0x1c,
-	0x6d, 0xcb, 0xd0, 0x1f, 0xfb, 0x93, 0x3e, 0xa7, 0x33, 0xfb, 0x08, 0x8f, 0xca, 0x3f, 0xac, 0x7d,
-	0x0b, 0xe1, 0x41, 0x09, 0x11, 0xd3, 0xe7, 0x55, 0x89, 0x43, 0xf0, 0xe7, 0x61, 0x67, 0xec, 0x4f,
-	0x02, 0xee, 0xcf, 0xd9, 0x0d, 0x44, 0xfb, 0xe6, 0x1c, 0xfa, 0x0a, 0x5e, 0x40, 0xf7, 0xfb, 0x46,
-	0xa7, 0xeb, 0x30, 0x18, 0xfb, 0x93, 0xc1, 0x65, 0x14, 0xdb, 0xec, 0xe3, 0x2a, 0xfb, 0xf8, 0x5b,
-	0x95, 0x3d, 0xb7, 0x44, 0xf6, 0x1a, 0x1e, 0x92, 0x79, 0x75, 0xab, 0x53, 0xe8, 0x12, 0x40, 0x8d,
-	0x02, 0x6e, 0x0b, 0xb6, 0x84, 0x70, 0xd7, 0xe3, 0xbb, 0x15, 0xb7, 0x9f, 0xd2, 0xb9, 0xef, 0xa7,
-	0xbc, 0x85, 0xc1, 0xc2, 0xc8, 0xfa, 0xd9, 0x11, 0x04, 0x0b, 0x23, 0xcb, 0xff, 0xdd, 0x1e, 0x77,
-	0x1c, 0xfb, 0x09, 0x4f, 0xdb, 0x31, 0xdd, 0x57, 0x79, 0xb8, 0x4b, 0x97, 0x7f, 0x03, 0xe8, 0x71,
-	0x91, 0xa9, 0x5c, 0x8b, 0x1c, 0xdf, 0x43, 0xaf, 0x5a, 0x0f, 0x7c, 0x1c, 0x6f, 0xb7, 0xad, 0xb9,
-	0x3e, 0xd1, 0x19, 0x41, 0xbb, 0x0b, 0xc4, 0x3c, 0xbc, 0xaa, 0x43, 0xc4, 0x11, 0x71, 0x1a, 0xe3,
-	0x14, 0x9d, 0x5a, 0x55, 0x7b, 0x7a, 0x98, 0x87, 0x5f, 0x00, 0xf7, 0xe7, 0xc2, 0xa1, 0x3f, 0x6f,
-	0xea, 0x1d, 0xa6, 0x30, 0x0f, 0xa7, 0x65, 0x4e, 0x0e, 0x35, 0x12, 0xd2, 0x1a, 0x04, 0xe6, 0xe1,
-	0x35, 0x8c, 0x76, 0x43, 0x77, 0x68, 0x5f, 0xdc, 0x6a, 0xdd, 0x7d, 0xdf, 0x50, 0x1c, 0x0e, 0xa5,
-	0x45, 0x1a, 0x99, 0x33, 0x0f, 0x67, 0x70, 0xd2, 0x4e, 0xd5, 0xa1, 0x7b, 0x5e, 0xe9, 0x9c, 0xfd,
-	0x96, 0xc7, 0x94, 0xe3, 0xd5, 0xbf, 0x00, 0x00, 0x00, 0xff, 0xff, 0x2d, 0xbb, 0x90, 0x89, 0x09,
-	0x05, 0x00, 0x00,
+var fileDescriptor_api_609420909ea7318b = []byte{
+	// 680 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xc4, 0x55, 0xdb, 0x6e, 0xd3, 0x4c,
+	0x10, 0xb6, 0xe3, 0xb4, 0x7f, 0x32, 0x4e, 0xdb, 0xfc, 0xd3, 0x93, 0x65, 0x0e, 0x0d, 0x2b, 0x21,
+	0x45, 0xaa, 0x48, 0x8b, 0x8b, 0x0a, 0x5c, 0x16, 0xda, 0x4a, 0x48, 0xa8, 0x42, 0x1b, 0x40, 0xdc,
+	0xba, 0x62, 0xa9, 0x82, 0xec, 0xd8, 0xf8, 0x50, 0x89, 0x2b, 0x2e, 0x78, 0x05, 0xde, 0x81, 0xf7,
+	0xe2, 0x49, 0x90, 0x77, 0xbd, 0xf6, 0xfa, 0x10, 0x68, 0x73, 0xc3, 0x9d, 0x67, 0xf6, 0xfb, 0x66,
+	0x66, 0x67, 0xbc, 0xdf, 0x40, 0xdf, 0x0d, 0x67, 0x93, 0x30, 0x0a, 0x92, 0x00, 0x0d, 0x37, 0x9c,
+	0xd9, 0x7b, 0x57, 0x41, 0x70, 0xe5, 0xb1, 0x03, 0xee, 0xba, 0x4c, 0x3f, 0x1d, 0x24, 0x33, 0x9f,
+	0xc5, 0x89, 0xeb, 0x87, 0x02, 0x45, 0xd6, 0x61, 0x70, 0xe6, 0x87, 0xc9, 0x57, 0xca, 0xbe, 0xa4,
+	0x2c, 0x4e, 0xc8, 0x8f, 0x0e, 0x0c, 0x4f, 0x3c, 0xef, 0xc2, 0xf5, 0x59, 0x4c, 0x59, 0x1c, 0x06,
+	0xf3, 0x98, 0x21, 0x81, 0xc1, 0xc9, 0x35, 0x8b, 0xdc, 0x2b, 0xc6, 0xfd, 0x96, 0x3e, 0x32, 0xc6,
+	0x7d, 0x5a, 0xf1, 0xe1, 0x33, 0xd8, 0xcd, 0xed, 0x37, 0x2c, 0x3a, 0x4d, 0x23, 0x37, 0x99, 0x05,
+	0x73, 0x01, 0xef, 0x70, 0xf8, 0xa2, 0x63, 0xbc, 0x0f, 0xf0, 0x32, 0x48, 0xe7, 0x89, 0x00, 0x1b,
+	0x1c, 0xac, 0x78, 0xf0, 0x09, 0x6c, 0x73, 0xab, 0x11, 0xb7, 0xcb, 0xa1, 0xed, 0x87, 0x68, 0x43,
+	0x6f, 0x9a, 0xfa, 0x02, 0xb8, 0xc2, 0x81, 0x85, 0x8d, 0x87, 0xb0, 0x39, 0x4d, 0xfd, 0x46, 0xbc,
+	0x55, 0x0e, 0x6b, 0x3b, 0x22, 0x0f, 0xc0, 0xcc, 0x3e, 0xf2, 0x2e, 0x21, 0x42, 0x37, 0x33, 0x2d,
+	0x7d, 0xa4, 0x8f, 0xfb, 0x94, 0x7f, 0x93, 0xe7, 0xb0, 0x91, 0xdf, 0xb0, 0xe8, 0x9b, 0x05, 0xff,
+	0xe5, 0x2e, 0x8e, 0xd4, 0xa9, 0x34, 0x71, 0x00, 0xfa, 0x85, 0xd5, 0x19, 0xe9, 0x63, 0x83, 0xea,
+	0x17, 0xe4, 0x1a, 0xec, 0x66, 0x73, 0x6e, 0x1b, 0x05, 0x0f, 0x61, 0xe5, 0xdd, 0x3c, 0x99, 0x79,
+	0x96, 0x31, 0xd2, 0xc7, 0xa6, 0x63, 0x4f, 0xc4, 0xec, 0x27, 0x72, 0xf6, 0x93, 0xb7, 0x72, 0xf6,
+	0x54, 0x00, 0xc9, 0x43, 0x58, 0xe3, 0xcd, 0x2b, 0x52, 0x6d, 0xc1, 0x0a, 0x77, 0xf0, 0x44, 0x06,
+	0x15, 0x06, 0xb9, 0x04, 0xab, 0xde, 0xe3, 0x3f, 0x33, 0xca, 0x52, 0x3a, 0x37, 0x2d, 0xe5, 0x11,
+	0x98, 0xd3, 0xd4, 0x2f, 0xc2, 0x0e, 0xc1, 0x98, 0xa6, 0x7e, 0x7e, 0xdf, 0xec, 0xb3, 0xd6, 0xb1,
+	0xcf, 0xb0, 0x53, 0x1d, 0xd3, 0x4d, 0x99, 0x4b, 0x74, 0xe9, 0x1c, 0x06, 0xd9, 0x80, 0x3f, 0xca,
+	0xae, 0xb7, 0x0c, 0x3f, 0x6b, 0xc3, 0x7b, 0xd7, 0x4b, 0x19, 0xcf, 0xa3, 0x53, 0x61, 0x88, 0xcc,
+	0x86, 0xac, 0xf9, 0xbb, 0x0e, 0xbb, 0x6a, 0x20, 0xa5, 0xfa, 0x65, 0x63, 0x96, 0xb7, 0xe9, 0xde,
+	0xf4, 0x36, 0xc7, 0x00, 0xbc, 0x08, 0x31, 0xa8, 0xbf, 0xe6, 0x35, 0xf2, 0xbc, 0x24, 0x86, 0xed,
+	0x92, 0x77, 0xab, 0xd2, 0x65, 0x88, 0x25, 0x5a, 0xff, 0x02, 0x7a, 0x3c, 0x69, 0x36, 0xc6, 0x65,
+	0xdb, 0xfe, 0x0d, 0x36, 0x65, 0x8c, 0x7f, 0xd3, 0xf1, 0x9f, 0x06, 0x0c, 0xcf, 0x53, 0xcf, 0x3b,
+	0x4d, 0xfd, 0xb0, 0xf8, 0x4d, 0x9f, 0xc2, 0x9a, 0xfa, 0x2f, 0x08, 0x4d, 0x35, 0x9d, 0xff, 0x27,
+	0x99, 0x80, 0xab, 0x27, 0xb4, 0x8a, 0xc3, 0x0f, 0x60, 0x55, 0x1c, 0xca, 0x9d, 0xb8, 0xd0, 0x9a,
+	0xce, 0xdd, 0x46, 0x0c, 0xf5, 0x9d, 0x2c, 0x64, 0xe3, 0x63, 0xa1, 0x71, 0x62, 0xc2, 0x42, 0x88,
+	0x4d, 0x67, 0xa3, 0x0c, 0x26, 0xa4, 0x42, 0xc5, 0x20, 0x85, 0x1d, 0xc5, 0x54, 0x4b, 0xe9, 0x72,
+	0xb6, 0x5d, 0x63, 0xab, 0x85, 0x2c, 0x60, 0xe2, 0x3e, 0xf4, 0xe5, 0xbc, 0x84, 0x72, 0x9b, 0xce,
+	0x5a, 0x19, 0x26, 0x13, 0x89, 0xf2, 0x1c, 0x5f, 0xc3, 0x56, 0x61, 0xa8, 0xe9, 0x57, 0x39, 0xcf,
+	0xaa, 0xf0, 0xd4, 0xe4, 0xad, 0x2c, 0xe7, 0x97, 0x01, 0x3d, 0xca, 0xc2, 0x20, 0x4a, 0x58, 0x84,
+	0xc7, 0xd0, 0x93, 0x8b, 0x10, 0xc5, 0x58, 0xd4, 0x45, 0x69, 0x6f, 0x73, 0x57, 0x7d, 0x55, 0x12,
+	0x2d, 0xe3, 0xc9, 0x69, 0x2f, 0xe6, 0xd5, 0xff, 0x07, 0xa2, 0xe1, 0x51, 0x21, 0xf3, 0x38, 0x2c,
+	0xea, 0x96, 0xac, 0x2d, 0x91, 0xad, 0xba, 0x5f, 0x88, 0x86, 0xaf, 0x00, 0x5b, 0xd4, 0xa4, 0xc9,
+	0xdf, 0x53, 0xf9, 0x2d, 0xb2, 0x49, 0x34, 0x3c, 0xc8, 0x95, 0xbc, 0x85, 0x8d, 0xdc, 0x53, 0x59,
+	0x15, 0x44, 0xc3, 0x33, 0x18, 0x36, 0xc4, 0xa0, 0xc9, 0xbd, 0x57, 0x72, 0xdb, 0xf3, 0xee, 0x73,
+	0xc1, 0x6e, 0x61, 0x0a, 0x8f, 0xb2, 0x15, 0x88, 0x86, 0x27, 0xb0, 0x5e, 0x7b, 0xc7, 0x4d, 0xde,
+	0x1d, 0xc9, 0x6b, 0xcd, 0x77, 0xb9, 0xca, 0x5f, 0xea, 0xd1, 0xef, 0x00, 0x00, 0x00, 0xff, 0xff,
+	0x95, 0x00, 0x48, 0x84, 0x2b, 0x09, 0x00, 0x00,
 }

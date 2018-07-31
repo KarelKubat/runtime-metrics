@@ -27,6 +27,108 @@ func (s *server) AllNames(ctx context.Context, in *api.EmptyRequest) (*api.AllNa
 	}, nil
 }
 
+// FullDump uses the API to return all registered named metrics and their values.
+// This is wrapped in the client, this function isn't for public consumption.
+func (s *server) FullDump(ctx context.Context, in *api.EmptyRequest) (*api.FullDumpResponse, error) {
+	ret := &api.FullDumpResponse{}
+
+	for _, name := range registry.AverageNames() {
+		metric, err := registry.GetAverage(name)
+		if err != nil {
+			return nil, err
+		}
+		val, n := metric.Report()
+		ret.NamedAverages = append(ret.NamedAverages, &api.NamedAverage{
+			Name:  name,
+			Value: val,
+			N:     n,
+		})
+	}
+
+	for _, name := range registry.AveragePerDurationNames() {
+		metric, err := registry.GetAveragePerDuration(name)
+		if err != nil {
+			return nil, err
+		}
+		val, n, until := metric.Report()
+		ts, err := ptypes.TimestampProto(until)
+		if ts != nil {
+			return nil, fmt.Errorf("timestamp conversion failed: %v", err)
+		}
+		ret.NamedAveragesPerDuration = append(
+			ret.NamedAveragesPerDuration, &api.NamedAveragePerDuration{
+				Name:  name,
+				Value: val,
+				N:     n,
+				Until: ts,
+			})
+	}
+
+	for _, name := range registry.CountNames() {
+		metric, err := registry.GetCount(name)
+		if err != nil {
+			return nil, err
+		}
+		val := metric.Report()
+		ret.NamedCounts = append(ret.NamedCounts, &api.NamedCount{
+			Name:  name,
+			Value: val,
+		})
+	}
+
+	for _, name := range registry.CountPerDurationNames() {
+		metric, err := registry.GetCountPerDuration(name)
+		if err != nil {
+			return nil, err
+		}
+		val, until := metric.Report()
+		ts, err := ptypes.TimestampProto(until)
+		if ts != nil {
+			return nil, fmt.Errorf("timestamp conversion failed: %v", err)
+		}
+		ret.NamedCountsPerDuration = append(
+			ret.NamedCountsPerDuration, &api.NamedCountPerDuration{
+				Name:  name,
+				Value: val,
+				Until: ts,
+			})
+	}
+
+	for _, name := range registry.SumNames() {
+		metric, err := registry.GetSum(name)
+		if err != nil {
+			return nil, err
+		}
+		val, n := metric.Report()
+		ret.NamedSums = append(ret.NamedSums, &api.NamedSum{
+			Name:  name,
+			Value: val,
+			N:     n,
+		})
+	}
+
+	for _, name := range registry.SumPerDurationNames() {
+		metric, err := registry.GetSumPerDuration(name)
+		if err != nil {
+			return nil, err
+		}
+		val, n, until := metric.Report()
+		ts, err := ptypes.TimestampProto(until)
+		if ts != nil {
+			return nil, fmt.Errorf("timestamp conversion failed: %v", err)
+		}
+		ret.NamedSumsPerDuration = append(
+			ret.NamedSumsPerDuration, &api.NamedSumPerDuration{
+				Name:  name,
+				Value: val,
+				N:     n,
+				Until: ts,
+			})
+	}
+
+	return ret, nil
+}
+
 // Average uses the API to return the state of a named Average.
 // This is wrapped in the client, this function isn't for public consumption.
 func (s *server) Average(ctx context.Context, in *api.NameRequest) (*api.AverageResponse, error) {
@@ -43,7 +145,9 @@ func (s *server) Average(ctx context.Context, in *api.NameRequest) (*api.Average
 
 // Average uses the API to return the state of a named AveragePerDuration.
 // This is wrapped in the client, this function isn't for public consumption.
-func (s *server) AveragePerDuration(ctx context.Context, in *api.NameRequest) (*api.AveragePerDurationResponse, error) {
+func (s *server) AveragePerDuration(ctx context.Context, in *api.NameRequest) (
+	*api.AveragePerDurationResponse, error) {
+
 	av, err := registry.GetAveragePerDuration(in.GetName())
 	if err != nil {
 		return nil, err
