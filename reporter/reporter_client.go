@@ -59,6 +59,8 @@ type AllNamesReturn struct {
 //  }
 //  // and so on with overview.AveragesPerDuration, overview.Counts,
 //  // overview.CountsPerDuration, overview.Sums, overview.SumsPerDuration
+//
+// See demo/client_allnames.go for a full example.
 func (c *Client) AllNames() (*AllNamesReturn, error) {
 	resp, err := c.client.AllNames(context.Background(), &api.EmptyRequest{})
 	if err != nil {
@@ -126,6 +128,8 @@ type FullDumpReturn struct {
 // CountsPerDuration: similar to the above, but the fields also have Until (time.Time)
 // Sums: an array of structs with a Name (string), Value (float64), N (int64)
 // SumsPerDuration: similar to the above, but the fields also have Until (time.Time)
+//
+// See demo/client_fulldump.go for a complete example.
 func (c *Client) FullDump() (*FullDumpReturn, error) {
 	resp, err := c.client.FullDump(context.Background(), &api.EmptyRequest{})
 	if err != nil {

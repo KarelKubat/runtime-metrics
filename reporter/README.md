@@ -123,6 +123,8 @@ Example:
     // and so on with overview.AveragesPerDuration, overview.Counts,
     // overview.CountsPerDuration, overview.Sums, overview.SumsPerDuration
 
+See demo/client_allnames.go for a full example.
+
 #### func (*Client) Average
 
 ```go
@@ -164,6 +166,24 @@ CountPerDuration returns the number of observations (int64) and the
 until-timestamp (time.Time) of a named server-side CountPerDuration metric; or a
 non-nil error.
 
+#### func (*Client) FullDump
+
+```go
+func (c *Client) FullDump() (*FullDumpReturn, error)
+```
+FullDump returns all names and states of server-known metrics. The return value
+is a (reference to a) structure with the fields:
+
+Averages: an array of structs with a Name (string), Value (float64), N (int64)
+AveragesPerDuration: similar to the above, but the fields also have Until
+(time.Time) Counts: an array of structs with a Name (string), Value (int64)
+CountsPerDuration: similar to the above, but the fields also have Until
+(time.Time) Sums: an array of structs with a Name (string), Value (float64), N
+(int64) SumsPerDuration: similar to the above, but the fields also have Until
+(time.Time)
+
+See demo/client_fulldump.go for a complete example.
+
 #### func (*Client) Sum
 
 ```go
@@ -180,3 +200,19 @@ func (c *Client) SumPerDuration(name string) (float64, int64, time.Time, error)
 SumPerDuration returns the sum of observations (float64), the number of cases
 (int32) and the until-timestamp (time.Time) of a named server-side
 SumPerDuration metric; or a non-nil error.
+
+#### type FullDumpReturn
+
+```go
+type FullDumpReturn struct {
+	Averages            []averageDump
+	AveragesPerDuration []averagePerDurationDump
+	Counts              []countDump
+	CountsPerDuration   []countPerDurationDump
+	Sums                []sumDump
+	SumsPerDuration     []sumPerDurationDump
+}
+```
+
+FullDumpReturn is returned by FullDump and lists all averages, averages per
+duration, etc., each including their name and reported state.
