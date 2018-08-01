@@ -42,22 +42,22 @@ the "width" of the observation window. NOTE THAT when Report() is called on
 these metrics, then values are returned that were obtained somewhere in the
 past. This is best illustrated in a simple diagram:
 
-                        av := base.NewAveragePerDuration(time.Second)
+           av := base.NewAveragePerDuration(time.Second)
     T=0s
-     |                  av.Mark(1.0)
-     |                  av.Mark(2.0)
-     |                  val0, n0, until0 := av.Report()   // state before T=0
+     |     av.Mark(1.0)
+     |     av.Mark(2.0)
+     |     val0, n0, until0 := av.Report()   // state before T=0; val0 is 0.0
     T=1s
-     |                  av.Mark(20.0)
-     |                  av.Mark(10.0)
-     |                  val1, n1, until1 := av.Report()   // state between T=0 and T=1
+     |     av.Mark(20.0)
+     |     av.Mark(10.0)
+     |     val1, n1, until1 := av.Report()   // state between T=0 and T=1; val1 is 1.5
     T=2s
-     |                  av.Mark(200.0)
-     |                  av.Mark(100.0)
-     |                  val2, n2, until2 := av.Report()   // state between T=1 and T=2
-    T=3
-     |                  val3, n3, until3 := av.Report     // state between T=2 and T=3
-     |                                                    // val3 == 150.0
+     |     av.Mark(200.0)
+     |     av.Mark(100.0)
+     |     val2, n2, until2 := av.Report()   // state between T=1 and T=2; val2 is 15.0
+    T=3s
+     |     val3, n3, until3 := av.Report     // state between T=2 and T=3; val3 is 150.0
+     |
 
 Here, val0 and n0 will both be zero, because the very first period is not
 finished yet when Report() is called. Once one second has expired (T=1), val1
