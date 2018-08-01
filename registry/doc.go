@@ -10,11 +10,15 @@ The typical usage is to create base metrics, register them using a
 unique name, and start a reporting server. This is also shown in
 demo/server.go:
 
-  err := registry.AddAverage("my_average", base.NewAverage())
+  myAverage = base.NewAverage()
+  err := registry.AddAverage("my_average", myAverage)
   if err != nil { ... } // name collision
 
-  err := registry.AddSum("my_sum", base.NewSum())
+  mySum := base.NewSum()
+  err := registry.AddSum("my_sum", mySum)
   if err != nil { ... } // name collision
+
+  // Now use myAverage and mySum to track whatever they should track.
 
 There are methods to retrieve metrics by their name, which return an
 error when the metric isn't in the registry. This is used by the
@@ -25,6 +29,9 @@ reporter:
 
   sum, err := registry.GetSum("my_sum")
   if err != nil { ... } // not found
+
+  // Now the values that are reported by avg.Report() and sum.Report()
+  // can be published.
 
 A sorted list of the names of all registered averages is retrieved using
 AverageNames(), of all counts using CountNames(), etc.:
