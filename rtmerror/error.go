@@ -41,7 +41,8 @@ func (e *Error) WithRetryable(r bool) *Error {
 	return e
 }
 
-// Retryable returns true when the error is retryable.
+// Retryable returns true when the error is retryable according to its
+// argument.
 func (e *Error) Retryable() bool {
 	return e.retryable
 }
