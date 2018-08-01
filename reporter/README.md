@@ -28,8 +28,15 @@ Any metrics that are registered are available for the server to be published:
       if err != nil { ... } // name collision
     }
     ...
-    checkErr(registry.AddAverage("average-metric", base.NewAverage()))
-    checkErr(registry.AddSumPerDuration("sum-per-minute", base.NewSumPerDuration(30 * time.Minute)))
+    // Create and register metrics
+    myAverage := base.NewAverage()
+    checkErr(registry.AddAverage("average-metric", myAverage))
+    mySumPD := base.NewSumPerDuration(time.Minute)
+    checkErr(registry.AddSumPerDuration("sum-per-minute", mySumPD))
+    ...
+    // As metrics are updated, the reporting server will publish them.
+    myAverage.Mark(3.14)
+    mySumPD.Mark(2.71)
 
 
 ### The Client
@@ -45,12 +52,12 @@ The client has a number of handy methods that contact the client to discover the
 names of metrics or to fetch metric values:
 
     allNames, err := c.AllNames()
-    // allNames.Averages is an array of strings (names) of all Average-type metrics
+    // allNames.Averages           is an array of strings (names) of all Average-type metrics
     // allNames.AveragesByDuration is an array of strings (names) of all AveragePerDuration-type metrics
-    // allNames.Counts is an array of strings (names) of all Count-type metrics
-    // allNames.CountsPerDuration is an array of strings (names) of all CountPerDuration-type metrics
-    // allNames.Sums is an array of strings (names) of all Sum-type metrics
-    // allNames.SumsPerDuration is an array of strings (names) of all SumPerDuration-type metrics
+    // allNames.Counts             is an array of strings (names) of all Count-type metrics
+    // allNames.CountsPerDuration  is an array of strings (names) of all CountPerDuration-type metrics
+    // allNames.Sums               is an array of strings (names) of all Sum-type metrics
+    // allNames.SumsPerDuration    is an array of strings (names) of all SumPerDuration-type metrics
 
 In order to fetch the values of a metric, the client calls c.Average(name),
 c.Sum(name) etc. The returned values are always what the base type returns, and
