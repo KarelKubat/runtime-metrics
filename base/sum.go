@@ -19,14 +19,19 @@ func NewSum() *Sum {
 
 // Mark adds the occurrence of a floating point value.
 func (s *Sum) Mark(val float64) {
-	s.mutex.Lock()
-	defer s.mutex.Unlock()
-	s.sum += val
-	s.n++
+	if s != nil {
+		s.mutex.Lock()
+		defer s.mutex.Unlock()
+		s.sum += val
+		s.n++
+	}
 }
 
 // Report returns the sum and number of observed values.
 func (s *Sum) Report() (float64, int64) {
+	if s == nil {
+		return 0.0, 0
+	}
 	s.mutex.Lock()
 	defer s.mutex.Unlock()
 	return s.sum, s.n
@@ -34,8 +39,10 @@ func (s *Sum) Report() (float64, int64) {
 
 // Reset resets the metric.
 func (s *Sum) Reset() {
-	s.mutex.Lock()
-	defer s.mutex.Unlock()
-	s.n = 0
-	s.sum = 0.0
+	if s != nil {
+		s.mutex.Lock()
+		defer s.mutex.Unlock()
+		s.n = 0
+		s.sum = 0.0
+	}
 }

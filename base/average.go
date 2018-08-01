@@ -13,11 +13,16 @@ func NewAverage() *Average {
 
 // Mark marks the occurrence of a floating point value.
 func (a *Average) Mark(val float64) {
-	a.summer.Mark(val)
+	if a != nil && a.summer != nil {
+		a.summer.Mark(val)
+	}
 }
 
 // Report returns the average and number of observed values.
 func (a *Average) Report() (float64, int64) {
+	if a == nil || a.summer == nil {
+		return 0.0, 0
+	}
 	sum, n := a.summer.Report()
 	if n == 0 {
 		return 0.0, 0
@@ -27,5 +32,7 @@ func (a *Average) Report() (float64, int64) {
 
 // Reset resets the metric.
 func (a *Average) Reset() {
-	a.summer.Reset()
+	if a != nil && a.summer != nil {
+		a.summer.Reset()
+	}
 }

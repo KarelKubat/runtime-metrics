@@ -17,13 +17,18 @@ func NewCount() *Count {
 
 // Mark marks the occurence of a "tick".
 func (c *Count) Mark() {
-	c.mutex.Lock()
-	defer c.mutex.Unlock()
-	c.counter++
+	if c != nil {
+		c.mutex.Lock()
+		defer c.mutex.Unlock()
+		c.counter++
+	}
 }
 
 // Report returns the number of observed "ticks".
 func (c *Count) Report() int64 {
+	if c == nil {
+		return 0
+	}
 	c.mutex.Lock()
 	defer c.mutex.Unlock()
 	return c.counter
@@ -31,7 +36,9 @@ func (c *Count) Report() int64 {
 
 // Reset resets the metric.
 func (c *Count) Reset() {
-	c.mutex.Lock()
-	defer c.mutex.Unlock()
-	c.counter = 0
+	if c != nil {
+		c.mutex.Lock()
+		defer c.mutex.Unlock()
+		c.counter = 0
+	}
 }
