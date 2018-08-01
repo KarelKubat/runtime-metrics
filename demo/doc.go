@@ -6,7 +6,10 @@ The server instantiates some metrics and starts a reporter. Then, in a
 loop, it manipulates the metrics, and stops after 20 seconds. To run
 the server, type
 
-  go run main.go server
+  go run main.go server &
+
+so that the server is started in the background. You have 20 seconds
+to try out the clients that are listed below.
 
 Client client_allnames.go discovers the names of metrics. To try it,
 run
@@ -223,13 +226,20 @@ The Full Dump Client
 	}
  }
 
-If you don't want a server publishing metrics, and a client scraping them; but
-instead want a server that pushes metrics as they change, then have a look at
-demosrc/pushing_server.go.
+A Self Publishing Program
 
-The approach is as follows: a function asks the registry for names, and using
-each name, gets the appropriate metric (sum, average, etc.). The values of the
-metric are returned by its Report() function.
+If you don't want a server publishing metrics, and a client scraping them; but
+instead want a program that pushes metrics as they change, then have a look at
+demosrc/publishing_program.go.
+
+The approach is as follows: the below shown function publishMetrics() asks the
+registry for names, and using each name, gets the appropriate metric (sum,
+average, etc.). The values of the metric are returned by its Report() function.
+This is repeated ad infinitum with some delay between runs. The function would
+typically be started as a go-routine.
+
+ // somewhere in the code...
+ go pushMetrics()
 
  func pushMetrics() {
 	// This could push the metrics onto some remote monitoring system. It's the alternative to
