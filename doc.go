@@ -130,5 +130,14 @@ example is provided in demo/ with sources in demo/demosrc/.
 
 Packages tools/, namedset/ and api/ are for internal usage.
 
+License
+
+This software is distributed under GPLv3, see LICENSE.md. Basically that means
+that you can use it as you like, there's no cost and no guarantee, you are
+free no modify the code as you see fit, but if you do, you must make
+your changes available to others under the same conditions.
+
+As a courtesy, I'd love to be informed of any changes that you make - I could
+incorporate them into a next release, with full credits if you like.
 */
 package runtimemetrics
