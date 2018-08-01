@@ -2,7 +2,7 @@
 --
     import "github.com/KarelKubat/runtime-metrics/reporter"
 
-reporter implements a metrics reporting server and client.
+Package reporter implements a metrics reporting server and client.
 
 
 ### The Server
@@ -145,6 +145,7 @@ type Client struct {
 }
 ```
 
+Client holds all client-related information.
 
 #### func  NewClient
 

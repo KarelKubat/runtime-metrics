@@ -2,7 +2,7 @@
 --
     import "github.com/KarelKubat/runtime-metrics/rtmerror"
 
-rtmerror implements the error type for runtime-metrics.
+Package rtmerror implements the error type for runtime-metrics.
 
 Errors in runtime-metrics are a custom error type, rtmerror.Error. You will
 normally not care, except when checking whether an error is retryable. This only
