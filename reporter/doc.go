@@ -66,7 +66,7 @@ an error:
   // err is nil or an error
 
 A full dump of all server-known metrics can be obtained using FullDump().
-See also demo/client.go for an example.
+See also demo/demosrc/client_fulldump.go for an example.
 
   dump, err := c.FullDump()
   if err != nil { ... }

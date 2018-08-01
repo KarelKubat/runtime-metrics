@@ -8,7 +8,7 @@ metric by its name and be sure that the metric is unique.
 
 The typical usage is to create base metrics, register them using a
 unique name, and start a reporting server. This is also shown in
-demo/server.go:
+demo/demosrc/server.go:
 
   myAverage = base.NewAverage()
   err := registry.AddAverage("my_average", myAverage)
