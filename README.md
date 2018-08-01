@@ -1,4 +1,4 @@
-# foo
+# runtimemetrics
 --
     import "github.com/KarelKubat/runtime-metrics"
 

@@ -51,7 +51,7 @@ underlying errors concatenated and between (). Example:
 ```go
 func (e *Error) Retryable() bool
 ```
-Retryable returns true when the error is retryable.
+Retryable returns true when the error is retryable according to its argument.
 
 #### func (*Error) WithError
 

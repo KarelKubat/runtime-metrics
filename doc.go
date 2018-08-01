@@ -131,4 +131,4 @@ provided in demo/.
 Packages tools/, namedset/ and api/ are for internal usage.
 
 */
-package foo
+package runtimemetrics
