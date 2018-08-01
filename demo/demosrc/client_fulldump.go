@@ -6,6 +6,8 @@ import (
 	"github.com/KarelKubat/runtime-metrics/reporter"
 )
 
+// ClientFullDumpDemo runs a reporter client, obtains a full metrics dump from
+// the server, and displays all metrics.
 func ClientFullDumpDemo() {
 
 	// Instantiate client.

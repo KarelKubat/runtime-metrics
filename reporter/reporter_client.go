@@ -11,6 +11,7 @@ import (
 	"google.golang.org/grpc"
 )
 
+// Client holds all client-related information.
 type Client struct {
 	conn            *grpc.ClientConn
 	client          api.ReporterClient

@@ -8,11 +8,13 @@ import (
 	"github.com/KarelKubat/runtime-metrics/rtmerror"
 )
 
+// AverageSet maps names to base.Average metrics.
 type AverageSet struct {
 	set   map[string]*base.Average
 	mutex *sync.Mutex
 }
 
+// NewAverageSet returns an initialized AverageSet.
 func NewAverageSet() *AverageSet {
 	return &AverageSet{
 		set:   map[string]*base.Average{},
@@ -20,6 +22,7 @@ func NewAverageSet() *AverageSet {
 	}
 }
 
+// Add registers a base.Average metric in the set.
 func (set *AverageSet) Add(name string, a *base.Average) error {
 	set.mutex.Lock()
 	defer set.mutex.Unlock()
@@ -30,6 +33,7 @@ func (set *AverageSet) Add(name string, a *base.Average) error {
 	return nil
 }
 
+// Names returns all names of this set.
 func (set *AverageSet) Names() []string {
 	set.mutex.Lock()
 	defer set.mutex.Unlock()
@@ -41,6 +45,7 @@ func (set *AverageSet) Names() []string {
 	return names
 }
 
+// Get returns a base.Average, identified by its name, or a non-nil error.
 func (set *AverageSet) Get(name string) (*base.Average, error) {
 	set.mutex.Lock()
 	defer set.mutex.Unlock()

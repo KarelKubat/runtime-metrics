@@ -4,6 +4,7 @@ import (
 	"time"
 )
 
+// AveragePerDuration is the metric type for averages over a time span.
 type AveragePerDuration struct {
 	summer *SumPerDuration
 }

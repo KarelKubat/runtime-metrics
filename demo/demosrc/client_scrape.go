@@ -7,6 +7,9 @@ import (
 	"github.com/KarelKubat/runtime-metrics/reporter"
 )
 
+// ClientScrapeDemo runs a reporter client that fetches server metrics in an
+// endless loop (or until the server exits). The metrics are displayed on
+// stdout.
 func ClientScrapeDemo() {
 
 	// Instantiate client.

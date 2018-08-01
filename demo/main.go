@@ -36,7 +36,7 @@ func main() {
 	case "fulldump":
 		demosrc.ClientFullDumpDemo()
 	case "publishingserver":
-		demosrc.PublishingServerDemo()
+		demosrc.PublishingProgramDemo()
 	default:
 		usage()
 	}

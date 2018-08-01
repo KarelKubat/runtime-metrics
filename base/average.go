@@ -1,5 +1,6 @@
 package base
 
+// Average is the metric type for averages.
 type Average struct {
 	summer *Sum
 }

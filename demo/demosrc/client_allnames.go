@@ -7,6 +7,8 @@ import (
 	"github.com/KarelKubat/runtime-metrics/reporter"
 )
 
+// ClientAllNamesDemo runs a reporter client, fetches all metric names,
+// and displays them.
 func ClientAllNamesDemo() {
 
 	// Instantiate client.

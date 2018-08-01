@@ -4,6 +4,7 @@ import (
 	"time"
 )
 
+// SumPerDuration is the metric type for sums over a time span.
 type SumPerDuration struct {
 	previousSum *Sum
 	currentSum  *Sum

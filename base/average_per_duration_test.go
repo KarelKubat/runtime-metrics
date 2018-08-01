@@ -44,7 +44,9 @@ func TestAveragePerDuration(t *testing.T) {
 	// Reset test
 	a.Reset()
 	avg, count, _ = a.Report()
-	
+	assert.Equal(t, int64(0), count)
+	assert.Equal(t, 0.0, avg)
+
 	// First slice
 	a.Mark(1.0)
 	a.Mark(2.0)
@@ -58,7 +60,7 @@ func TestAveragePerDuration(t *testing.T) {
 	a.Mark(4.0)
 	a.Mark(5.0)
 	a.Reset()
-	
+
 	avg, count, _ = a.Report()
 	assert.Equal(t, int64(0), count)
 	assert.Equal(t, 0.0, avg)

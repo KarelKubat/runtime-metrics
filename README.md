@@ -2,8 +2,8 @@
 --
     import "github.com/KarelKubat/runtime-metrics"
 
-runtime-metrics implements the collection of in-program metrics, a server to
-publish these, and a client to collect them.
+Package runtimemetrics implements the collection of in-program metrics, a server
+to publish these, and a client to collect them.
 
 
 ### What Is It

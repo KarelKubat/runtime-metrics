@@ -2,6 +2,7 @@ package base
 
 import "sync"
 
+// Sum is the metric type for sums.
 type Sum struct {
 	n     int64
 	sum   float64

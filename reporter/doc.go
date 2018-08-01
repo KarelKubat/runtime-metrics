@@ -1,5 +1,5 @@
 /*
-reporter  implements a metrics reporting server and client.
+Package reporter implements a metrics reporting server and client.
 
 The Server
 

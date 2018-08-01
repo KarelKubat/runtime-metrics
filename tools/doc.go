@@ -1,4 +1,4 @@
 /*
-This directory just holds tooling for this project.
+Package tools just holds tooling for this project.
 */
 package tools

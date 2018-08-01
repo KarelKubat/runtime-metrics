@@ -2,7 +2,7 @@
 --
     import "github.com/KarelKubat/runtime-metrics/base"
 
-base defines the most basic metric types.
+Package base defines the most basic metric types.
 
 The most basic types are:
 
@@ -77,6 +77,7 @@ type Average struct {
 }
 ```
 
+Average is the metric type for averages.
 
 #### func  NewAverage
 
@@ -113,6 +114,7 @@ type AveragePerDuration struct {
 }
 ```
 
+AveragePerDuration is the metric type for averages over a time span.
 
 #### func  NewAveragePerDuration
 
@@ -151,6 +153,7 @@ type Count struct {
 }
 ```
 
+Count is the metric type for counters.
 
 #### func  NewCount
 
@@ -187,6 +190,7 @@ type CountPerDuration struct {
 }
 ```
 
+CountPerDuration is the metric type for counts over a time span.
 
 #### func  NewCountPerDuration
 
@@ -224,6 +228,7 @@ type Sum struct {
 }
 ```
 
+Sum is the metric type for sums.
 
 #### func  NewSum
 
@@ -260,6 +265,7 @@ type SumPerDuration struct {
 }
 ```
 
+SumPerDuration is the metric type for sums over a time span.
 
 #### func  NewSumPerDuration
 

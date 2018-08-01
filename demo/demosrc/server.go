@@ -8,12 +8,16 @@ import (
 	"github.com/KarelKubat/runtime-metrics/reporter"
 )
 
+// CheckErr checks whether its argument is a non-nil error and panics if
+// so. It's included to simplify the examples.
 func CheckErr(err error) {
 	if err != nil {
 		panic(err)
 	}
 }
 
+// ServerDemo starts a reporter, creates some metrics, and then in a loop
+// changes their values - so that clients may scrape them.
 func ServerDemo() {
 
 	// Start up the reporting server on port 1234, all network addresses.

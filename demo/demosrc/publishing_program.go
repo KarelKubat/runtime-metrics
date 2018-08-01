@@ -8,7 +8,11 @@ import (
 	"github.com/KarelKubat/runtime-metrics/registry"
 )
 
-func PublishingServerDemo() {
+// PublishingProgramDemo shows how a program can inspect its own metrics, so
+// that they can be e.g. pushed to a monitoring service. This is a different
+// approach than having the metrics in a server, and having a client scrape
+// them and process them further.
+func PublishingProgramDemo() {
 
 	// Create some metrics and register them.
 	avg := base.NewAverage()

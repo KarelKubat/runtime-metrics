@@ -8,11 +8,13 @@ import (
 	"github.com/KarelKubat/runtime-metrics/rtmerror"
 )
 
+// CountPerDurationSet maps names to base.CountPerDuration metrics.
 type CountPerDurationSet struct {
 	set   map[string]*base.CountPerDuration
 	mutex *sync.Mutex
 }
 
+// NewCountPerDurationSet returns an initialized CountPerDurationSet.
 func NewCountPerDurationSet() *CountPerDurationSet {
 	return &CountPerDurationSet{
 		set:   map[string]*base.CountPerDuration{},
@@ -20,6 +22,7 @@ func NewCountPerDurationSet() *CountPerDurationSet {
 	}
 }
 
+// Add registers a base.CountPerDuration metric in the set.
 func (set *CountPerDurationSet) Add(name string, a *base.CountPerDuration) error {
 	set.mutex.Lock()
 	defer set.mutex.Unlock()
@@ -30,6 +33,7 @@ func (set *CountPerDurationSet) Add(name string, a *base.CountPerDuration) error
 	return nil
 }
 
+// Names returns all names in this set.
 func (set *CountPerDurationSet) Names() []string {
 	set.mutex.Lock()
 	defer set.mutex.Unlock()
@@ -41,6 +45,7 @@ func (set *CountPerDurationSet) Names() []string {
 	return names
 }
 
+// Get returns a base.CountPerDuration, identified by its name, or a non-nil error.
 func (set *CountPerDurationSet) Get(name string) (*base.CountPerDuration, error) {
 	set.mutex.Lock()
 	defer set.mutex.Unlock()

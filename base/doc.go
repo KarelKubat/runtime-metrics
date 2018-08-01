@@ -1,5 +1,5 @@
 /*
-base defines the most basic metric types.
+Package base defines the most basic metric types.
 
 The most basic types are:
 

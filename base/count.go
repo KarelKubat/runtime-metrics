@@ -2,6 +2,7 @@ package base
 
 import "sync"
 
+// Count is the metric type for counters.
 type Count struct {
 	counter int64
 	mutex   *sync.Mutex

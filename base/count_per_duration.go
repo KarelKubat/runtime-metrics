@@ -4,6 +4,7 @@ import (
 	"time"
 )
 
+// CountPerDuration is the metric type for counts over a time span.
 type CountPerDuration struct {
 	previousCount *Count
 	currentCount  *Count
