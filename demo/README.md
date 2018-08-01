@@ -219,3 +219,88 @@ to the source files under demosrc/for the most recent versions.
     			av.Name, av.Value, av.N, av.Until)
     	}
      }
+
+If you don't want a server publishing metrics, and a client scraping them; but
+instead want a server that pushes metrics as they change, then have a look at
+demosrc/pushing_server.go.
+
+The approach is as follows: a function asks the registry for names, and using
+each name, gets the appropriate metric (sum, average, etc.). The values of the
+metric are returned by its Report() function.
+
+     func pushMetrics() {
+    	// This could push the metrics onto some remote monitoring system. It's the alternative to
+    	// having a server that just publishes its metrics and a client that scrapes them and processes
+    	// them further.
+        //
+        // It would be started as a go-routine to run in a separate thread.
+    	//
+    	// In each loop we re-query registery.*Names() incase new metrics were created since the
+    	// previous run.
+
+    	for {
+    		for _, name := range registry.AverageNames() {
+    			avg, err := registry.GetAverage(name)
+    			if err == nil {
+    				val, n := avg.Report()
+    				fmt.Printf("%q: %v (n=%v)\n", name, val, n)
+    				// some network call would be here
+    			} else {
+    				fmt.Printf("Problem with %q: %v\n", name, err)
+    			}
+    		}
+    		for _, name := range registry.AveragePerDurationNames() {
+    			avgPD, err := registry.GetAveragePerDuration(name)
+    			if err == nil {
+    				val, n, _ := avgPD.Report()
+    				fmt.Printf("%q: %v (n=%v)\n", name, val, n)
+    				// some network call would be here
+    			} else {
+    				fmt.Printf("Problem with %q: %v\n", name, err)
+    			}
+    		}
+    		for _, name := range registry.CountNames() {
+    			cnt, err := registry.GetCount(name)
+    			if err == nil {
+    				val := cnt.Report()
+    				fmt.Printf("%q: %v\n", name, val)
+    				// some network call would be here
+    			} else {
+    				fmt.Printf("Problem with %q: %v\n", name, err)
+    			}
+    		}
+    		for _, name := range registry.CountPerDurationNames() {
+    			cntPD, err := registry.GetCountPerDuration(name)
+    			if err == nil {
+    				val, _ := cntPD.Report()
+    				fmt.Printf("%q: %v\n", name, val)
+    				// some network call would be here
+    			} else {
+    				fmt.Printf("Problem with %q: %v\n", name, err)
+    			}
+    		}
+    		for _, name := range registry.SumNames() {
+    			avg, err := registry.GetSum(name)
+    			if err == nil {
+    				val, n := avg.Report()
+    				fmt.Printf("%q: %v (n=%v)\n", name, val, n)
+    				// some network call would be here
+    			} else {
+    				fmt.Printf("Problem with %q: %v\n", name, err)
+    			}
+    		}
+    		for _, name := range registry.SumPerDurationNames() {
+    			avgPD, err := registry.GetSumPerDuration(name)
+    			if err == nil {
+    				val, n, _ := avgPD.Report()
+    				fmt.Printf("%q: %v (n=%v)\n", name, val, n)
+    				// some network call would be here
+    			} else {
+    				fmt.Printf("Problem with %q: %v\n", name, err)
+    			}
+    		}
+
+    		// Pause for 5 seconds before re-fetching all metrics.
+    		time.Sleep(5 * time.Second)
+    	}
+     }

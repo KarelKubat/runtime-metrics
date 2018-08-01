@@ -118,7 +118,8 @@ Published metrics can be scraped by a client:
     }
 
 There is also discovery: a client can get a list of all the names of counts,
-sums, and averages, and query these. See demo/client.go for an example.
+sums, and averages, and query these. See demo/demosrc/client_allnames.go for an
+example.
 
 
 ### Further Reading
@@ -128,8 +129,8 @@ Particularly make sure you understand how *PerDuration metrics work, they always
 report results that "lag" a duration.
 
 For information how to publish metrics, read the server section in package
-reporter/. For scraping, read the client section. An example is provided in
-demo/.
+reporter/. For scraping, read the client section. A runnable example is provided
+in demo/ with sources in demo/demosrc/.
 
 Packages tools/, namedset/ and api/ are for internal usage.
 

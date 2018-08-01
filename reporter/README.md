@@ -69,7 +69,7 @@ an error:
     // err is nil or an error
 
 A full dump of all server-known metrics can be obtained using FullDump(). See
-also demo/client.go for an example.
+also demo/demosrc/client_fulldump.go for an example.
 
     dump, err := c.FullDump()
     if err != nil { ... }
@@ -174,7 +174,7 @@ Example:
     // and so on with overview.AveragesPerDuration, overview.Counts,
     // overview.CountsPerDuration, overview.Sums, overview.SumsPerDuration
 
-See demo/client_allnames.go for a full example.
+See demo/demosrc/client_allnames.go for a full example.
 
 #### func (*Client) Average
 
@@ -232,7 +232,8 @@ is a (reference to a) structure with the fields:
     Sums:                an array of structs with a Name (string), Value (float64), N (int64)
     SumsPerDuration:     similar to the above, but the fields also have Until (time.Time)
 
-See the package overview or demo/client_fulldump.go for a complete example.
+See the package overview or demo/demosrc/client_fulldump.go for a complete
+example.
 
 #### func (*Client) Sum
 

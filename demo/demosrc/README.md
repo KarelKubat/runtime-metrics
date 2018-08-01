@@ -31,6 +31,12 @@ func ClientFullDumpDemo()
 func ClientScrapeDemo()
 ```
 
+#### func  PublishingServerDemo
+
+```go
+func PublishingServerDemo()
+```
+
 #### func  ServerDemo
 
 ```go
