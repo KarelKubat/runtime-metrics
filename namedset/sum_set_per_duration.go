@@ -1,11 +1,11 @@
 package namedset
 
 import (
-	"fmt"
 	"sort"
 	"sync"
 
 	"github.com/KarelKubat/runtime-metrics/base"
+	"github.com/KarelKubat/runtime-metrics/rtmerror"
 )
 
 type SumPerDurationSet struct {
@@ -24,7 +24,7 @@ func (set *SumPerDurationSet) Add(name string, a *base.SumPerDuration) error {
 	set.mutex.Lock()
 	defer set.mutex.Unlock()
 	if _, ok := set.set[name]; ok {
-		return fmt.Errorf("SumPerDuration %q already in set", name)
+		return rtmerror.NewError("SumPerDuration %q already in set", name)
 	}
 	set.set[name] = a
 	return nil
@@ -46,7 +46,7 @@ func (set *SumPerDurationSet) Get(name string) (*base.SumPerDuration, error) {
 	defer set.mutex.Unlock()
 	ret, ok := set.set[name]
 	if !ok {
-		return nil, fmt.Errorf("SumPerDuration %q not in set", name)
+		return nil, rtmerror.NewError("SumPerDuration %q not in set", name)
 	}
 	return ret, nil
 }

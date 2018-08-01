@@ -1,11 +1,11 @@
 package namedset
 
 import (
-	"fmt"
 	"sort"
 	"sync"
 
 	"github.com/KarelKubat/runtime-metrics/base"
+	"github.com/KarelKubat/runtime-metrics/rtmerror"
 )
 
 type CountPerDurationSet struct {
@@ -24,7 +24,7 @@ func (set *CountPerDurationSet) Add(name string, a *base.CountPerDuration) error
 	set.mutex.Lock()
 	defer set.mutex.Unlock()
 	if _, ok := set.set[name]; ok {
-		return fmt.Errorf("CountPerDuration %q already in set", name)
+		return rtmerror.NewError("CountPerDuration %q already in set", name)
 	}
 	set.set[name] = a
 	return nil
@@ -46,7 +46,7 @@ func (set *CountPerDurationSet) Get(name string) (*base.CountPerDuration, error)
 	defer set.mutex.Unlock()
 	ret, ok := set.set[name]
 	if !ok {
-		return nil, fmt.Errorf("CountPerDuration %q not in set", name)
+		return nil, rtmerror.NewError("CountPerDuration %q not in set", name)
 	}
 	return ret, nil
 }

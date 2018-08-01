@@ -1,11 +1,11 @@
 package namedset
 
 import (
-	"fmt"
 	"sort"
 	"sync"
 
 	"github.com/KarelKubat/runtime-metrics/base"
+	"github.com/KarelKubat/runtime-metrics/rtmerror"
 )
 
 type AveragePerDurationSet struct {
@@ -22,7 +22,7 @@ func NewAveragePerDurationSet() *AveragePerDurationSet {
 
 func (set *AveragePerDurationSet) Add(name string, a *base.AveragePerDuration) error {
 	if _, ok := set.set[name]; ok {
-		return fmt.Errorf("AveragePerDuration %q already in set", name)
+		return rtmerror.NewError("AveragePerDuration %q already in set", name)
 	}
 	set.set[name] = a
 	return nil
@@ -40,7 +40,7 @@ func (set *AveragePerDurationSet) Names() []string {
 func (set *AveragePerDurationSet) Get(name string) (*base.AveragePerDuration, error) {
 	ret, ok := set.set[name]
 	if !ok {
-		return nil, fmt.Errorf("AveragePerDuration %q not in set", name)
+		return nil, rtmerror.NewError("AveragePerDuration %q not in set", name)
 	}
 	return ret, nil
 }

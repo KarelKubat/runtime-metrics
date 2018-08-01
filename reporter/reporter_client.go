@@ -1,35 +1,61 @@
 package reporter
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/KarelKubat/runtime-metrics/api"
+	"github.com/KarelKubat/runtime-metrics/rtmerror"
 	"github.com/golang/protobuf/ptypes"
+	"github.com/golang/protobuf/ptypes/timestamp"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 )
 
 type Client struct {
-	conn   *grpc.ClientConn
-	client api.ReporterClient
+	conn            *grpc.ClientConn
+	client          api.ReporterClient
+	backoffTries    int
+	backoffInterval time.Duration
 }
 
 // NewClient returns an initialized client, or a non-nil error.
 // The addr argument is the "ip:port" to connect to; "ip" being optional (defaults to
-// localhost).
+// localhost). The default backup policy (to overcome network errors) is retry up to 5
+// times, with delays 50, 100, 150, 200, 250 and 300 milliseconds between tries.
+// This can be changed using WithBackoffPolicy.
 func NewClient(addr string) (*Client, error) {
 	conn, err := grpc.Dial(addr, grpc.WithInsecure())
 	if err != nil {
-		return nil, fmt.Errorf("failed to dial %q: %v", addr, err)
+		return nil, rtmerror.NewError("failed to dial %q", addr).WithError(err)
 	}
 
 	client := api.NewReporterClient(conn)
 
 	return &Client{
-		conn:   conn,
-		client: client,
+		conn:            conn,
+		client:          client,
+		backoffTries:    5,
+		backoffInterval: 50 * time.Millisecond,
 	}, nil
+}
+
+// WithBackoffPolicy overrules the default retry/backoff policy for network operations.
+// The first argument specifies how many times should be retried, the second specifies
+// the base wait time. The actual wait time is the retry number times his wait time; e.g.,
+// when the base wait time is 30ms, then for 5 retries the actual wait time is
+// 30, 60, 90, 120 and 150 milliseconds.
+//
+// Example:
+//
+//  // This retry policy is stubborn but goes easy on resources. It retries 10 times,
+//  // but waits 1, 2, 3, etc. seconds between consecutive tries.
+//  // So, the client will only return an error for Sum(), Average() etc. after 55
+//  // seconds (1+2+3+...+10).
+//  c, err := NewClient(":1234").WithBackoffPolicy(10, time.Second)
+func (c *Client) WithBackoffPolicy(tries int, interval time.Duration) *Client {
+	c.backoffTries = tries
+	c.backoffInterval = interval
+	return c
 }
 
 // Close disconnects the client. It may be deferred, similar to file closing.
@@ -62,9 +88,18 @@ type AllNamesReturn struct {
 //
 // See demo/client_allnames.go for a full example.
 func (c *Client) AllNames() (*AllNamesReturn, error) {
-	resp, err := c.client.AllNames(context.Background(), &api.EmptyRequest{})
+	var err error
+	var resp *api.AllNamesResponse
+
+	for i := 0; i < c.backoffTries; i++ {
+		resp, err = c.client.AllNames(context.Background(), &api.EmptyRequest{})
+		if err == nil || i == c.backoffTries-1 {
+			break
+		}
+		time.Sleep(c.backoffInterval * time.Duration(i))
+	}
 	if err != nil {
-		return nil, fmt.Errorf("failed at AllNames service: %v", err)
+		return nil, retryableError("AllNames", err)
 	}
 	return &AllNamesReturn{
 		Averages:            resp.GetAverageNames(),
@@ -131,9 +166,18 @@ type FullDumpReturn struct {
 //
 // See the package overview or demo/client_fulldump.go for a complete example.
 func (c *Client) FullDump() (*FullDumpReturn, error) {
-	resp, err := c.client.FullDump(context.Background(), &api.EmptyRequest{})
+	var err error
+	var resp *api.FullDumpResponse
+
+	for i := 0; i < c.backoffTries; i++ {
+		resp, err = c.client.FullDump(context.Background(), &api.EmptyRequest{})
+		if err == nil || i == c.backoffTries-1 {
+			break
+		}
+		time.Sleep(c.backoffInterval * time.Duration(i))
+	}
 	if err != nil {
-		return nil, fmt.Errorf("failed at FullDump service: %v", err)
+		return nil, retryableError("FullDump", err)
 	}
 
 	ret := &FullDumpReturn{}
@@ -146,9 +190,9 @@ func (c *Client) FullDump() (*FullDumpReturn, error) {
 		})
 	}
 	for _, named := range resp.GetNamedAveragesPerDuration() {
-		ts, err := ptypes.Timestamp(named.GetUntil())
+		ts, err := timeOf(named.GetUntil())
 		if err != nil {
-			return nil, fmt.Errorf("timestamp conversion failed: %v", err)
+			return nil, err
 		}
 		ret.AveragesPerDuration = append(ret.AveragesPerDuration, averagePerDurationDump{
 			Name:  named.GetName(),
@@ -165,9 +209,9 @@ func (c *Client) FullDump() (*FullDumpReturn, error) {
 		})
 	}
 	for _, named := range resp.GetNamedCountsPerDuration() {
-		ts, err := ptypes.Timestamp(named.GetUntil())
+		ts, err := timeOf(named.GetUntil())
 		if err != nil {
-			return nil, fmt.Errorf("timestamp conversion failed: %v", err)
+			return nil, err
 		}
 		ret.CountsPerDuration = append(ret.CountsPerDuration, countPerDurationDump{
 			Name:  named.GetName(),
@@ -184,9 +228,9 @@ func (c *Client) FullDump() (*FullDumpReturn, error) {
 		})
 	}
 	for _, named := range resp.GetNamedSumsPerDuration() {
-		ts, err := ptypes.Timestamp(named.GetUntil())
+		ts, err := timeOf(named.GetUntil())
 		if err != nil {
-			return nil, fmt.Errorf("timestamp conversion failed: %v", err)
+			return nil, err
 		}
 		ret.SumsPerDuration = append(ret.SumsPerDuration, sumPerDurationDump{
 			Name:  named.GetName(),
@@ -202,9 +246,18 @@ func (c *Client) FullDump() (*FullDumpReturn, error) {
 // Average returns the average value (float64) and number of cases (int64) of a named
 // server-side Average metric; or a non-nil error.
 func (c *Client) Average(name string) (float64, int64, error) {
-	resp, err := c.client.Average(context.Background(), &api.NameRequest{Name: name})
+	var err error
+	var resp *api.AverageResponse
+
+	for i := 0; i < c.backoffTries; i++ {
+		resp, err = c.client.Average(context.Background(), &api.NameRequest{Name: name})
+		if err == nil || i == c.backoffTries-1 {
+			break
+		}
+		time.Sleep(c.backoffInterval * time.Duration(i))
+	}
 	if err != nil {
-		return 0.0, int64(0), fmt.Errorf("failed at Average service: %v", err)
+		return 0.0, int64(0), retryableError("Average", err)
 	}
 	return resp.GetAverage(), resp.GetN(), nil
 }
@@ -212,13 +265,23 @@ func (c *Client) Average(name string) (float64, int64, error) {
 // AveragePerDuration returns the average (float64), number of cases (int64) and the until-timestamp
 // (time.Time) of a named server-side AveragePerDuration metric; or a non-nil error.
 func (c *Client) AveragePerDuration(name string) (float64, int64, time.Time, error) {
-	resp, err := c.client.AveragePerDuration(context.Background(), &api.NameRequest{Name: name})
-	if err != nil {
-		return 0.0, int64(0), time.Now(), fmt.Errorf("failed at AveragePerDuration service: %v", err)
+	var err error
+	var resp *api.AveragePerDurationResponse
+
+	for i := 0; i < c.backoffTries; i++ {
+		resp, err = c.client.AveragePerDuration(context.Background(),
+			&api.NameRequest{Name: name})
+		if err == nil || i == c.backoffTries-1 {
+			break
+		}
+		time.Sleep(c.backoffInterval * time.Duration(i))
 	}
-	ts, err := ptypes.Timestamp(resp.GetUntil())
 	if err != nil {
-		return 0.0, int64(0), time.Now(), fmt.Errorf("timestamp conversion failed: %v", err)
+		return 0.0, int64(0), time.Now(), retryableError("AveragePerDuration", err)
+	}
+	ts, err := timeOf(resp.GetUntil())
+	if err != nil {
+		return 0.0, int64(0), time.Now(), err
 	}
 	return resp.GetAverage(), resp.GetN(), ts, nil
 }
@@ -226,9 +289,18 @@ func (c *Client) AveragePerDuration(name string) (float64, int64, time.Time, err
 // Count returns the number of observations (int64) of a named
 // server-side Count metric; or a non-nil error.
 func (c *Client) Count(name string) (int64, error) {
-	resp, err := c.client.Count(context.Background(), &api.NameRequest{Name: name})
+	var err error
+	var resp *api.CountResponse
+
+	for i := 0; i < c.backoffTries; i++ {
+		resp, err = c.client.Count(context.Background(), &api.NameRequest{Name: name})
+		if err == nil || i == c.backoffTries-1 {
+			break
+		}
+		time.Sleep(c.backoffInterval * time.Duration(i))
+	}
 	if err != nil {
-		return int64(0), fmt.Errorf("failed at Count service: %v", err)
+		return int64(0), retryableError("Count", err)
 	}
 	return resp.GetCount(), nil
 }
@@ -236,13 +308,23 @@ func (c *Client) Count(name string) (int64, error) {
 // CountPerDuration returns the number of observations (int64) and the until-timestamp
 // (time.Time) of a named server-side CountPerDuration metric; or a non-nil error.
 func (c *Client) CountPerDuration(name string) (int64, time.Time, error) {
-	resp, err := c.client.CountPerDuration(context.Background(), &api.NameRequest{Name: name})
-	if err != nil {
-		return int64(0), time.Now(), fmt.Errorf("failed at CountPerDuration service: %v", err)
+	var err error
+	var resp *api.CountPerDurationResponse
+
+	for i := 0; i < c.backoffTries; i++ {
+		resp, err = c.client.CountPerDuration(context.Background(),
+			&api.NameRequest{Name: name})
+		if err == nil || i == c.backoffTries-1 {
+			break
+		}
+		time.Sleep(c.backoffInterval * time.Duration(i))
 	}
-	ts, err := ptypes.Timestamp(resp.GetUntil())
 	if err != nil {
-		return int64(0), time.Now(), fmt.Errorf("timestamp conversion failed: %v", err)
+		return int64(0), time.Now(), retryableError("CountPerDuration", err)
+	}
+	ts, err := timeOf(resp.GetUntil())
+	if err != nil {
+		return int64(0), time.Now(), err
 	}
 	return resp.GetCount(), ts, nil
 }
@@ -250,9 +332,18 @@ func (c *Client) CountPerDuration(name string) (int64, time.Time, error) {
 // Sum returns the sum of observations (float64) and number of cases (int32) of a named
 // server-side Sum metric; or a non-nil error.
 func (c *Client) Sum(name string) (float64, int64, error) {
-	resp, err := c.client.Sum(context.Background(), &api.NameRequest{Name: name})
+	var err error
+	var resp *api.SumResponse
+
+	for i := 0; i < c.backoffTries; i++ {
+		resp, err = c.client.Sum(context.Background(), &api.NameRequest{Name: name})
+		if err == nil || i == c.backoffTries-1 {
+			break
+		}
+		time.Sleep(c.backoffInterval * time.Duration(i))
+	}
 	if err != nil {
-		return 0.0, int64(0), fmt.Errorf("failed at Sum service: %v", err)
+		return 0.0, int64(0), retryableError("Sum", err)
 	}
 	return resp.GetSum(), resp.GetN(), nil
 }
@@ -261,13 +352,36 @@ func (c *Client) Sum(name string) (float64, int64, error) {
 // and the until-timestamp (time.Time) of a named server-side SumPerDuration metric; or
 // a non-nil error.
 func (c *Client) SumPerDuration(name string) (float64, int64, time.Time, error) {
-	resp, err := c.client.SumPerDuration(context.Background(), &api.NameRequest{Name: name})
-	if err != nil {
-		return 0.0, int64(0), time.Now(), fmt.Errorf("failed at SumPerDuration service: %v", err)
+	var err error
+	var resp *api.SumPerDurationResponse
+
+	for i := 0; i < c.backoffTries; i++ {
+		resp, err = c.client.SumPerDuration(context.Background(), &api.NameRequest{Name: name})
+		if err == nil || i == c.backoffTries-1 {
+			break
+		}
+		time.Sleep(c.backoffInterval * time.Duration(i))
 	}
-	ts, err := ptypes.Timestamp(resp.GetUntil())
 	if err != nil {
-		return 0.0, int64(0), time.Now(), fmt.Errorf("timestamp conversion failed: %v", err)
+		return 0.0, int64(0), time.Now(), retryableError("SumPerDuration", err)
+	}
+	ts, err := timeOf(resp.GetUntil())
+	if err != nil {
+		return 0.0, int64(0), time.Now(), err
 	}
 	return resp.GetSum(), resp.GetN(), ts, nil
+}
+
+func retryableError(serviceName string, err error) error {
+	return rtmerror.NewError("failed in service %q", serviceName).
+		WithError(err).WithRetryable(true)
+}
+
+func timeOf(t *timestamp.Timestamp) (time.Time, error) {
+	ts, err := ptypes.Timestamp(t)
+	if err != nil {
+		return ts, rtmerror.NewError("timestamp conversion failed").
+			WithError(err)
+	}
+	return ts, nil
 }

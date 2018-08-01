@@ -94,6 +94,23 @@ also demo/client.go for an example.
       // sPD.Until is the up-to timestamp
     }
 
+The network calls that the client issues to obtain metrics, are subject to a
+retry policy. The default policy is that if the network call fails, then the
+client waits for 50 milliseconds and retries. If that fails, the server waits
+for 100 milliseconds and retries again. If that fails, then the wait time is
+extended by another 50 milliseconds (becoming 150), and the client retries
+again.
+
+This policy is defined by two numbers: the allowed retries (defaults to 5) and
+the duration by which the wait time is extended each time that a call fails
+(defaults to 50 milliseconds). This backoff policy can be overruled when
+constructing a client using WithBackoffPolicy(), for example:
+
+    c, err := reporter.NewClient(":9000").WithBackoffPolicy(
+      10,                           // retry up to 10 times
+      100 * time.Millisecond)       // 100ms between the first failed call and the first retry,
+                                    // 1s between the 9th and 10th retry
+
 ## Usage
 
 #### func  StartReporter
@@ -135,7 +152,10 @@ type Client struct {
 func NewClient(addr string) (*Client, error)
 ```
 NewClient returns an initialized client, or a non-nil error. The addr argument
-is the "ip:port" to connect to; "ip" being optional (defaults to localhost).
+is the "ip:port" to connect to; "ip" being optional (defaults to localhost). The
+default backup policy (to overcome network errors) is retry up to 5 times, with
+delays 50, 100, 150, 200, 250 and 300 milliseconds between tries. This can be
+changed using WithBackoffPolicy.
 
 #### func (*Client) AllNames
 
@@ -230,6 +250,25 @@ func (c *Client) SumPerDuration(name string) (float64, int64, time.Time, error)
 SumPerDuration returns the sum of observations (float64), the number of cases
 (int32) and the until-timestamp (time.Time) of a named server-side
 SumPerDuration metric; or a non-nil error.
+
+#### func (*Client) WithBackoffPolicy
+
+```go
+func (c *Client) WithBackoffPolicy(tries int, interval time.Duration) *Client
+```
+WithBackoffPolicy overrules the default retry/backoff policy for network
+operations. The first argument specifies how many times should be retried, the
+second specifies the base wait time. The actual wait time is the retry number
+times his wait time; e.g., when the base wait time is 30ms, then for 5 retries
+the actual wait time is 30, 60, 90, 120 and 150 milliseconds.
+
+Example:
+
+    // This retry policy is stubborn but goes easy on resources. It retries 10 times,
+    // but waits 1, 2, 3, etc. seconds between consecutive tries.
+    // So, the client will only return an error for Sum(), Average() etc. after 55
+    // seconds (1+2+3+...+10).
+    c, err := NewClient(":1234").WithBackoffPolicy(10, time.Second)
 
 #### type FullDumpReturn
 

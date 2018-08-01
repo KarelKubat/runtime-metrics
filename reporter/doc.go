@@ -38,8 +38,8 @@ published:
 
 The Client
 
-The client is instantiated using reporter.NewClient(addr), where again
-addr is a string defining the IP address and TCP port:
+The client is instantiated using reporter.NewClient(addr), where again addr is
+a string defining the IP address and TCP port:
 
   c, err := reporter.NewClient(":9000")
   checkErr(err)
@@ -56,8 +56,9 @@ discover the names of metrics or to fetch metric values:
   // allNames.Sums               is an array of strings (names) of all Sum-type metrics
   // allNames.SumsPerDuration    is an array of strings (names) of all SumPerDuration-type metrics
 
-In order to fetch the values of a metric, the client calls c.Average(name), c.Sum(name) etc. The
-returned values are always what the base type returns, and an error:
+In order to fetch the values of a metric, the client calls c.Average(name),
+c.Sum(name) etc. The returned values are always what the base type returns, and
+an error:
 
   avg, n, err := c.Average("my-average")
   // val is the average
@@ -89,5 +90,21 @@ See also demo/client.go for an example.
     // sPD.Name is the name, sPD.Value is the sum, sPD.N is the number of cases,
     // sPD.Until is the up-to timestamp
   }
+
+The network calls that the client issues to obtain metrics, are subject to a retry policy.
+The default policy is that if the network call fails, then the client waits for 50
+milliseconds and retries. If that fails, the server waits for 100 milliseconds and retries
+again. If that fails, then the wait time is extended by another 50 milliseconds (becoming
+150), and the client retries again.
+
+This policy is defined by two numbers: the allowed retries (defaults to 5) and the duration
+by which the wait time is extended each time that a call fails (defaults to 50 milliseconds).
+This backoff policy can be overruled when constructing a client using WithBackoffPolicy(),
+for example:
+
+  c, err := reporter.NewClient(":9000").WithBackoffPolicy(
+    10,                           // retry up to 10 times
+    100 * time.Millisecond)       // 100ms between the first failed call and the first retry,
+                                  // 1s between the 9th and 10th retry
 */
 package reporter

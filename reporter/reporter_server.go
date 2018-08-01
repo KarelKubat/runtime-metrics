@@ -1,12 +1,14 @@
 package reporter
 
 import (
-	"fmt"
 	"net"
+	"time"
 
 	"github.com/KarelKubat/runtime-metrics/api"
 	"github.com/KarelKubat/runtime-metrics/registry"
+	"github.com/KarelKubat/runtime-metrics/rtmerror"
 	"github.com/golang/protobuf/ptypes"
+	"github.com/golang/protobuf/ptypes/timestamp"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 )
@@ -51,9 +53,9 @@ func (s *server) FullDump(ctx context.Context, in *api.EmptyRequest) (*api.FullD
 			return nil, err
 		}
 		val, n, until := metric.Report()
-		ts, err := ptypes.TimestampProto(until)
+		ts, err := timestampOf(until)
 		if err != nil {
-			return nil, fmt.Errorf("timestamp conversion failed: %v", err)
+			return nil, err
 		}
 		ret.NamedAveragesPerDuration = append(
 			ret.NamedAveragesPerDuration, &api.NamedAveragePerDuration{
@@ -82,9 +84,9 @@ func (s *server) FullDump(ctx context.Context, in *api.EmptyRequest) (*api.FullD
 			return nil, err
 		}
 		val, until := metric.Report()
-		ts, err := ptypes.TimestampProto(until)
+		ts, err := timestampOf(until)
 		if err != nil {
-			return nil, fmt.Errorf("timestamp conversion failed: %v", err)
+			return nil, err
 		}
 		ret.NamedCountsPerDuration = append(
 			ret.NamedCountsPerDuration, &api.NamedCountPerDuration{
@@ -113,9 +115,9 @@ func (s *server) FullDump(ctx context.Context, in *api.EmptyRequest) (*api.FullD
 			return nil, err
 		}
 		val, n, until := metric.Report()
-		ts, err := ptypes.TimestampProto(until)
+		ts, err := timestampOf(until)
 		if err != nil {
-			return nil, fmt.Errorf("timestamp conversion failed: %v", err)
+			return nil, err
 		}
 		ret.NamedSumsPerDuration = append(
 			ret.NamedSumsPerDuration, &api.NamedSumPerDuration{
@@ -153,9 +155,9 @@ func (s *server) AveragePerDuration(ctx context.Context, in *api.NameRequest) (
 		return nil, err
 	}
 	val, n, until := av.Report()
-	ts, err := ptypes.TimestampProto(until)
+	ts, err := timestampOf(until)
 	if err != nil {
-		return nil, fmt.Errorf("timestamp conversion failed: %v", err)
+		return nil, err
 	}
 	return &api.AveragePerDurationResponse{
 		Average: val,
@@ -184,9 +186,9 @@ func (s *server) CountPerDuration(ctx context.Context, in *api.NameRequest) (*ap
 		return nil, err
 	}
 	val, until := av.Report()
-	ts, err := ptypes.TimestampProto(until)
+	ts, err := timestampOf(until)
 	if err != nil {
-		return nil, fmt.Errorf("timestamp conversion failed: %v", err)
+		return nil, err
 	}
 	return &api.CountPerDurationResponse{
 		Count: val,
@@ -216,9 +218,9 @@ func (s *server) SumPerDuration(ctx context.Context, in *api.NameRequest) (*api.
 		return nil, err
 	}
 	val, n, until := av.Report()
-	ts, err := ptypes.TimestampProto(until)
+	ts, err := timestampOf(until)
 	if err != nil {
-		return nil, fmt.Errorf("timestamp conversion failed: %v", err)
+		return nil, err
 	}
 	return &api.SumPerDurationResponse{
 		Sum:   val,
@@ -233,16 +235,26 @@ func (s *server) SumPerDuration(ctx context.Context, in *api.NameRequest) (*api.
 func StartReporter(addr string) error {
 	lis, err := net.Listen("tcp", addr)
 	if err != nil {
-		return fmt.Errorf("failed to listen to address %q: %v", addr, err)
+		return rtmerror.NewError("failed to listen to address %q", addr).
+			WithError(err)
 	}
 
 	s := &server{}
 	grpcServer := grpc.NewServer()
 	api.RegisterReporterServer(grpcServer, s)
 	if err = grpcServer.Serve(lis); err != nil {
-		return fmt.Errorf("failed to serve: %v", err)
+		return rtmerror.NewError("failed to start server").WithError(err)
 	}
 
 	// notreached
 	return nil
+}
+
+func timestampOf(d time.Time) (*timestamp.Timestamp, error) {
+	ts, err := ptypes.TimestampProto(d)
+	if err != nil {
+		return ts, rtmerror.NewError("timestamp conversion failed").
+			WithError(err)
+	}
+	return ts, nil
 }
