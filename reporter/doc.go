@@ -57,7 +57,30 @@ returned values are always what the base type returns, and an error:
   // n   is the number of observations
   // err is nil or an error
 
-See demo/client.go for an example.
+A full dump of all server-known metrics can be obtained using FullDump().
+See also demo/client.go for an example.
 
+  dump, err := c.FullDump()
+  if err != nil { ... }
+  for _, av := range dump.Averages {
+    // av.Name is the name, av.Value is the average, av.N is the number of cases
+  }
+  for _, avPD := range dump.AveragesPerDuration {
+    // avPD.Name is the name, avPD.Value is the average, avPD.N is the number of cases,
+    // av.Until is the up-to timestamp
+  }
+  for _, c := range dump.Counts {
+    // c.Name is the name, c.Value is the count
+  }
+  for _, cPD := range dump.CountsPerDuration {
+    // cPD.Name is the name, cPD.Value is the count, cPD.Until is the up-to timestamp
+  }
+  for _, s := range dump.Sums {
+    // s.Name is the name, s.Value is the sum, s.N is the number of cases
+  }
+  for _, sPD := range dump.SumsPerDuration {
+    // sPD.Name is the name, sPD.Value is the sum, sPD.N is the number of cases,
+    // sPD.Until is the up-to timestamp
+  }
 */
 package reporter

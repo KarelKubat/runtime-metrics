@@ -122,14 +122,14 @@ type FullDumpReturn struct {
 // FullDump returns all names and states of server-known metrics. The return value is a
 // (reference to a) structure with the fields:
 //
-// Averages: an array of structs with a Name (string), Value (float64), N (int64)
-// AveragesPerDuration: similar to the above, but the fields also have Until (time.Time)
-// Counts: an array of structs with a Name (string), Value (int64)
-// CountsPerDuration: similar to the above, but the fields also have Until (time.Time)
-// Sums: an array of structs with a Name (string), Value (float64), N (int64)
-// SumsPerDuration: similar to the above, but the fields also have Until (time.Time)
+//  Averages:            an array of structs with a Name (string), Value (float64), N (int64)
+//  AveragesPerDuration: similar to the above, but the fields also have Until (time.Time)
+//  Counts:              an array of structs with a Name (string), Value (int64)
+//  CountsPerDuration:   similar to the above, but the fields also have Until (time.Time)
+//  Sums:                an array of structs with a Name (string), Value (float64), N (int64)
+//  SumsPerDuration:     similar to the above, but the fields also have Until (time.Time)
 //
-// See demo/client_fulldump.go for a complete example.
+// See the package overview or demo/client_fulldump.go for a complete example.
 func (c *Client) FullDump() (*FullDumpReturn, error) {
 	resp, err := c.client.FullDump(context.Background(), &api.EmptyRequest{})
 	if err != nil {

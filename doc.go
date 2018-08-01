@@ -36,16 +36,20 @@ ratio exceeds 1% over a period of 30 seconds.
   // - NewCountPerDuration(d time.Duration)
   // - NewSumPerDuration(d time.Duration)
   // - NewAveragePerDuration(d time.Duration)
+
   errorRatio = base.NewAveragePerDuration(30 * time.Second)
 
   // Check failures vs. totals and do something when there is >= 1% failures.
-  // Poll every 10 seconds.
+  // Poll every 30 seconds, a shorter period won't help because the average
+  // cannot change any quicker.
   go func() {
+    // average is the recorded value, n is the number of cases,
+    // until is the up-to timestamp of the calculation
     average, n, until := errorRatio.Report()
     if average >= 0.01 {
       log.Printf("WARNING %v percent of lookups is failing " +
         "over a period of 30 seconds until %v, %v cases ",
-        ratio * 100.0, until, n)
+        average * 100.0, until, n)
       }
     }
     time.Sleep(time.Second * 30)
