@@ -41,9 +41,9 @@ func (set *AveragePerDurationSet) Names() []string {
 	return names
 }
 
-// Get returns a base.AveragePerDuration, identified by its name, or a non-nil
+// By returns a base.AveragePerDuration, identified by its name, or a non-nil
 // error.
-func (set *AveragePerDurationSet) Get(name string) (*base.AveragePerDuration, error) {
+func (set *AveragePerDurationSet) By(name string) (*base.AveragePerDuration, error) {
 	ret, ok := set.set[name]
 	if !ok {
 		return nil, rtmerror.NewError("AveragePerDuration %q not in set", name)

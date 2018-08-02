@@ -45,8 +45,8 @@ func (set *CountSet) Names() []string {
 	return names
 }
 
-// Get returns a base.Count, identified by its name, or a non-nil error.
-func (set *CountSet) Get(name string) (*base.Count, error) {
+// By returns a base.Count, identified by its name, or a non-nil error.
+func (set *CountSet) By(name string) (*base.Count, error) {
 	set.mutex.Lock()
 	defer set.mutex.Unlock()
 	ret, ok := set.set[name]

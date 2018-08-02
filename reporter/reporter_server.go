@@ -35,7 +35,7 @@ func (s *server) FullDump(ctx context.Context, in *api.EmptyRequest) (*api.FullD
 	ret := &api.FullDumpResponse{}
 
 	for _, name := range registry.AverageNames() {
-		metric, err := registry.GetAverage(name)
+		metric, err := registry.AverageBy(name)
 		if err != nil {
 			return nil, err
 		}
@@ -48,7 +48,7 @@ func (s *server) FullDump(ctx context.Context, in *api.EmptyRequest) (*api.FullD
 	}
 
 	for _, name := range registry.AveragePerDurationNames() {
-		metric, err := registry.GetAveragePerDuration(name)
+		metric, err := registry.AveragePerDurationBy(name)
 		if err != nil {
 			return nil, err
 		}
@@ -67,7 +67,7 @@ func (s *server) FullDump(ctx context.Context, in *api.EmptyRequest) (*api.FullD
 	}
 
 	for _, name := range registry.CountNames() {
-		metric, err := registry.GetCount(name)
+		metric, err := registry.CountBy(name)
 		if err != nil {
 			return nil, err
 		}
@@ -79,7 +79,7 @@ func (s *server) FullDump(ctx context.Context, in *api.EmptyRequest) (*api.FullD
 	}
 
 	for _, name := range registry.CountPerDurationNames() {
-		metric, err := registry.GetCountPerDuration(name)
+		metric, err := registry.CountPerDurationBy(name)
 		if err != nil {
 			return nil, err
 		}
@@ -97,7 +97,7 @@ func (s *server) FullDump(ctx context.Context, in *api.EmptyRequest) (*api.FullD
 	}
 
 	for _, name := range registry.SumNames() {
-		metric, err := registry.GetSum(name)
+		metric, err := registry.SumBy(name)
 		if err != nil {
 			return nil, err
 		}
@@ -110,7 +110,7 @@ func (s *server) FullDump(ctx context.Context, in *api.EmptyRequest) (*api.FullD
 	}
 
 	for _, name := range registry.SumPerDurationNames() {
-		metric, err := registry.GetSumPerDuration(name)
+		metric, err := registry.SumPerDurationBy(name)
 		if err != nil {
 			return nil, err
 		}
@@ -134,7 +134,7 @@ func (s *server) FullDump(ctx context.Context, in *api.EmptyRequest) (*api.FullD
 // Average uses the API to return the state of a named Average.
 // This is wrapped in the client, this function isn't for public consumption.
 func (s *server) Average(ctx context.Context, in *api.NameRequest) (*api.AverageResponse, error) {
-	av, err := registry.GetAverage(in.GetName())
+	av, err := registry.AverageBy(in.GetName())
 	if err != nil {
 		return nil, err
 	}
@@ -150,7 +150,7 @@ func (s *server) Average(ctx context.Context, in *api.NameRequest) (*api.Average
 func (s *server) AveragePerDuration(ctx context.Context, in *api.NameRequest) (
 	*api.AveragePerDurationResponse, error) {
 
-	av, err := registry.GetAveragePerDuration(in.GetName())
+	av, err := registry.AveragePerDurationBy(in.GetName())
 	if err != nil {
 		return nil, err
 	}
@@ -169,7 +169,7 @@ func (s *server) AveragePerDuration(ctx context.Context, in *api.NameRequest) (
 // Average uses the API to return the state of a named Count.
 // This is wrapped in the client, this function isn't for public consumption.
 func (s *server) Count(ctx context.Context, in *api.NameRequest) (*api.CountResponse, error) {
-	av, err := registry.GetCount(in.GetName())
+	av, err := registry.CountBy(in.GetName())
 	if err != nil {
 		return nil, err
 	}
@@ -181,7 +181,7 @@ func (s *server) Count(ctx context.Context, in *api.NameRequest) (*api.CountResp
 // Average uses the API to return the state of a named CountPerDuration.
 // This is wrapped in the client, this function isn't for public consumption.
 func (s *server) CountPerDuration(ctx context.Context, in *api.NameRequest) (*api.CountPerDurationResponse, error) {
-	av, err := registry.GetCountPerDuration(in.GetName())
+	av, err := registry.CountPerDurationBy(in.GetName())
 	if err != nil {
 		return nil, err
 	}
@@ -199,7 +199,7 @@ func (s *server) CountPerDuration(ctx context.Context, in *api.NameRequest) (*ap
 // Average uses the API to return the state of a named Sum.
 // This is wrapped in the client, this function isn't for public consumption.
 func (s *server) Sum(ctx context.Context, in *api.NameRequest) (*api.SumResponse, error) {
-	av, err := registry.GetSum(in.GetName())
+	av, err := registry.SumBy(in.GetName())
 	if err != nil {
 		return nil, err
 	}
@@ -213,7 +213,7 @@ func (s *server) Sum(ctx context.Context, in *api.NameRequest) (*api.SumResponse
 // Average uses the API to return the state of a named SumPerDuration.
 // This is wrapped in the client, this function isn't for public consumption.
 func (s *server) SumPerDuration(ctx context.Context, in *api.NameRequest) (*api.SumPerDurationResponse, error) {
-	av, err := registry.GetSumPerDuration(in.GetName())
+	av, err := registry.SumPerDurationBy(in.GetName())
 	if err != nil {
 		return nil, err
 	}

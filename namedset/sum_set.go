@@ -45,8 +45,8 @@ func (set *SumSet) Names() []string {
 	return names
 }
 
-// Get returns a base.Sum, identified by its name, or a non-nil error.
-func (set *SumSet) Get(name string) (*base.Sum, error) {
+// By returns a base.Sum, identified by its name, or a non-nil error.
+func (set *SumSet) By(name string) (*base.Sum, error) {
 	set.mutex.Lock()
 	defer set.mutex.Unlock()
 	ret, ok := set.set[name]

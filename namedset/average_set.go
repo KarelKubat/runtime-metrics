@@ -45,8 +45,8 @@ func (set *AverageSet) Names() []string {
 	return names
 }
 
-// Get returns a base.Average, identified by its name, or a non-nil error.
-func (set *AverageSet) Get(name string) (*base.Average, error) {
+// By returns a base.Average, identified by its name, or a non-nil error.
+func (set *AverageSet) By(name string) (*base.Average, error) {
 	set.mutex.Lock()
 	defer set.mutex.Unlock()
 	ret, ok := set.set[name]

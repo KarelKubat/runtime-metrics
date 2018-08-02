@@ -96,6 +96,14 @@ func AddSumPerDuration(name string, a *base.SumPerDuration) error
 AddSumPerDuration adds a reference to a base.SumPerDuration to the registry, or
 returns an error when a name collision occurs with an other metric.
 
+#### func  AverageBy
+
+```go
+func AverageBy(name string) (*base.Average, error)
+```
+AverageBy returns a reference to a registered base.Average, or a non-nil error
+when the metric wasn't registered. The argument is the name to lookup.
+
 #### func  AverageNames
 
 ```go
@@ -103,6 +111,15 @@ func AverageNames() []string
 ```
 AverageNames returns a list of sorted strings of the names of the Averages in
 the registry.
+
+#### func  AveragePerDurationBy
+
+```go
+func AveragePerDurationBy(name string) (*base.AveragePerDuration, error)
+```
+AveragePerDurationBy returns a reference to a registered
+base.AveragePerDuration, or a non-nil error when the metric wasn't registered.
+The argument is the name to lookup.
 
 #### func  AveragePerDurationNames
 
@@ -112,6 +129,14 @@ func AveragePerDurationNames() []string
 AveragePerDurationNames returns a list of sorted strings of all the names of
 AveragePerDurations in the registry.
 
+#### func  CountBy
+
+```go
+func CountBy(name string) (*base.Count, error)
+```
+CountBy returns a reference to a registered base.Count, or a non-nil error when
+the metric wasn't registered. The argument is the name to lookup.
+
 #### func  CountNames
 
 ```go
@@ -119,6 +144,15 @@ func CountNames() []string
 ```
 CountNames returns a list of sorted strings of all the names of Counts in the
 registry.
+
+#### func  CountPerDurationBy
+
+```go
+func CountPerDurationBy(name string) (*base.CountPerDuration, error)
+```
+CountPerDurationBy returns a reference to a registered base.CountPerDuration, or
+a non-nil error when the metric wasn't registered. The argument is the name to
+lookup.
 
 #### func  CountPerDurationNames
 
@@ -128,56 +162,13 @@ func CountPerDurationNames() []string
 CountPerDurationNames returns a list of sorted strings of all the names of
 CountPerDurations in the registry.
 
-#### func  GetAverage
+#### func  SumBy
 
 ```go
-func GetAverage(name string) (*base.Average, error)
+func SumBy(name string) (*base.Sum, error)
 ```
-GetAverage returns a reference to a registered base.Average, or a non-nil error
-when the metric wasn't registered. The argument is the name to lookup.
-
-#### func  GetAveragePerDuration
-
-```go
-func GetAveragePerDuration(name string) (*base.AveragePerDuration, error)
-```
-GetAveragePerDuration returns a reference to a registered
-base.AveragePerDuration, or a non-nil error when the metric wasn't registered.
-The argument is the name to lookup.
-
-#### func  GetCount
-
-```go
-func GetCount(name string) (*base.Count, error)
-```
-GetCount returns a reference to a registered base.Count, or a non-nil error when
-the metric wasn't registered. The argument is the name to lookup.
-
-#### func  GetCountPerDuration
-
-```go
-func GetCountPerDuration(name string) (*base.CountPerDuration, error)
-```
-GetCountPerDuration returns a reference to a registered base.CountPerDuration,
-or a non-nil error when the metric wasn't registered. The argument is the name
-to lookup.
-
-#### func  GetSum
-
-```go
-func GetSum(name string) (*base.Sum, error)
-```
-GetSum returns a reference to a registered base.Sum, or a non-nil error when the
+SumBy returns a reference to a registered base.Sum, or a non-nil error when the
 metric wasn't registered. The argument is the name to lookup.
-
-#### func  GetSumPerDuration
-
-```go
-func GetSumPerDuration(name string) (*base.SumPerDuration, error)
-```
-GetSumPerDuration returns a reference to a registered base.SumPerDuration, or a
-non-nil error when the metric wasn't registered. The argument is the name to
-lookup.
 
 #### func  SumNames
 
@@ -186,6 +177,15 @@ func SumNames() []string
 ```
 SumNames returns a list of sorted strings of all the names of Sums in the
 registry.
+
+#### func  SumPerDurationBy
+
+```go
+func SumPerDurationBy(name string) (*base.SumPerDuration, error)
+```
+SumPerDurationBy returns a reference to a registered base.SumPerDuration, or a
+non-nil error when the metric wasn't registered. The argument is the name to
+lookup.
 
 #### func  SumPerDurationNames
 

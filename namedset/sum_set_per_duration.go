@@ -45,8 +45,8 @@ func (set *SumPerDurationSet) Names() []string {
 	return names
 }
 
-// Get returns a base.SumPerDuration, identified by its name, or a non-nil error.
-func (set *SumPerDurationSet) Get(name string) (*base.SumPerDuration, error) {
+// By returns a base.SumPerDuration, identified by its name, or a non-nil error.
+func (set *SumPerDurationSet) By(name string) (*base.SumPerDuration, error) {
 	set.mutex.Lock()
 	defer set.mutex.Unlock()
 	ret, ok := set.set[name]

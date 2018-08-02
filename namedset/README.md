@@ -31,12 +31,12 @@ func (set *AveragePerDurationSet) Add(name string, a *base.AveragePerDuration) e
 ```
 Add registers a base.AveragePerDuration in the set.
 
-#### func (*AveragePerDurationSet) Get
+#### func (*AveragePerDurationSet) By
 
 ```go
-func (set *AveragePerDurationSet) Get(name string) (*base.AveragePerDuration, error)
+func (set *AveragePerDurationSet) By(name string) (*base.AveragePerDuration, error)
 ```
-Get returns a base.AveragePerDuration, identified by its name, or a non-nil
+By returns a base.AveragePerDuration, identified by its name, or a non-nil
 error.
 
 #### func (*AveragePerDurationSet) Names
@@ -69,12 +69,12 @@ func (set *AverageSet) Add(name string, a *base.Average) error
 ```
 Add registers a base.Average metric in the set.
 
-#### func (*AverageSet) Get
+#### func (*AverageSet) By
 
 ```go
-func (set *AverageSet) Get(name string) (*base.Average, error)
+func (set *AverageSet) By(name string) (*base.Average, error)
 ```
-Get returns a base.Average, identified by its name, or a non-nil error.
+By returns a base.Average, identified by its name, or a non-nil error.
 
 #### func (*AverageSet) Names
 
@@ -106,12 +106,12 @@ func (set *CountPerDurationSet) Add(name string, a *base.CountPerDuration) error
 ```
 Add registers a base.CountPerDuration metric in the set.
 
-#### func (*CountPerDurationSet) Get
+#### func (*CountPerDurationSet) By
 
 ```go
-func (set *CountPerDurationSet) Get(name string) (*base.CountPerDuration, error)
+func (set *CountPerDurationSet) By(name string) (*base.CountPerDuration, error)
 ```
-Get returns a base.CountPerDuration, identified by its name, or a non-nil error.
+By returns a base.CountPerDuration, identified by its name, or a non-nil error.
 
 #### func (*CountPerDurationSet) Names
 
@@ -143,12 +143,12 @@ func (set *CountSet) Add(name string, a *base.Count) error
 ```
 Add registers a base.Count metric in the set.
 
-#### func (*CountSet) Get
+#### func (*CountSet) By
 
 ```go
-func (set *CountSet) Get(name string) (*base.Count, error)
+func (set *CountSet) By(name string) (*base.Count, error)
 ```
-Get returns a base.Count, identified by its name, or a non-nil error.
+By returns a base.Count, identified by its name, or a non-nil error.
 
 #### func (*CountSet) Names
 
@@ -180,12 +180,12 @@ func (set *SumPerDurationSet) Add(name string, a *base.SumPerDuration) error
 ```
 Add registers a base.SumPerDuration metric in the set.
 
-#### func (*SumPerDurationSet) Get
+#### func (*SumPerDurationSet) By
 
 ```go
-func (set *SumPerDurationSet) Get(name string) (*base.SumPerDuration, error)
+func (set *SumPerDurationSet) By(name string) (*base.SumPerDuration, error)
 ```
-Get returns a base.SumPerDuration, identified by its name, or a non-nil error.
+By returns a base.SumPerDuration, identified by its name, or a non-nil error.
 
 #### func (*SumPerDurationSet) Names
 
@@ -217,12 +217,12 @@ func (set *SumSet) Add(name string, a *base.Sum) error
 ```
 Add registers a base.Sum metric in the set.
 
-#### func (*SumSet) Get
+#### func (*SumSet) By
 
 ```go
-func (set *SumSet) Get(name string) (*base.Sum, error)
+func (set *SumSet) By(name string) (*base.Sum, error)
 ```
-Get returns a base.Sum, identified by its name, or a non-nil error.
+By returns a base.Sum, identified by its name, or a non-nil error.
 
 #### func (*SumSet) Names
 

@@ -45,8 +45,8 @@ func (set *CountPerDurationSet) Names() []string {
 	return names
 }
 
-// Get returns a base.CountPerDuration, identified by its name, or a non-nil error.
-func (set *CountPerDurationSet) Get(name string) (*base.CountPerDuration, error) {
+// By returns a base.CountPerDuration, identified by its name, or a non-nil error.
+func (set *CountPerDurationSet) By(name string) (*base.CountPerDuration, error) {
 	set.mutex.Lock()
 	defer set.mutex.Unlock()
 	ret, ok := set.set[name]

@@ -63,40 +63,40 @@ func AddSumPerDuration(name string, a *base.SumPerDuration) error {
 	return sumPerDurationSet.Add(name, a)
 }
 
-// GetAverage returns a reference to a registered base.Average, or a non-nil error when
+// AverageBy returns a reference to a registered base.Average, or a non-nil error when
 // the metric wasn't registered. The argument is the name to lookup.
-func GetAverage(name string) (*base.Average, error) {
-	return averageSet.Get(name)
+func AverageBy(name string) (*base.Average, error) {
+	return averageSet.By(name)
 }
 
-// GetAveragePerDuration returns a reference to a registered base.AveragePerDuration, or a non-nil error when
-// the metric wasn't registered. The argument is the name to lookup.
-func GetAveragePerDuration(name string) (*base.AveragePerDuration, error) {
-	return averagePerDurationSet.Get(name)
+// AveragePerDurationBy returns a reference to a registered base.AveragePerDuration,
+// or a non-nil error when the metric wasn't registered. The argument is the name to lookup.
+func AveragePerDurationBy(name string) (*base.AveragePerDuration, error) {
+	return averagePerDurationSet.By(name)
 }
 
-// GetCount returns a reference to a registered base.Count, or a non-nil error when
+// CountBy returns a reference to a registered base.Count, or a non-nil error when
 // the metric wasn't registered. The argument is the name to lookup.
-func GetCount(name string) (*base.Count, error) {
-	return counterSet.Get(name)
+func CountBy(name string) (*base.Count, error) {
+	return counterSet.By(name)
 }
 
-// GetCountPerDuration returns a reference to a registered base.CountPerDuration, or a non-nil error when
-// the metric wasn't registered. The argument is the name to lookup.
-func GetCountPerDuration(name string) (*base.CountPerDuration, error) {
-	return counterPerDurationSet.Get(name)
+// CountPerDurationBy returns a reference to a registered base.CountPerDuration, or a non-nil
+// error when the metric wasn't registered. The argument is the name to lookup.
+func CountPerDurationBy(name string) (*base.CountPerDuration, error) {
+	return counterPerDurationSet.By(name)
 }
 
-// GetSum returns a reference to a registered base.Sum, or a non-nil error when
+// SumBy returns a reference to a registered base.Sum, or a non-nil error when
 // the metric wasn't registered. The argument is the name to lookup.
-func GetSum(name string) (*base.Sum, error) {
-	return sumSet.Get(name)
+func SumBy(name string) (*base.Sum, error) {
+	return sumSet.By(name)
 }
 
-// GetSumPerDuration returns a reference to a registered base.SumPerDuration, or a non-nil error when
-// the metric wasn't registered. The argument is the name to lookup.
-func GetSumPerDuration(name string) (*base.SumPerDuration, error) {
-	return sumPerDurationSet.Get(name)
+// SumPerDurationBy returns a reference to a registered base.SumPerDuration, or a non-nil error
+// when the metric wasn't registered. The argument is the name to lookup.
+func SumPerDurationBy(name string) (*base.SumPerDuration, error) {
+	return sumPerDurationSet.By(name)
 }
 
 // AverageNames returns a list of sorted strings of the names of the Averages in the registry.
