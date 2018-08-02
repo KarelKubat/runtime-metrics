@@ -313,3 +313,14 @@ typically be started as a go-routine.
            time.Sleep(5 * time.Second)
        }
     }
+
+
+### A Testing Server That Runs Forever
+
+For benchmarking etc., there is also a server that just runs forever and
+pretends to call some RPC that fails in about 10% of the cases. It exports the
+error ratio, latency and number of calls. It can be started using
+
+    go run main.go foreverserver
+
+The source is in demosrc/forever_server.go.

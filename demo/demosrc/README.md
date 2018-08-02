@@ -39,6 +39,14 @@ func ClientScrapeDemo()
 ClientScrapeDemo runs a reporter client that fetches server metrics in an
 endless loop (or until the server exits). The metrics are displayed on stdout.
 
+#### func  ForeverServerDemo
+
+```go
+func ForeverServerDemo()
+```
+ForeverServerDemo simulates what a real-life server might do to obtain and to
+publish its metrics.
+
 #### func  PublishingProgramDemo
 
 ```go
