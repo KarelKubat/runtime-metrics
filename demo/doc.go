@@ -245,9 +245,7 @@ go-routine.
     // This could push the metrics onto some remote monitoring system. It's the alternative to
     // having a server that just publishes its metrics and a client that scrapes them and processes
     // them further.
-    //
     // It would be started as a go-routine to run in a separate thread.
-    //
     // In each loop we re-query registery.*Names() incase new metrics were created since the
     // previous run.
 
