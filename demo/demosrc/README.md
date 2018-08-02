@@ -44,10 +44,6 @@ endless loop (or until the server exits). The metrics are displayed on stdout.
 ```go
 func PublishingProgramDemo()
 ```
-PublishingProgramDemo shows how a program can inspect its own metrics, so that
-they can be e.g. pushed to a monitoring service. This is a different approach
-than having the metrics in a server, and having a client scrape them and process
-them further.
 
 #### func  ServerDemo
 
