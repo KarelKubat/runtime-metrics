@@ -253,7 +253,7 @@ typically be started as a go-routine.
 
 	for {
 		for _, name := range registry.AverageNames() {
-			avg, err := registry.GetAverage(name)
+			avg, err := registry.AverageBy(name)
 			if err == nil {
 				val, n := avg.Report()
 				fmt.Printf("%q: %v (n=%v)\n", name, val, n)
@@ -263,7 +263,7 @@ typically be started as a go-routine.
 			}
 		}
 		for _, name := range registry.AveragePerDurationNames() {
-			avgPD, err := registry.GetAveragePerDuration(name)
+			avgPD, err := registry.AveragePerDurationBy(name)
 			if err == nil {
 				val, n, _ := avgPD.Report()
 				fmt.Printf("%q: %v (n=%v)\n", name, val, n)
@@ -273,7 +273,7 @@ typically be started as a go-routine.
 			}
 		}
 		for _, name := range registry.CountNames() {
-			cnt, err := registry.GetCount(name)
+			cnt, err := registry.CountBy(name)
 			if err == nil {
 				val := cnt.Report()
 				fmt.Printf("%q: %v\n", name, val)
@@ -283,7 +283,7 @@ typically be started as a go-routine.
 			}
 		}
 		for _, name := range registry.CountPerDurationNames() {
-			cntPD, err := registry.GetCountPerDuration(name)
+			cntPD, err := registry.CountPerDurationBy(name)
 			if err == nil {
 				val, _ := cntPD.Report()
 				fmt.Printf("%q: %v\n", name, val)
@@ -293,7 +293,7 @@ typically be started as a go-routine.
 			}
 		}
 		for _, name := range registry.SumNames() {
-			avg, err := registry.GetSum(name)
+			avg, err := registry.SumBy(name)
 			if err == nil {
 				val, n := avg.Report()
 				fmt.Printf("%q: %v (n=%v)\n", name, val, n)
@@ -303,7 +303,7 @@ typically be started as a go-routine.
 			}
 		}
 		for _, name := range registry.SumPerDurationNames() {
-			avgPD, err := registry.GetSumPerDuration(name)
+			avgPD, err := registry.SumPerDurationBy(name)
 			if err == nil {
 				val, n, _ := avgPD.Report()
 				fmt.Printf("%q: %v (n=%v)\n", name, val, n)
