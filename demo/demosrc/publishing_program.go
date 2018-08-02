@@ -12,6 +12,14 @@ import (
 // that they can be e.g. pushed to a monitoring service. This is a different
 // approach than having the metrics in a server, and having a client scrape
 // them and process them further.
+//
+// Advantage: All-in-one, no need for TCP ports that can already be take
+// (because the server/client force you to pick a por);
+//
+// Disadvantage: Forces your program to be midful of what could go wrong when
+// sending metrics to a remote service, how to recover when out of quota,
+// etc..
+
 func PublishingProgramDemo() {
 
 	// Create some metrics and register them.
