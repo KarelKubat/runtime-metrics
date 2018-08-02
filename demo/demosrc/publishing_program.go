@@ -19,7 +19,6 @@ import (
 // Disadvantage: Forces your program to be midful of what could go wrong when
 // sending metrics to a remote service, how to recover when out of quota,
 // etc..
-
 func PublishingProgramDemo() {
 
 	// Create some metrics and register them.
