@@ -16,22 +16,22 @@ func TestRegistry(t *testing.T) {
 	// Add some metrics. No errors expected.
 	err = AddAverage("testname-average",
 		base.NewAverage())
-	assert.NoError(t, err)
+	assert.Nil(t, err)
 	err = AddAveragePerDuration("testname-average-per-duration",
 		base.NewAveragePerDuration(D))
-	assert.NoError(t, err)
+	assert.Nil(t, err)
 	err = AddCount("testname-counter",
 		base.NewCount())
-	assert.NoError(t, err)
+	assert.Nil(t, err)
 	err = AddCountPerDuration("testname-counter-per-duration",
 		base.NewCountPerDuration(D))
-	assert.NoError(t, err)
+	assert.Nil(t, err)
 	err = AddSum("testname-sum",
 		base.NewSum())
-	assert.NoError(t, err)
+	assert.Nil(t, err)
 	err = AddSumPerDuration("testname-sum-per-duration",
 		base.NewSumPerDuration(D))
-	assert.NoError(t, err)
+	assert.Nil(t, err)
 
 	// Redo, errors expected.
 	err = AddAverage("testname-average",

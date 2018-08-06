@@ -3,6 +3,7 @@ package registry
 import (
 	"github.com/KarelKubat/runtime-metrics/base"
 	"github.com/KarelKubat/runtime-metrics/namedset"
+	"github.com/KarelKubat/runtime-metrics/rtmerror"
 )
 
 var averageSet *namedset.AverageSet
@@ -24,78 +25,78 @@ func init() {
 // AddAverage adds a reference to a base.Average to the registry,
 // or returns an error when a name collision occurs with an other
 // metric.
-func AddAverage(name string, a *base.Average) error {
+func AddAverage(name string, a *base.Average) *rtmerror.Error {
 	return averageSet.Add(name, a)
 }
 
 // AddAveragePerDuration adds a reference to a base.AveragePerDuration to the registry,
 // or returns an error when a name collision occurs with an other
 // metric.
-func AddAveragePerDuration(name string, a *base.AveragePerDuration) error {
+func AddAveragePerDuration(name string, a *base.AveragePerDuration) *rtmerror.Error {
 	return averagePerDurationSet.Add(name, a)
 }
 
 // AddCount adds a reference to a base.Count to the registry,
 // or returns an error when a name collision occurs with an other
 // metric.
-func AddCount(name string, a *base.Count) error {
+func AddCount(name string, a *base.Count) *rtmerror.Error {
 	return counterSet.Add(name, a)
 }
 
 // AddCountPerDuration adds a reference to a base.CountPerDuration to the registry,
 // or returns an error when a name collision occurs with an other
 // metric.
-func AddCountPerDuration(name string, a *base.CountPerDuration) error {
+func AddCountPerDuration(name string, a *base.CountPerDuration) *rtmerror.Error {
 	return counterPerDurationSet.Add(name, a)
 }
 
 // AddSum adds a reference to a base.Sum to the registry,
 // or returns an error when a name collision occurs with an other
 // metric.
-func AddSum(name string, a *base.Sum) error {
+func AddSum(name string, a *base.Sum) *rtmerror.Error {
 	return sumSet.Add(name, a)
 }
 
 // AddSumPerDuration adds a reference to a base.SumPerDuration to the registry,
 // or returns an error when a name collision occurs with an other
 // metric.
-func AddSumPerDuration(name string, a *base.SumPerDuration) error {
+func AddSumPerDuration(name string, a *base.SumPerDuration) *rtmerror.Error {
 	return sumPerDurationSet.Add(name, a)
 }
 
 // AverageBy returns a reference to a registered base.Average, or a non-nil error when
 // the metric wasn't registered. The argument is the name to lookup.
-func AverageBy(name string) (*base.Average, error) {
+func AverageBy(name string) (*base.Average, *rtmerror.Error) {
 	return averageSet.By(name)
 }
 
 // AveragePerDurationBy returns a reference to a registered base.AveragePerDuration,
 // or a non-nil error when the metric wasn't registered. The argument is the name to lookup.
-func AveragePerDurationBy(name string) (*base.AveragePerDuration, error) {
+func AveragePerDurationBy(name string) (*base.AveragePerDuration, *rtmerror.Error) {
 	return averagePerDurationSet.By(name)
 }
 
 // CountBy returns a reference to a registered base.Count, or a non-nil error when
 // the metric wasn't registered. The argument is the name to lookup.
-func CountBy(name string) (*base.Count, error) {
+func CountBy(name string) (*base.Count, *rtmerror.Error) {
 	return counterSet.By(name)
 }
 
 // CountPerDurationBy returns a reference to a registered base.CountPerDuration, or a non-nil
 // error when the metric wasn't registered. The argument is the name to lookup.
-func CountPerDurationBy(name string) (*base.CountPerDuration, error) {
+func CountPerDurationBy(name string) (*base.CountPerDuration, *rtmerror.Error) {
 	return counterPerDurationSet.By(name)
 }
 
 // SumBy returns a reference to a registered base.Sum, or a non-nil error when
 // the metric wasn't registered. The argument is the name to lookup.
-func SumBy(name string) (*base.Sum, error) {
+func SumBy(name string) (*base.Sum, *rtmerror.Error) {
 	return sumSet.By(name)
 }
 
 // SumPerDurationBy returns a reference to a registered base.SumPerDuration, or a non-nil error
 // when the metric wasn't registered. The argument is the name to lookup.
-func SumPerDurationBy(name string) (*base.SumPerDuration, error) {
+func SumPerDurationBy(name string) (*base.SumPerDuration, *rtmerror.Error) {
 	return sumPerDurationSet.By(name)
 }
 

@@ -24,7 +24,7 @@ type Client struct {
 // localhost). The default backup policy (to overcome network errors) is retry up to 5
 // times, with delays 50, 100, 150, 200, 250 and 300 milliseconds between tries.
 // This can be changed using WithBackoffPolicy.
-func NewClient(addr string) (*Client, error) {
+func NewClient(addr string) (*Client, *rtmerror.Error) {
 	conn, err := grpc.Dial(addr, grpc.WithInsecure())
 	if err != nil {
 		return nil, rtmerror.NewError("failed to dial %q", addr).WithError(err)
@@ -88,7 +88,7 @@ type AllNamesReturn struct {
 //  // overview.CountsPerDuration, overview.Sums, overview.SumsPerDuration
 //
 // See demo/demosrc/client_allnames.go for a full example.
-func (c *Client) AllNames() (*AllNamesReturn, error) {
+func (c *Client) AllNames() (*AllNamesReturn, *rtmerror.Error) {
 	var err error
 	var resp *api.AllNamesResponse
 
@@ -166,7 +166,7 @@ type FullDumpReturn struct {
 //  SumsPerDuration:     similar to the above, but the fields also have Until (time.Time)
 //
 // See the package overview or demo/demosrc/client_fulldump.go for a complete example.
-func (c *Client) FullDump() (*FullDumpReturn, error) {
+func (c *Client) FullDump() (*FullDumpReturn, *rtmerror.Error) {
 	var err error
 	var resp *api.FullDumpResponse
 
@@ -246,7 +246,7 @@ func (c *Client) FullDump() (*FullDumpReturn, error) {
 
 // Average returns the average value (float64) and number of cases (int64) of a named
 // server-side Average metric; or a non-nil error.
-func (c *Client) Average(name string) (float64, int64, error) {
+func (c *Client) Average(name string) (float64, int64, *rtmerror.Error) {
 	var err error
 	var resp *api.AverageResponse
 
@@ -265,7 +265,7 @@ func (c *Client) Average(name string) (float64, int64, error) {
 
 // AveragePerDuration returns the average (float64), number of cases (int64) and the until-timestamp
 // (time.Time) of a named server-side AveragePerDuration metric; or a non-nil error.
-func (c *Client) AveragePerDuration(name string) (float64, int64, time.Time, error) {
+func (c *Client) AveragePerDuration(name string) (float64, int64, time.Time, *rtmerror.Error) {
 	var err error
 	var resp *api.AveragePerDurationResponse
 
@@ -280,16 +280,16 @@ func (c *Client) AveragePerDuration(name string) (float64, int64, time.Time, err
 	if err != nil {
 		return 0.0, int64(0), time.Now(), retryableError("AveragePerDuration", err)
 	}
-	ts, err := timeOf(resp.GetUntil())
+	ts, rtmerr := timeOf(resp.GetUntil())
 	if err != nil {
-		return 0.0, int64(0), time.Now(), err
+		return 0.0, int64(0), time.Now(), rtmerr
 	}
 	return resp.GetAverage(), resp.GetN(), ts, nil
 }
 
 // Count returns the number of observations (int64) of a named
 // server-side Count metric; or a non-nil error.
-func (c *Client) Count(name string) (int64, error) {
+func (c *Client) Count(name string) (int64, *rtmerror.Error) {
 	var err error
 	var resp *api.CountResponse
 
@@ -308,7 +308,7 @@ func (c *Client) Count(name string) (int64, error) {
 
 // CountPerDuration returns the number of observations (int64) and the until-timestamp
 // (time.Time) of a named server-side CountPerDuration metric; or a non-nil error.
-func (c *Client) CountPerDuration(name string) (int64, time.Time, error) {
+func (c *Client) CountPerDuration(name string) (int64, time.Time, *rtmerror.Error) {
 	var err error
 	var resp *api.CountPerDurationResponse
 
@@ -323,16 +323,16 @@ func (c *Client) CountPerDuration(name string) (int64, time.Time, error) {
 	if err != nil {
 		return int64(0), time.Now(), retryableError("CountPerDuration", err)
 	}
-	ts, err := timeOf(resp.GetUntil())
-	if err != nil {
-		return int64(0), time.Now(), err
+	ts, rtmerr := timeOf(resp.GetUntil())
+	if rtmerr != nil {
+		return int64(0), time.Now(), rtmerr
 	}
 	return resp.GetCount(), ts, nil
 }
 
 // Sum returns the sum of observations (float64) and number of cases (int32) of a named
 // server-side Sum metric; or a non-nil error.
-func (c *Client) Sum(name string) (float64, int64, error) {
+func (c *Client) Sum(name string) (float64, int64, *rtmerror.Error) {
 	var err error
 	var resp *api.SumResponse
 
@@ -352,7 +352,7 @@ func (c *Client) Sum(name string) (float64, int64, error) {
 // SumPerDuration returns the sum of observations (float64), the number of cases (int32)
 // and the until-timestamp (time.Time) of a named server-side SumPerDuration metric; or
 // a non-nil error.
-func (c *Client) SumPerDuration(name string) (float64, int64, time.Time, error) {
+func (c *Client) SumPerDuration(name string) (float64, int64, time.Time, *rtmerror.Error) {
 	var err error
 	var resp *api.SumPerDurationResponse
 
@@ -366,19 +366,19 @@ func (c *Client) SumPerDuration(name string) (float64, int64, time.Time, error) 
 	if err != nil {
 		return 0.0, int64(0), time.Now(), retryableError("SumPerDuration", err)
 	}
-	ts, err := timeOf(resp.GetUntil())
-	if err != nil {
-		return 0.0, int64(0), time.Now(), err
+	ts, rtmerr := timeOf(resp.GetUntil())
+	if rtmerr != nil {
+		return 0.0, int64(0), time.Now(), rtmerr
 	}
 	return resp.GetSum(), resp.GetN(), ts, nil
 }
 
-func retryableError(serviceName string, err error) error {
+func retryableError(serviceName string, err error) *rtmerror.Error {
 	return rtmerror.NewError("failed in service %q", serviceName).
 		WithError(err).WithRetryable(true)
 }
 
-func timeOf(t *timestamp.Timestamp) (time.Time, error) {
+func timeOf(t *timestamp.Timestamp) (time.Time, *rtmerror.Error) {
 	ts, err := ptypes.Timestamp(t)
 	if err != nil {
 		return ts, rtmerror.NewError("timestamp conversion failed").

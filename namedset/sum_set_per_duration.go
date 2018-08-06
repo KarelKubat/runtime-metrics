@@ -23,7 +23,7 @@ func NewSumPerDurationSet() *SumPerDurationSet {
 }
 
 // Add registers a base.SumPerDuration metric in the set.
-func (set *SumPerDurationSet) Add(name string, a *base.SumPerDuration) error {
+func (set *SumPerDurationSet) Add(name string, a *base.SumPerDuration) *rtmerror.Error {
 	set.mutex.Lock()
 	defer set.mutex.Unlock()
 	if _, ok := set.set[name]; ok {
@@ -46,7 +46,7 @@ func (set *SumPerDurationSet) Names() []string {
 }
 
 // By returns a base.SumPerDuration, identified by its name, or a non-nil error.
-func (set *SumPerDurationSet) By(name string) (*base.SumPerDuration, error) {
+func (set *SumPerDurationSet) By(name string) (*base.SumPerDuration, *rtmerror.Error) {
 	set.mutex.Lock()
 	defer set.mutex.Unlock()
 	ret, ok := set.set[name]

@@ -23,7 +23,7 @@ func NewCountPerDurationSet() *CountPerDurationSet {
 }
 
 // Add registers a base.CountPerDuration metric in the set.
-func (set *CountPerDurationSet) Add(name string, a *base.CountPerDuration) error {
+func (set *CountPerDurationSet) Add(name string, a *base.CountPerDuration) *rtmerror.Error {
 	set.mutex.Lock()
 	defer set.mutex.Unlock()
 	if _, ok := set.set[name]; ok {
@@ -46,7 +46,7 @@ func (set *CountPerDurationSet) Names() []string {
 }
 
 // By returns a base.CountPerDuration, identified by its name, or a non-nil error.
-func (set *CountPerDurationSet) By(name string) (*base.CountPerDuration, error) {
+func (set *CountPerDurationSet) By(name string) (*base.CountPerDuration, *rtmerror.Error) {
 	set.mutex.Lock()
 	defer set.mutex.Unlock()
 	ret, ok := set.set[name]

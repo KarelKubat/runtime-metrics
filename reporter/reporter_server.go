@@ -1,6 +1,7 @@
 package reporter
 
 import (
+	"fmt"
 	"net"
 	"time"
 
@@ -53,9 +54,9 @@ func (s *server) FullDump(ctx context.Context, in *api.EmptyRequest) (*api.FullD
 			return nil, err
 		}
 		val, n, until := metric.Report()
-		ts, err := timestampOf(until)
-		if err != nil {
-			return nil, err
+		ts, stderr := timestampOf(until)
+		if stderr != nil {
+			return nil, stderr
 		}
 		ret.NamedAveragesPerDuration = append(
 			ret.NamedAveragesPerDuration, &api.NamedAveragePerDuration{
@@ -84,9 +85,9 @@ func (s *server) FullDump(ctx context.Context, in *api.EmptyRequest) (*api.FullD
 			return nil, err
 		}
 		val, until := metric.Report()
-		ts, err := timestampOf(until)
-		if err != nil {
-			return nil, err
+		ts, stderr := timestampOf(until)
+		if stderr != nil {
+			return nil, stderr
 		}
 		ret.NamedCountsPerDuration = append(
 			ret.NamedCountsPerDuration, &api.NamedCountPerDuration{
@@ -115,9 +116,9 @@ func (s *server) FullDump(ctx context.Context, in *api.EmptyRequest) (*api.FullD
 			return nil, err
 		}
 		val, n, until := metric.Report()
-		ts, err := timestampOf(until)
-		if err != nil {
-			return nil, err
+		ts, stderr := timestampOf(until)
+		if stderr != nil {
+			return nil, stderr
 		}
 		ret.NamedSumsPerDuration = append(
 			ret.NamedSumsPerDuration, &api.NamedSumPerDuration{
@@ -155,9 +156,9 @@ func (s *server) AveragePerDuration(ctx context.Context, in *api.NameRequest) (
 		return nil, err
 	}
 	val, n, until := av.Report()
-	ts, err := timestampOf(until)
-	if err != nil {
-		return nil, err
+	ts, stderr := timestampOf(until)
+	if stderr != nil {
+		return nil, stderr
 	}
 	return &api.AveragePerDurationResponse{
 		Average: val,
@@ -186,9 +187,9 @@ func (s *server) CountPerDuration(ctx context.Context, in *api.NameRequest) (*ap
 		return nil, err
 	}
 	val, until := av.Report()
-	ts, err := timestampOf(until)
-	if err != nil {
-		return nil, err
+	ts, stderr := timestampOf(until)
+	if stderr != nil {
+		return nil, stderr
 	}
 	return &api.CountPerDurationResponse{
 		Count: val,
@@ -218,9 +219,9 @@ func (s *server) SumPerDuration(ctx context.Context, in *api.NameRequest) (*api.
 		return nil, err
 	}
 	val, n, until := av.Report()
-	ts, err := timestampOf(until)
-	if err != nil {
-		return nil, err
+	ts, stderr := timestampOf(until)
+	if stderr != nil {
+		return nil, stderr
 	}
 	return &api.SumPerDurationResponse{
 		Sum:   val,
@@ -253,8 +254,7 @@ func StartReporter(addr string) error {
 func timestampOf(d time.Time) (*timestamp.Timestamp, error) {
 	ts, err := ptypes.TimestampProto(d)
 	if err != nil {
-		return ts, rtmerror.NewError("timestamp conversion failed").
-			WithError(err)
+		return ts, fmt.Errorf("timestamp conversion failed: %v", err)
 	}
 	return ts, nil
 }

@@ -23,7 +23,7 @@ func NewCountSet() *CountSet {
 }
 
 // Add registers a base.Count metric in the set.
-func (set *CountSet) Add(name string, a *base.Count) error {
+func (set *CountSet) Add(name string, a *base.Count) *rtmerror.Error {
 	set.mutex.Lock()
 	defer set.mutex.Unlock()
 	if _, ok := set.set[name]; ok {
@@ -46,7 +46,7 @@ func (set *CountSet) Names() []string {
 }
 
 // By returns a base.Count, identified by its name, or a non-nil error.
-func (set *CountSet) By(name string) (*base.Count, error) {
+func (set *CountSet) By(name string) (*base.Count, *rtmerror.Error) {
 	set.mutex.Lock()
 	defer set.mutex.Unlock()
 	ret, ok := set.set[name]

@@ -23,7 +23,7 @@ func NewAverageSet() *AverageSet {
 }
 
 // Add registers a base.Average metric in the set.
-func (set *AverageSet) Add(name string, a *base.Average) error {
+func (set *AverageSet) Add(name string, a *base.Average) *rtmerror.Error {
 	set.mutex.Lock()
 	defer set.mutex.Unlock()
 	if _, ok := set.set[name]; ok {
@@ -46,7 +46,7 @@ func (set *AverageSet) Names() []string {
 }
 
 // By returns a base.Average, identified by its name, or a non-nil error.
-func (set *AverageSet) By(name string) (*base.Average, error) {
+func (set *AverageSet) By(name string) (*base.Average, *rtmerror.Error) {
 	set.mutex.Lock()
 	defer set.mutex.Unlock()
 	ret, ok := set.set[name]

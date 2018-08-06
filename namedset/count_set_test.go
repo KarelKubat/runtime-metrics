@@ -18,7 +18,7 @@ func TestCountSet(t *testing.T) {
 	// Create and add some base metrics
 	for _, name := range NAMES {
 		err := set.Add(name, base.NewCount())
-		assert.NoError(t, err)
+		assert.Nil(t, err)
 	}
 
 	// Re-adding won't work

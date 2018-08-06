@@ -23,7 +23,7 @@ func NewAveragePerDurationSet() *AveragePerDurationSet {
 }
 
 // Add registers a base.AveragePerDuration in the set.
-func (set *AveragePerDurationSet) Add(name string, a *base.AveragePerDuration) error {
+func (set *AveragePerDurationSet) Add(name string, a *base.AveragePerDuration) *rtmerror.Error {
 	if _, ok := set.set[name]; ok {
 		return rtmerror.NewError("AveragePerDuration %q already in set", name)
 	}
@@ -43,7 +43,7 @@ func (set *AveragePerDurationSet) Names() []string {
 
 // By returns a base.AveragePerDuration, identified by its name, or a non-nil
 // error.
-func (set *AveragePerDurationSet) By(name string) (*base.AveragePerDuration, error) {
+func (set *AveragePerDurationSet) By(name string) (*base.AveragePerDuration, *rtmerror.Error) {
 	ret, ok := set.set[name]
 	if !ok {
 		return nil, rtmerror.NewError("AveragePerDuration %q not in set", name)

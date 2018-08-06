@@ -23,7 +23,7 @@ func NewSumSet() *SumSet {
 }
 
 // Add registers a base.Sum metric in the set.
-func (set *SumSet) Add(name string, a *base.Sum) error {
+func (set *SumSet) Add(name string, a *base.Sum) *rtmerror.Error {
 	set.mutex.Lock()
 	defer set.mutex.Unlock()
 	if _, ok := set.set[name]; ok {
@@ -46,7 +46,7 @@ func (set *SumSet) Names() []string {
 }
 
 // By returns a base.Sum, identified by its name, or a non-nil error.
-func (set *SumSet) By(name string) (*base.Sum, error) {
+func (set *SumSet) By(name string) (*base.Sum, *rtmerror.Error) {
 	set.mutex.Lock()
 	defer set.mutex.Unlock()
 	ret, ok := set.set[name]
