@@ -233,7 +233,7 @@ func (s *server) SumPerDuration(ctx context.Context, in *api.NameRequest) (*api.
 // StartReporter starts the reporting server or returns a non-nil error.
 // The argument is an address in the format "ip:port", where "ip" is
 // optional. This is the binding address.
-func StartReporter(addr string) error {
+func StartReporter(addr string) *rtmerror.Error {
 	lis, err := net.Listen("tcp", addr)
 	if err != nil {
 		return rtmerror.NewError("failed to listen to address %q", addr).
