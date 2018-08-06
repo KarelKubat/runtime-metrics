@@ -116,7 +116,7 @@ constructing a client using WithBackoffPolicy(), for example:
 #### func  StartReporter
 
 ```go
-func StartReporter(addr string) error
+func StartReporter(addr string) *rtmerror.Error
 ```
 StartReporter starts the reporting server or returns a non-nil error. The
 argument is an address in the format "ip:port", where "ip" is optional. This is
