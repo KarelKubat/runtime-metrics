@@ -51,7 +51,7 @@ AverageNames(), of all counts using CountNames(), etc.:
 #### func  AddAverage
 
 ```go
-func AddAverage(name string, a *base.Average) error
+func AddAverage(name string, a *base.Average) *rtmerror.Error
 ```
 AddAverage adds a reference to a base.Average to the registry, or returns an
 error when a name collision occurs with an other metric.
@@ -59,7 +59,7 @@ error when a name collision occurs with an other metric.
 #### func  AddAveragePerDuration
 
 ```go
-func AddAveragePerDuration(name string, a *base.AveragePerDuration) error
+func AddAveragePerDuration(name string, a *base.AveragePerDuration) *rtmerror.Error
 ```
 AddAveragePerDuration adds a reference to a base.AveragePerDuration to the
 registry, or returns an error when a name collision occurs with an other metric.
@@ -67,7 +67,7 @@ registry, or returns an error when a name collision occurs with an other metric.
 #### func  AddCount
 
 ```go
-func AddCount(name string, a *base.Count) error
+func AddCount(name string, a *base.Count) *rtmerror.Error
 ```
 AddCount adds a reference to a base.Count to the registry, or returns an error
 when a name collision occurs with an other metric.
@@ -75,7 +75,7 @@ when a name collision occurs with an other metric.
 #### func  AddCountPerDuration
 
 ```go
-func AddCountPerDuration(name string, a *base.CountPerDuration) error
+func AddCountPerDuration(name string, a *base.CountPerDuration) *rtmerror.Error
 ```
 AddCountPerDuration adds a reference to a base.CountPerDuration to the registry,
 or returns an error when a name collision occurs with an other metric.
@@ -83,7 +83,7 @@ or returns an error when a name collision occurs with an other metric.
 #### func  AddSum
 
 ```go
-func AddSum(name string, a *base.Sum) error
+func AddSum(name string, a *base.Sum) *rtmerror.Error
 ```
 AddSum adds a reference to a base.Sum to the registry, or returns an error when
 a name collision occurs with an other metric.
@@ -91,7 +91,7 @@ a name collision occurs with an other metric.
 #### func  AddSumPerDuration
 
 ```go
-func AddSumPerDuration(name string, a *base.SumPerDuration) error
+func AddSumPerDuration(name string, a *base.SumPerDuration) *rtmerror.Error
 ```
 AddSumPerDuration adds a reference to a base.SumPerDuration to the registry, or
 returns an error when a name collision occurs with an other metric.
@@ -99,7 +99,7 @@ returns an error when a name collision occurs with an other metric.
 #### func  AverageBy
 
 ```go
-func AverageBy(name string) (*base.Average, error)
+func AverageBy(name string) (*base.Average, *rtmerror.Error)
 ```
 AverageBy returns a reference to a registered base.Average, or a non-nil error
 when the metric wasn't registered. The argument is the name to lookup.
@@ -115,7 +115,7 @@ the registry.
 #### func  AveragePerDurationBy
 
 ```go
-func AveragePerDurationBy(name string) (*base.AveragePerDuration, error)
+func AveragePerDurationBy(name string) (*base.AveragePerDuration, *rtmerror.Error)
 ```
 AveragePerDurationBy returns a reference to a registered
 base.AveragePerDuration, or a non-nil error when the metric wasn't registered.
@@ -132,7 +132,7 @@ AveragePerDurations in the registry.
 #### func  CountBy
 
 ```go
-func CountBy(name string) (*base.Count, error)
+func CountBy(name string) (*base.Count, *rtmerror.Error)
 ```
 CountBy returns a reference to a registered base.Count, or a non-nil error when
 the metric wasn't registered. The argument is the name to lookup.
@@ -148,7 +148,7 @@ registry.
 #### func  CountPerDurationBy
 
 ```go
-func CountPerDurationBy(name string) (*base.CountPerDuration, error)
+func CountPerDurationBy(name string) (*base.CountPerDuration, *rtmerror.Error)
 ```
 CountPerDurationBy returns a reference to a registered base.CountPerDuration, or
 a non-nil error when the metric wasn't registered. The argument is the name to
@@ -165,7 +165,7 @@ CountPerDurations in the registry.
 #### func  SumBy
 
 ```go
-func SumBy(name string) (*base.Sum, error)
+func SumBy(name string) (*base.Sum, *rtmerror.Error)
 ```
 SumBy returns a reference to a registered base.Sum, or a non-nil error when the
 metric wasn't registered. The argument is the name to lookup.
@@ -181,7 +181,7 @@ registry.
 #### func  SumPerDurationBy
 
 ```go
-func SumPerDurationBy(name string) (*base.SumPerDuration, error)
+func SumPerDurationBy(name string) (*base.SumPerDuration, *rtmerror.Error)
 ```
 SumPerDurationBy returns a reference to a registered base.SumPerDuration, or a
 non-nil error when the metric wasn't registered. The argument is the name to

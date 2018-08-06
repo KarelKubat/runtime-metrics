@@ -27,14 +27,14 @@ NewAveragePerDurationSet returns an initialized AveragePerDurationSet.
 #### func (*AveragePerDurationSet) Add
 
 ```go
-func (set *AveragePerDurationSet) Add(name string, a *base.AveragePerDuration) error
+func (set *AveragePerDurationSet) Add(name string, a *base.AveragePerDuration) *rtmerror.Error
 ```
 Add registers a base.AveragePerDuration in the set.
 
 #### func (*AveragePerDurationSet) By
 
 ```go
-func (set *AveragePerDurationSet) By(name string) (*base.AveragePerDuration, error)
+func (set *AveragePerDurationSet) By(name string) (*base.AveragePerDuration, *rtmerror.Error)
 ```
 By returns a base.AveragePerDuration, identified by its name, or a non-nil
 error.
@@ -65,14 +65,14 @@ NewAverageSet returns an initialized AverageSet.
 #### func (*AverageSet) Add
 
 ```go
-func (set *AverageSet) Add(name string, a *base.Average) error
+func (set *AverageSet) Add(name string, a *base.Average) *rtmerror.Error
 ```
 Add registers a base.Average metric in the set.
 
 #### func (*AverageSet) By
 
 ```go
-func (set *AverageSet) By(name string) (*base.Average, error)
+func (set *AverageSet) By(name string) (*base.Average, *rtmerror.Error)
 ```
 By returns a base.Average, identified by its name, or a non-nil error.
 
@@ -102,14 +102,14 @@ NewCountPerDurationSet returns an initialized CountPerDurationSet.
 #### func (*CountPerDurationSet) Add
 
 ```go
-func (set *CountPerDurationSet) Add(name string, a *base.CountPerDuration) error
+func (set *CountPerDurationSet) Add(name string, a *base.CountPerDuration) *rtmerror.Error
 ```
 Add registers a base.CountPerDuration metric in the set.
 
 #### func (*CountPerDurationSet) By
 
 ```go
-func (set *CountPerDurationSet) By(name string) (*base.CountPerDuration, error)
+func (set *CountPerDurationSet) By(name string) (*base.CountPerDuration, *rtmerror.Error)
 ```
 By returns a base.CountPerDuration, identified by its name, or a non-nil error.
 
@@ -139,14 +139,14 @@ NewCountSet returns an initialized CountSet.
 #### func (*CountSet) Add
 
 ```go
-func (set *CountSet) Add(name string, a *base.Count) error
+func (set *CountSet) Add(name string, a *base.Count) *rtmerror.Error
 ```
 Add registers a base.Count metric in the set.
 
 #### func (*CountSet) By
 
 ```go
-func (set *CountSet) By(name string) (*base.Count, error)
+func (set *CountSet) By(name string) (*base.Count, *rtmerror.Error)
 ```
 By returns a base.Count, identified by its name, or a non-nil error.
 
@@ -176,14 +176,14 @@ NewSumPerDurationSet returns an initialized SumPerDurationSet.
 #### func (*SumPerDurationSet) Add
 
 ```go
-func (set *SumPerDurationSet) Add(name string, a *base.SumPerDuration) error
+func (set *SumPerDurationSet) Add(name string, a *base.SumPerDuration) *rtmerror.Error
 ```
 Add registers a base.SumPerDuration metric in the set.
 
 #### func (*SumPerDurationSet) By
 
 ```go
-func (set *SumPerDurationSet) By(name string) (*base.SumPerDuration, error)
+func (set *SumPerDurationSet) By(name string) (*base.SumPerDuration, *rtmerror.Error)
 ```
 By returns a base.SumPerDuration, identified by its name, or a non-nil error.
 
@@ -213,14 +213,14 @@ NewSumSet returns an initialized SumSet.
 #### func (*SumSet) Add
 
 ```go
-func (set *SumSet) Add(name string, a *base.Sum) error
+func (set *SumSet) Add(name string, a *base.Sum) *rtmerror.Error
 ```
 Add registers a base.Sum metric in the set.
 
 #### func (*SumSet) By
 
 ```go
-func (set *SumSet) By(name string) (*base.Sum, error)
+func (set *SumSet) By(name string) (*base.Sum, *rtmerror.Error)
 ```
 By returns a base.Sum, identified by its name, or a non-nil error.
 

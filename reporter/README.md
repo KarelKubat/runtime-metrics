@@ -150,7 +150,7 @@ Client holds all client-related information.
 #### func  NewClient
 
 ```go
-func NewClient(addr string) (*Client, error)
+func NewClient(addr string) (*Client, *rtmerror.Error)
 ```
 NewClient returns an initialized client, or a non-nil error. The addr argument
 is the "ip:port" to connect to; "ip" being optional (defaults to localhost). The
@@ -161,7 +161,7 @@ changed using WithBackoffPolicy.
 #### func (*Client) AllNames
 
 ```go
-func (c *Client) AllNames() (*AllNamesReturn, error)
+func (c *Client) AllNames() (*AllNamesReturn, *rtmerror.Error)
 ```
 AllNames returns a list of server-registered named metrics, or a non-nil error.
 
@@ -180,7 +180,7 @@ See demo/demosrc/client_allnames.go for a full example.
 #### func (*Client) Average
 
 ```go
-func (c *Client) Average(name string) (float64, int64, error)
+func (c *Client) Average(name string) (float64, int64, *rtmerror.Error)
 ```
 Average returns the average value (float64) and number of cases (int64) of a
 named server-side Average metric; or a non-nil error.
@@ -188,7 +188,7 @@ named server-side Average metric; or a non-nil error.
 #### func (*Client) AveragePerDuration
 
 ```go
-func (c *Client) AveragePerDuration(name string) (float64, int64, time.Time, error)
+func (c *Client) AveragePerDuration(name string) (float64, int64, time.Time, *rtmerror.Error)
 ```
 AveragePerDuration returns the average (float64), number of cases (int64) and
 the until-timestamp (time.Time) of a named server-side AveragePerDuration
@@ -204,7 +204,7 @@ Close disconnects the client. It may be deferred, similar to file closing.
 #### func (*Client) Count
 
 ```go
-func (c *Client) Count(name string) (int64, error)
+func (c *Client) Count(name string) (int64, *rtmerror.Error)
 ```
 Count returns the number of observations (int64) of a named server-side Count
 metric; or a non-nil error.
@@ -212,7 +212,7 @@ metric; or a non-nil error.
 #### func (*Client) CountPerDuration
 
 ```go
-func (c *Client) CountPerDuration(name string) (int64, time.Time, error)
+func (c *Client) CountPerDuration(name string) (int64, time.Time, *rtmerror.Error)
 ```
 CountPerDuration returns the number of observations (int64) and the
 until-timestamp (time.Time) of a named server-side CountPerDuration metric; or a
@@ -221,7 +221,7 @@ non-nil error.
 #### func (*Client) FullDump
 
 ```go
-func (c *Client) FullDump() (*FullDumpReturn, error)
+func (c *Client) FullDump() (*FullDumpReturn, *rtmerror.Error)
 ```
 FullDump returns all names and states of server-known metrics. The return value
 is a (reference to a) structure with the fields:
@@ -239,7 +239,7 @@ example.
 #### func (*Client) Sum
 
 ```go
-func (c *Client) Sum(name string) (float64, int64, error)
+func (c *Client) Sum(name string) (float64, int64, *rtmerror.Error)
 ```
 Sum returns the sum of observations (float64) and number of cases (int32) of a
 named server-side Sum metric; or a non-nil error.
@@ -247,7 +247,7 @@ named server-side Sum metric; or a non-nil error.
 #### func (*Client) SumPerDuration
 
 ```go
-func (c *Client) SumPerDuration(name string) (float64, int64, time.Time, error)
+func (c *Client) SumPerDuration(name string) (float64, int64, time.Time, *rtmerror.Error)
 ```
 SumPerDuration returns the sum of observations (float64), the number of cases
 (int32) and the until-timestamp (time.Time) of a named server-side
