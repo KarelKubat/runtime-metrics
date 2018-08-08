@@ -6,6 +6,7 @@ import (
 	"github.com/KarelKubat/runtime-metrics/api"
 	"github.com/KarelKubat/runtime-metrics/rtmerror"
 	"github.com/golang/protobuf/ptypes"
+	"github.com/golang/protobuf/ptypes/empty"
 	"github.com/golang/protobuf/ptypes/timestamp"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
@@ -93,7 +94,7 @@ func (c *Client) AllNames() (*AllNamesReturn, *rtmerror.Error) {
 	var resp *api.AllNamesResponse
 
 	for i := 0; i < c.backoffTries; i++ {
-		resp, err = c.client.AllNames(context.Background(), &api.EmptyRequest{})
+		resp, err = c.client.AllNames(context.Background(), &empty.Empty{})
 		if err == nil || i == c.backoffTries-1 {
 			break
 		}
@@ -171,7 +172,7 @@ func (c *Client) FullDump() (*FullDumpReturn, *rtmerror.Error) {
 	var resp *api.FullDumpResponse
 
 	for i := 0; i < c.backoffTries; i++ {
-		resp, err = c.client.FullDump(context.Background(), &api.EmptyRequest{})
+		resp, err = c.client.FullDump(context.Background(), &empty.Empty{})
 		if err == nil || i == c.backoffTries-1 {
 			break
 		}

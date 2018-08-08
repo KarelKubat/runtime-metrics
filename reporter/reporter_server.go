@@ -9,6 +9,7 @@ import (
 	"github.com/KarelKubat/runtime-metrics/registry"
 	"github.com/KarelKubat/runtime-metrics/rtmerror"
 	"github.com/golang/protobuf/ptypes"
+	"github.com/golang/protobuf/ptypes/empty"
 	"github.com/golang/protobuf/ptypes/timestamp"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
@@ -19,7 +20,7 @@ type server struct {
 
 // AllNames uses the API to return registered named metrics.
 // This is wrapped in the client, this function isn't for public consumption.
-func (s *server) AllNames(ctx context.Context, in *api.EmptyRequest) (*api.AllNamesResponse, error) {
+func (s *server) AllNames(ctx context.Context, in *empty.Empty) (*api.AllNamesResponse, error) {
 	return &api.AllNamesResponse{
 		AverageNames:            registry.AverageNames(),
 		AveragePerDurationNames: registry.AveragePerDurationNames(),
@@ -32,7 +33,7 @@ func (s *server) AllNames(ctx context.Context, in *api.EmptyRequest) (*api.AllNa
 
 // FullDump uses the API to return all registered named metrics and their values.
 // This is wrapped in the client, this function isn't for public consumption.
-func (s *server) FullDump(ctx context.Context, in *api.EmptyRequest) (*api.FullDumpResponse, error) {
+func (s *server) FullDump(ctx context.Context, in *empty.Empty) (*api.FullDumpResponse, error) {
 	ret := &api.FullDumpResponse{}
 
 	for _, name := range registry.AverageNames() {
