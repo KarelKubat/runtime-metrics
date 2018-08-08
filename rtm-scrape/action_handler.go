@@ -6,5 +6,6 @@ import (
 
 // ActionHandler is the generic interface for actions.
 type ActionHandler interface {
-	HandleFullDump(*reporter.FullDumpReturn)
+	Init() error
+	HandleFullDump(*reporter.FullDumpReturn) error
 }

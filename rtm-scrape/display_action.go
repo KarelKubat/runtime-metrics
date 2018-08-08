@@ -10,9 +10,15 @@ import (
 type DisplayAction struct {
 }
 
+// Init doesn't perform any tasks with DisplayAction.
+func (d *DisplayAction) Init() error {
+	return nil
+}
+
 // HandleFullDump implements ActionHandler to display a full metrics dump.
-func (d *DisplayAction) HandleFullDump(dump *reporter.FullDumpReturn) {
+func (d *DisplayAction) HandleFullDump(dump *reporter.FullDumpReturn) error {
 	maxLen := longestMetricName(dump)
+	fmt.Printf("%-*s  %10s %6s %s\n", maxLen, "NAME", "VALUE", "N", "UNTIL")
 	for _, m := range dump.Averages {
 		fmt.Printf("%-*s  %10.2f %6d\n", maxLen, m.Name, m.Value, m.N)
 	}
@@ -32,6 +38,7 @@ func (d *DisplayAction) HandleFullDump(dump *reporter.FullDumpReturn) {
 		fmt.Printf("%-*s  %10.2f %6d %v\n", maxLen, m.Name, m.Value, m.N, m.Until)
 	}
 	fmt.Printf("\n")
+	return nil
 }
 
 func longestMetricName(dump *reporter.FullDumpReturn) int {

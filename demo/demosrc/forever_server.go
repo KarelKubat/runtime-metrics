@@ -25,7 +25,7 @@ func ForeverServerDemo() {
 	latencyPerSec := base.NewAveragePerDuration(time.Second)
 	latencyPer10Sec := base.NewAveragePerDuration(10 * time.Second)
 	callsPerSec := base.NewCountPerDuration(time.Second)
-	callsPer10Sec := base.NewCountPerDuration(time.Minute)
+	callsPer10Sec := base.NewCountPerDuration(10 * time.Second)
 
 	CheckErr(registry.AddAveragePerDuration("Error ratio (over 10s)", errorRatioPer10Sec))
 	CheckErr(registry.AddAveragePerDuration("Latency (ms, over 1s)", latencyPerSec))
