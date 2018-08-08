@@ -24,6 +24,10 @@ func NewAverageSet() *AverageSet {
 
 // Add registers a base.Average metric in the set.
 func (set *AverageSet) Add(name string, a *base.Average) *rtmerror.Error {
+	if set == nil {
+		return rtmerror.NewError("attempt to add an Average to a non-initialized AverageSet")
+	}
+
 	set.mutex.Lock()
 	defer set.mutex.Unlock()
 	if _, ok := set.set[name]; ok {
@@ -35,6 +39,10 @@ func (set *AverageSet) Add(name string, a *base.Average) *rtmerror.Error {
 
 // Names returns all names of this set.
 func (set *AverageSet) Names() []string {
+	if set == nil {
+		return []string{}
+	}
+
 	set.mutex.Lock()
 	defer set.mutex.Unlock()
 	names := []string{}
@@ -47,6 +55,10 @@ func (set *AverageSet) Names() []string {
 
 // By returns a base.Average, identified by its name, or a non-nil error.
 func (set *AverageSet) By(name string) (*base.Average, *rtmerror.Error) {
+	if set == nil {
+		return nil, nil
+	}
+
 	set.mutex.Lock()
 	defer set.mutex.Unlock()
 	ret, ok := set.set[name]

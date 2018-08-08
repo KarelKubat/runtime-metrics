@@ -24,6 +24,10 @@ func NewCountSet() *CountSet {
 
 // Add registers a base.Count metric in the set.
 func (set *CountSet) Add(name string, a *base.Count) *rtmerror.Error {
+	if set == nil {
+		return rtmerror.NewError("attempt to add a Count to a non-initialized CountSet")
+	}
+
 	set.mutex.Lock()
 	defer set.mutex.Unlock()
 	if _, ok := set.set[name]; ok {
@@ -35,6 +39,10 @@ func (set *CountSet) Add(name string, a *base.Count) *rtmerror.Error {
 
 // Names returns all names of this set.
 func (set *CountSet) Names() []string {
+	if set == nil {
+		return []string{}
+	}
+
 	set.mutex.Lock()
 	defer set.mutex.Unlock()
 	names := []string{}
@@ -47,6 +55,10 @@ func (set *CountSet) Names() []string {
 
 // By returns a base.Count, identified by its name, or a non-nil error.
 func (set *CountSet) By(name string) (*base.Count, *rtmerror.Error) {
+	if set == nil {
+		return nil, nil
+	}
+
 	set.mutex.Lock()
 	defer set.mutex.Unlock()
 	ret, ok := set.set[name]

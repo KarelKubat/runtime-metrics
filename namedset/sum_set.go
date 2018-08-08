@@ -24,6 +24,10 @@ func NewSumSet() *SumSet {
 
 // Add registers a base.Sum metric in the set.
 func (set *SumSet) Add(name string, a *base.Sum) *rtmerror.Error {
+	if set == nil {
+		return rtmerror.NewError("attempt to Add a Sum to a non-initialized SumSet")
+	}
+
 	set.mutex.Lock()
 	defer set.mutex.Unlock()
 	if _, ok := set.set[name]; ok {
@@ -35,6 +39,10 @@ func (set *SumSet) Add(name string, a *base.Sum) *rtmerror.Error {
 
 // Names returns all names of this set.
 func (set *SumSet) Names() []string {
+	if set == nil {
+		return []string{}
+	}
+
 	set.mutex.Lock()
 	defer set.mutex.Unlock()
 	names := []string{}
@@ -47,6 +55,10 @@ func (set *SumSet) Names() []string {
 
 // By returns a base.Sum, identified by its name, or a non-nil error.
 func (set *SumSet) By(name string) (*base.Sum, *rtmerror.Error) {
+	if set == nil {
+		return nil, nil
+	}
+
 	set.mutex.Lock()
 	defer set.mutex.Unlock()
 	ret, ok := set.set[name]
