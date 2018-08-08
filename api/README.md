@@ -29,6 +29,7 @@ type AllNamesResponse struct {
 }
 ```
 
+Discovery of all the names
 
 #### func (*AllNamesResponse) Descriptor
 
@@ -436,72 +437,6 @@ func (m *CountResponse) XXX_Size() int
 
 ```go
 func (m *CountResponse) XXX_Unmarshal(b []byte) error
-```
-
-#### type EmptyRequest
-
-```go
-type EmptyRequest struct {
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
-}
-```
-
-Discovery of all the names
-
-#### func (*EmptyRequest) Descriptor
-
-```go
-func (*EmptyRequest) Descriptor() ([]byte, []int)
-```
-
-#### func (*EmptyRequest) ProtoMessage
-
-```go
-func (*EmptyRequest) ProtoMessage()
-```
-
-#### func (*EmptyRequest) Reset
-
-```go
-func (m *EmptyRequest) Reset()
-```
-
-#### func (*EmptyRequest) String
-
-```go
-func (m *EmptyRequest) String() string
-```
-
-#### func (*EmptyRequest) XXX_DiscardUnknown
-
-```go
-func (m *EmptyRequest) XXX_DiscardUnknown()
-```
-
-#### func (*EmptyRequest) XXX_Marshal
-
-```go
-func (m *EmptyRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error)
-```
-
-#### func (*EmptyRequest) XXX_Merge
-
-```go
-func (dst *EmptyRequest) XXX_Merge(src proto.Message)
-```
-
-#### func (*EmptyRequest) XXX_Size
-
-```go
-func (m *EmptyRequest) XXX_Size() int
-```
-
-#### func (*EmptyRequest) XXX_Unmarshal
-
-```go
-func (m *EmptyRequest) XXX_Unmarshal(b []byte) error
 ```
 
 #### type FullDumpResponse
@@ -1211,8 +1146,8 @@ func (m *NamedSumPerDuration) XXX_Unmarshal(b []byte) error
 
 ```go
 type ReporterClient interface {
-	AllNames(ctx context.Context, in *EmptyRequest, opts ...grpc.CallOption) (*AllNamesResponse, error)
-	FullDump(ctx context.Context, in *EmptyRequest, opts ...grpc.CallOption) (*FullDumpResponse, error)
+	AllNames(ctx context.Context, in *empty.Empty, opts ...grpc.CallOption) (*AllNamesResponse, error)
+	FullDump(ctx context.Context, in *empty.Empty, opts ...grpc.CallOption) (*FullDumpResponse, error)
 	Average(ctx context.Context, in *NameRequest, opts ...grpc.CallOption) (*AverageResponse, error)
 	AveragePerDuration(ctx context.Context, in *NameRequest, opts ...grpc.CallOption) (*AveragePerDurationResponse, error)
 	Count(ctx context.Context, in *NameRequest, opts ...grpc.CallOption) (*CountResponse, error)
@@ -1237,8 +1172,8 @@ func NewReporterClient(cc *grpc.ClientConn) ReporterClient
 
 ```go
 type ReporterServer interface {
-	AllNames(context.Context, *EmptyRequest) (*AllNamesResponse, error)
-	FullDump(context.Context, *EmptyRequest) (*FullDumpResponse, error)
+	AllNames(context.Context, *empty.Empty) (*AllNamesResponse, error)
+	FullDump(context.Context, *empty.Empty) (*FullDumpResponse, error)
 	Average(context.Context, *NameRequest) (*AverageResponse, error)
 	AveragePerDuration(context.Context, *NameRequest) (*AveragePerDurationResponse, error)
 	Count(context.Context, *NameRequest) (*CountResponse, error)
