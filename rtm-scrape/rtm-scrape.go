@@ -88,7 +88,7 @@ func main() {
 		} else {
 			consecutiveErrors = 0
 			if err := handler.HandleFullDump(dump); err != nil {
-				fmt.Fprintf(os.Stderr, "Failed to handle dump: %v", err)
+				fmt.Fprintf(os.Stderr, "Failed to handle dump: %v\n", err)
 				os.Exit(1)
 			}
 		}
