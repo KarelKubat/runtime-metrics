@@ -10,11 +10,6 @@ import (
 type DisplayAction struct {
 }
 
-// Init doesn't perform any tasks with DisplayAction.
-func (d *DisplayAction) Init() error {
-	return nil
-}
-
 // HandleFullDump implements ActionHandler to display a full metrics dump.
 func (d *DisplayAction) HandleFullDump(dump *reporter.FullDumpReturn) error {
 	maxLen := longestMetricName(dump)
