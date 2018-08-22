@@ -3,7 +3,6 @@ package main
 import (
 	"database/sql"
 	"fmt"
-	"log"
 	"strings"
 	"time"
 
@@ -11,52 +10,28 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-// CompressPolicy defines after which duration, datapoints should be compressed or dropped.
-type CompressPolicy struct {
-	to1Min    time.Duration
-	to5Mins   time.Duration
-	to15Mins  time.Duration
-	to30Mins  time.Duration
-	to1Hour   time.Duration
-	dropAfter time.Duration
-}
-
-// NewCompressPolicy returns an initialized CompressPolicy.
-func NewCompressPolicy(to1Min, to5Mins, to15Mins, to30Mins, to1Hour,
-	dropAfter time.Duration) *CompressPolicy {
-
-	return &CompressPolicy{
-		to1Min:    to1Min,
-		to5Mins:   to5Mins,
-		to15Mins:  to15Mins,
-		to30Mins:  to30Mins,
-		to1Hour:   to1Hour,
-		dropAfter: dropAfter,
-	}
-}
-
 // StoreAction handles storing full metrics dumps.
 type StoreAction struct {
-	db             *sql.DB
-	driver         *string
-	compressPolicy *CompressPolicy
-	nameCache      map[string]int
+	db              *sql.DB
+	compressionInfo []CompressionInfo
+	cleanerInterval time.Duration
+	nameCache       map[string]int
 }
 
 // NewStoreAction returns an initialized StoreAction.
-func NewStoreAction(db *sql.DB, driver *string,
-	compressPolicy *CompressPolicy) (*StoreAction, error) {
+func NewStoreAction(db *sql.DB, compressionInfo []CompressionInfo,
+	cleanerInterval time.Duration) (*StoreAction, error) {
 
 	ret := &StoreAction{
-		db:             db,
-		driver:         driver,
-		compressPolicy: compressPolicy,
-		nameCache:      map[string]int{},
+		db:              db,
+		compressionInfo: compressionInfo,
+		cleanerInterval: cleanerInterval,
+		nameCache:       map[string]int{},
 	}
 	if err := ret.createTables(); err != nil {
 		return nil, err
 	}
-	go ret.compress()
+	go ret.runCleanup()
 	return ret, nil
 }
 
@@ -75,10 +50,16 @@ func logSQL(qry string, bindVariables ...interface{}) {
 		}
 		loggableVars += fmt.Sprintf("$%d=%v", i+1, b)
 	}
-	log.WithFields(log.Fields{
-		"sql":  loggableSQL,
-		"vars": loggableVars,
-	}).Debug("db query")
+	if loggableVars != "" {
+		log.WithFields(log.Fields{
+			"sql":  loggableSQL,
+			"vars": loggableVars,
+		}).Debug("db query")
+	} else {
+		log.WithFields(log.Fields{
+			"sql": loggableSQL,
+		}).Debug("db query")
+	}
 }
 
 // queryRow wraps sql.QueryRow for logging and error recovery.
@@ -87,26 +68,16 @@ func (d *StoreAction) queryRow(qry string, bindVariables ...interface{}) *sql.Ro
 	return d.db.QueryRow(qry, bindVariables...)
 }
 
-// exec wraps sql.Exec for logging and error recovery. Exec's Result is not returned.
-func (d *StoreAction) exec(qry string, bindVariables ...interface{}) error {
+// exec wraps sql.Exec for logging and error recovery.
+func (d *StoreAction) exec(qry string, bindVariables ...interface{}) (sql.Result, error) {
 	var err error
 
 	logSQL(qry, bindVariables...)
-	for i := 0; i < 5; i++ {
-		_, err = d.db.Exec(qry, bindVariables...)
-		if err != nil && strings.Index(err.Error(), "database is locked") != -1 {
-			time.Sleep(time.Millisecond * 100)
-			continue
-		}
-		if err != nil {
-			log.WithFields(log.Fields{"err": err}).Warn("db error")
-		}
-		return err
-	}
+	res, err := d.db.Exec(qry, bindVariables...)
 	if err != nil {
 		log.WithFields(log.Fields{"err": err}).Warn("db error")
 	}
-	return err
+	return res, err
 }
 
 // query wraps sql.Query for logging and error recovery.
@@ -115,17 +86,7 @@ func (d *StoreAction) query(qry string, bindVariables ...interface{}) (*sql.Rows
 	var rows *sql.Rows
 
 	logSQL(qry, bindVariables...)
-	for i := 0; i < 5; i++ {
-		rows, err = d.db.Query(qry, bindVariables...)
-		if err != nil && strings.Index(err.Error(), "database is locked") != -1 {
-			time.Sleep(time.Millisecond * 100)
-			continue
-		}
-		if err != nil {
-			log.WithFields(log.Fields{"err": err}).Warn("db error")
-		}
-		return rows, err
-	}
+	rows, err = d.db.Query(qry, bindVariables...)
 	if err != nil {
 		log.WithFields(log.Fields{"err": err}).Warn("db error")
 	}
@@ -135,85 +96,88 @@ func (d *StoreAction) query(qry string, bindVariables ...interface{}) (*sql.Rows
 // createTables optionally creates tables.
 func (d *StoreAction) createTables() error {
 	var err error
-	var serialSQL string
-
-	if serialSQL, err = d.serialName(); err != nil {
-		return err
-	}
 
 	// Metric names
-	if err = d.exec(fmt.Sprintf(
+	if _, err = d.exec(fmt.Sprintf(
 		`CREATE TABLE IF NOT EXISTS metric_name (
-		   id %s,
-		   name TEXT
-		 )`, serialSQL)); err != nil {
+		   id SERIAL PRIMARY KEY,
+		   name TEXT UNIQUE
+		 )`)); err != nil {
 		return fmt.Errorf("failed to initialize: %v", err)
 	}
 
+	// Tables for scraped data. We have UNIQUE constraints for all timestamps, which are
+	// the times that we received the data. Furthermore we have UNIQUE constraints on
+	// values and `until` of all _per_duration data to avoid duplicates. The scraper may
+	// run in parallel, or may sample with a higher frequency than server-metrics change.
+
 	// Averages and -per duration
-	if err = d.exec(fmt.Sprintf(
+	if _, err = d.exec(fmt.Sprintf(
 		`CREATE TABLE IF NOT EXISTS average (
-		   id %s,
+		   id SERIAL PRIMARY KEY,
 		   name_id INTEGER NOT NULL REFERENCES metric_name(id),
 		   value REAL NOT NULL,
 		   n REAL NOT NULL,
-		   timestamp TEXT NOT NULL
-		 )`, serialSQL)); err != nil {
+		   timestamp TEXT NOT NULL UNIQUE
+		 )`)); err != nil {
 		return fmt.Errorf("failed to initialize: %v", err)
 	}
-	if err = d.exec(fmt.Sprintf(
+	if _, err = d.exec(fmt.Sprintf(
 		`CREATE TABLE IF NOT EXISTS average_per_duration (
-		   id %s,
+		   id SERIAL PRIMARY KEY,
 		   name_id INTEGER NOT NULL REFERENCES metric_name(id),
 		   value REAL NOT NULL,
 		   n REAL NOT NULL,
 		   until TEXT NOT NULL,
-		   timestamp TEXT NOT NULL
-		 )`, serialSQL)); err != nil {
+		   timestamp TEXT NOT NULL UNIQUE,
+		   UNIQUE (name_id, value, n, until)
+		 )`)); err != nil {
 		return fmt.Errorf("failed to initialize: %v", err)
 	}
 
 	// Counts and -per duration
-	if err = d.exec(fmt.Sprintf(
+	if _, err = d.exec(fmt.Sprintf(
 		`CREATE TABLE IF NOT EXISTS count (
-		   id %s,
+		   id SERIAL PRIMARY KEY,
 		   name_id INTEGER NOT NULL REFERENCES metric_name(id),
 		   value INTEGER NOT NULL,
-		   timestamp TEXT NOT NULL
-		 )`, serialSQL)); err != nil {
+		   timestamp TEXT NOT NULL UNIQUE
+		 )`)); err != nil {
 		return fmt.Errorf("failed to initialize: %v", err)
 	}
-	if err = d.exec(fmt.Sprintf(
+	if _, err = d.exec(fmt.Sprintf(
 		`CREATE TABLE IF NOT EXISTS count_per_duration (
-		   id %s,
+		   id SERIAL PRIMARY KEY,
 		   name_id INTEGER NOT NULL REFERENCES metric_name(id),
 		   value INTEGER NOT NULL,
 		   until TEXT NOT NULL,
-		   timestamp TEXT NOT NULL
-		 )`, serialSQL)); err != nil {
+		   timestamp TEXT NOT NULL,
+		   UNIQUE (name_id, value, until)
+		 )`)); err != nil {
 		return fmt.Errorf("failed to initialize: %v", err)
 	}
 
 	// Sums and -per duration
-	if err = d.exec(fmt.Sprintf(
+	if _, err = d.exec(fmt.Sprintf(
 		`CREATE TABLE IF NOT EXISTS sum (
-		   id %s,
+		   id SERIAL PRIMARY KEY,
 		   name_id INTEGER NOT NULL REFERENCES metric_name(id),
 		   value REAL NOT NULL,
 		   n REAL NOT NULL,
-		   timestamp TEXT NOT NULL
-		 )`, serialSQL)); err != nil {
+		   timestamp TEXT NOT NULL UNIQUE
+		 )`)); err != nil {
 		return fmt.Errorf("failed to initialize: %v", err)
 	}
-	if err = d.exec(fmt.Sprintf(
+	if _, err = d.exec(fmt.Sprintf(
 		`CREATE TABLE IF NOT EXISTS sum_per_duration (
-		   id %s,
+		   id SERIAL PRIMARY KEY,
 		   name_id INTEGER NOT NULL REFERENCES metric_name(id),
 		   value REAL NOT NULL,
 		   n REAL NOT NULL,
 		   until TEXT NOT NULL,
-		   timestamp TEXT
-		 )`, serialSQL)); err != nil {
+		   timestamp TEXT UNIQUE,
+		   UNIQUE (name_id, value, n, until)
+		 )`)); err != nil {
 		return fmt.Errorf("failed to initialize: %v", err)
 	}
 
@@ -225,14 +189,18 @@ func (d *StoreAction) HandleFullDump(dump *reporter.FullDumpReturn) error {
 	var nameID int
 	var err error
 
+	// All data are inserted with `ON CONFLICT DO NOTHING` because the scraper may sample at
+	// a higher frequency than server-metrics are changing.
+
 	// Averages and -per duration
 	for _, m := range dump.Averages {
 		if nameID, err = d.upsertName(m.Name); err != nil {
 			return err
 		}
-		if err = d.exec(
+		if _, err = d.exec(
 			`INSERT INTO average (name_id, value, n, timestamp)
-			 VALUES (?,?,?,?)`, nameID, m.Value, m.N, time.Now()); err != nil {
+			 VALUES ($1,$2,$3,$4)
+			 ON CONFLICT DO NOTHING`, nameID, m.Value, m.N, time.Now()); err != nil {
 			return err
 		}
 	}
@@ -240,9 +208,10 @@ func (d *StoreAction) HandleFullDump(dump *reporter.FullDumpReturn) error {
 		if nameID, err = d.upsertName(m.Name); err != nil {
 			return err
 		}
-		if err = d.exec(
+		if _, err = d.exec(
 			`INSERT INTO average_per_duration (name_id, value, n, until, timestamp)
-			 VALUES (?,?,?,?,?)`, nameID, m.Value, m.N, m.Until, time.Now()); err != nil {
+			 VALUES ($1,$2,$3,$4,$5)
+			 ON CONFLICT DO NOTHING`, nameID, m.Value, m.N, m.Until, time.Now()); err != nil {
 			return err
 		}
 	}
@@ -252,9 +221,10 @@ func (d *StoreAction) HandleFullDump(dump *reporter.FullDumpReturn) error {
 		if nameID, err = d.upsertName(m.Name); err != nil {
 			return err
 		}
-		if err = d.exec(
+		if _, err = d.exec(
 			`INSERT INTO count (name_id, value, timestamp)
-			 VALUES (?,?,?)`, nameID, m.Value, time.Now()); err != nil {
+			 VALUES ($1,$2,$3)
+			 ON CONFLICT DO NOTHING`, nameID, m.Value, time.Now()); err != nil {
 			return err
 		}
 	}
@@ -262,9 +232,10 @@ func (d *StoreAction) HandleFullDump(dump *reporter.FullDumpReturn) error {
 		if nameID, err = d.upsertName(m.Name); err != nil {
 			return err
 		}
-		if err = d.exec(
+		if _, err = d.exec(
 			`INSERT INTO count_per_duration (name_id, value, until, timestamp)
-			 VALUES (?,?,?,?)`, nameID, m.Value, m.Until, time.Now()); err != nil {
+			 VALUES ($1,$2,$3,$4)
+			 ON CONFLICT DO NOTHING`, nameID, m.Value, m.Until, time.Now()); err != nil {
 			return err
 		}
 	}
@@ -274,9 +245,10 @@ func (d *StoreAction) HandleFullDump(dump *reporter.FullDumpReturn) error {
 		if nameID, err = d.upsertName(m.Name); err != nil {
 			return err
 		}
-		if err = d.exec(
+		if _, err = d.exec(
 			`INSERT INTO sum (name_id, value, n, timestamp)
-			 VALUES (?,?,?,?)`, nameID, m.Value, m.N, time.Now()); err != nil {
+			 VALUES ($1,$2,$3,$4)
+			 ON CONFLICT DO NOTHING`, nameID, m.Value, m.N, time.Now()); err != nil {
 			return err
 		}
 	}
@@ -284,9 +256,10 @@ func (d *StoreAction) HandleFullDump(dump *reporter.FullDumpReturn) error {
 		if nameID, err = d.upsertName(m.Name); err != nil {
 			return err
 		}
-		if err = d.exec(
+		if _, err = d.exec(
 			`INSERT INTO sum_per_duration (name_id, value, n, until, timestamp)
-			 VALUES (?,?,?,?,?)`, nameID, m.Value, m.N, m.Until, time.Now()); err != nil {
+			 VALUES ($1,$2,$3,$4,$5)
+			 ON CONFLICT DO NOTHING`, nameID, m.Value, m.N, m.Until, time.Now()); err != nil {
 			return err
 		}
 	}
@@ -306,7 +279,7 @@ func (d *StoreAction) upsertName(n string) (int, error) {
 	}
 
 	// If already known, cache and return.
-	r := d.queryRow("SELECT id FROM metric_name WHERE name=?", n)
+	r := d.queryRow("SELECT id FROM metric_name WHERE name=$1", n)
 	if err = r.Scan(&ret); err == nil {
 		d.nameCache[n] = ret
 		return ret, nil
@@ -316,42 +289,55 @@ func (d *StoreAction) upsertName(n string) (int, error) {
 	}
 
 	// Need to add to table metric_name.
-	// Unfortunately, sqlite3 doesn't respect LastInsertId() of the return
-	// value. We have to insert and then requery.
-	if err = d.exec("INSERT INTO metric_name (name) VALUES (?)", n); err != nil {
+	res, err := d.exec("INSERT INTO metric_name (name) VALUES ($1)", n)
+	if err != nil {
 		return 0, err
 	}
-	r = d.queryRow("SELECT id FROM metric_name WHERE name=?", n)
-	if err = r.Scan(&ret); err != nil {
+	ret64, err := res.LastInsertId()
+	if err != nil {
 		return 0, err
 	}
-	d.nameCache[n] = ret
+	d.nameCache[n] = int(ret64)
 	return ret, nil
 }
 
-// serialName is the driver-dependent SQL DDL to define an auto-incrementing ID.
-func (d *StoreAction) serialName() (string, error) {
-	switch *d.driver {
-	case "sqlite3":
-		return "INTEGER PRIMARY KEY AUTOINCREMENT", nil
-	case "postgres":
-		return "SERIAL", nil
+// compress takes care of compressing the datapoints.
+func (d *StoreAction) runCleanup() {
+	time.Sleep(d.cleanerInterval)
+
+	for i := 0; i < len(d.compressionInfo); i++ {
+		// If the period isn't stated, then the intention is to drop.
+		// Otherwise, compress entries between after and until into period-intervals.
+		if d.compressionInfo[i].period == 0 {
+			d.dropAfter(d.compressionInfo[i].after)
+		} else {
+			d.compress(compressionInfo[i].after, compressionInfo[i].until,
+				compressionInfo[i].period)
+		}
 	}
-	return "", fmt.Errorf("driver %v not implemented", d.driver)
 }
 
-// compress takes care of compressing the datapoints.
-func (d *StoreAction) compress() {
-	time.Sleep(time.Minute)
-	d.dropAfter()
+// compress recalculates datapoints between its first two duration arguments into
+// periods given by the third argument.
+func (d *StoreAction) compress(after, until, period time.Duration) {
+	afterTime := time.Now().Add(-after)
+	untilTime := time.Now().Add(-until)
+	log.WithFields(log.Fields{
+		"after":  afterTime,
+		"until":  untilTime,
+		"period": period,
+	}).Debug("compress-to cleanup")
+
 }
 
 // dropAfter drops stale entries, i.e., older than the policies dropAfter duration.
-func (d *StoreAction) dropAfter() {
+func (d *StoreAction) dropAfter(after time.Duration) {
 	var cutoff time.Time
 
 	// Drop entries that we no longer need
-	cutoff = time.Now().Add(-d.compressPolicy.dropAfter)
+	cutoff = time.Now().Add(-after)
+	log.WithFields(log.Fields{"cutoff": cutoff}).Debug("drop-after cleanup")
+
 	for _, table := range []string{
 		"average",
 		"average_per_duration",
@@ -360,19 +346,6 @@ func (d *StoreAction) dropAfter() {
 		"sum",
 		"sum_per_duration",
 	} {
-		rows, err := d.query(fmt.Sprintf(
-			"SELECT id FROM %s WHERE timestamp < ?", table), cutoff)
-		if err != nil {
-			continue
-		}
-		defer rows.Close()
-		for rows.Next() {
-			var id int
-			if err := rows.Scan(&id); err != nil {
-				log.WithFields(log.Fields{"err": err}).Warn("db error")
-				continue
-			}
-			d.exec(fmt.Sprintf("DELETE FROM %s WHERE id=?", table), cutoff)
-		}
+		d.exec(fmt.Sprintf("DELETE FROM %s WHERE timestamp < $1", table), cutoff)
 	}
 }
