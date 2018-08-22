@@ -68,16 +68,15 @@ func (d *StoreAction) queryRow(qry string, bindVariables ...interface{}) *sql.Ro
 	return d.db.QueryRow(qry, bindVariables...)
 }
 
-// exec wraps sql.Exec for logging and error recovery.
-func (d *StoreAction) exec(qry string, bindVariables ...interface{}) (sql.Result, error) {
+// exec wraps sql.Exec for logging and error recovery. The Result is discarded.
+func (d *StoreAction) exec(qry string, bindVariables ...interface{}) error {
 	var err error
 
 	logSQL(qry, bindVariables...)
-	res, err := d.db.Exec(qry, bindVariables...)
-	if err != nil {
+	if _, err = d.db.Exec(qry, bindVariables...); err != nil {
 		log.WithFields(log.Fields{"err": err}).Warn("db error")
 	}
-	return res, err
+	return err
 }
 
 // query wraps sql.Query for logging and error recovery.
@@ -98,7 +97,7 @@ func (d *StoreAction) createTables() error {
 	var err error
 
 	// Metric names
-	if _, err = d.exec(fmt.Sprintf(
+	if err = d.exec(fmt.Sprintf(
 		`CREATE TABLE IF NOT EXISTS metric_name (
 		   id SERIAL PRIMARY KEY,
 		   name TEXT UNIQUE
@@ -112,7 +111,7 @@ func (d *StoreAction) createTables() error {
 	// run in parallel, or may sample with a higher frequency than server-metrics change.
 
 	// Averages and -per duration
-	if _, err = d.exec(fmt.Sprintf(
+	if err = d.exec(fmt.Sprintf(
 		`CREATE TABLE IF NOT EXISTS average (
 		   id SERIAL PRIMARY KEY,
 		   name_id INTEGER NOT NULL REFERENCES metric_name(id),
@@ -122,7 +121,7 @@ func (d *StoreAction) createTables() error {
 		 )`)); err != nil {
 		return fmt.Errorf("failed to initialize: %v", err)
 	}
-	if _, err = d.exec(fmt.Sprintf(
+	if err = d.exec(fmt.Sprintf(
 		`CREATE TABLE IF NOT EXISTS average_per_duration (
 		   id SERIAL PRIMARY KEY,
 		   name_id INTEGER NOT NULL REFERENCES metric_name(id),
@@ -136,7 +135,7 @@ func (d *StoreAction) createTables() error {
 	}
 
 	// Counts and -per duration
-	if _, err = d.exec(fmt.Sprintf(
+	if err = d.exec(fmt.Sprintf(
 		`CREATE TABLE IF NOT EXISTS count (
 		   id SERIAL PRIMARY KEY,
 		   name_id INTEGER NOT NULL REFERENCES metric_name(id),
@@ -145,7 +144,7 @@ func (d *StoreAction) createTables() error {
 		 )`)); err != nil {
 		return fmt.Errorf("failed to initialize: %v", err)
 	}
-	if _, err = d.exec(fmt.Sprintf(
+	if err = d.exec(fmt.Sprintf(
 		`CREATE TABLE IF NOT EXISTS count_per_duration (
 		   id SERIAL PRIMARY KEY,
 		   name_id INTEGER NOT NULL REFERENCES metric_name(id),
@@ -158,7 +157,7 @@ func (d *StoreAction) createTables() error {
 	}
 
 	// Sums and -per duration
-	if _, err = d.exec(fmt.Sprintf(
+	if err = d.exec(fmt.Sprintf(
 		`CREATE TABLE IF NOT EXISTS sum (
 		   id SERIAL PRIMARY KEY,
 		   name_id INTEGER NOT NULL REFERENCES metric_name(id),
@@ -168,7 +167,7 @@ func (d *StoreAction) createTables() error {
 		 )`)); err != nil {
 		return fmt.Errorf("failed to initialize: %v", err)
 	}
-	if _, err = d.exec(fmt.Sprintf(
+	if err = d.exec(fmt.Sprintf(
 		`CREATE TABLE IF NOT EXISTS sum_per_duration (
 		   id SERIAL PRIMARY KEY,
 		   name_id INTEGER NOT NULL REFERENCES metric_name(id),
@@ -197,10 +196,10 @@ func (d *StoreAction) HandleFullDump(dump *reporter.FullDumpReturn) error {
 		if nameID, err = d.upsertName(m.Name); err != nil {
 			return err
 		}
-		if _, err = d.exec(
+		if err = d.exec(
 			`INSERT INTO average (name_id, value, n, timestamp)
 			 VALUES ($1,$2,$3,$4)
-			 ON CONFLICT DO NOTHING`, nameID, m.Value, m.N, time.Now()); err != nil {
+			 ON CONFLICT DO NOTHING`, nameID, m.Value, m.N, time.Now().UTC()); err != nil {
 			return err
 		}
 	}
@@ -208,10 +207,10 @@ func (d *StoreAction) HandleFullDump(dump *reporter.FullDumpReturn) error {
 		if nameID, err = d.upsertName(m.Name); err != nil {
 			return err
 		}
-		if _, err = d.exec(
+		if err = d.exec(
 			`INSERT INTO average_per_duration (name_id, value, n, until, timestamp)
 			 VALUES ($1,$2,$3,$4,$5)
-			 ON CONFLICT DO NOTHING`, nameID, m.Value, m.N, m.Until, time.Now()); err != nil {
+			 ON CONFLICT DO NOTHING`, nameID, m.Value, m.N, m.Until, time.Now().UTC()); err != nil {
 			return err
 		}
 	}
@@ -221,10 +220,10 @@ func (d *StoreAction) HandleFullDump(dump *reporter.FullDumpReturn) error {
 		if nameID, err = d.upsertName(m.Name); err != nil {
 			return err
 		}
-		if _, err = d.exec(
+		if err = d.exec(
 			`INSERT INTO count (name_id, value, timestamp)
 			 VALUES ($1,$2,$3)
-			 ON CONFLICT DO NOTHING`, nameID, m.Value, time.Now()); err != nil {
+			 ON CONFLICT DO NOTHING`, nameID, m.Value, time.Now().UTC()); err != nil {
 			return err
 		}
 	}
@@ -232,10 +231,10 @@ func (d *StoreAction) HandleFullDump(dump *reporter.FullDumpReturn) error {
 		if nameID, err = d.upsertName(m.Name); err != nil {
 			return err
 		}
-		if _, err = d.exec(
+		if err = d.exec(
 			`INSERT INTO count_per_duration (name_id, value, until, timestamp)
 			 VALUES ($1,$2,$3,$4)
-			 ON CONFLICT DO NOTHING`, nameID, m.Value, m.Until, time.Now()); err != nil {
+			 ON CONFLICT DO NOTHING`, nameID, m.Value, m.Until, time.Now().UTC()); err != nil {
 			return err
 		}
 	}
@@ -245,10 +244,10 @@ func (d *StoreAction) HandleFullDump(dump *reporter.FullDumpReturn) error {
 		if nameID, err = d.upsertName(m.Name); err != nil {
 			return err
 		}
-		if _, err = d.exec(
+		if err = d.exec(
 			`INSERT INTO sum (name_id, value, n, timestamp)
 			 VALUES ($1,$2,$3,$4)
-			 ON CONFLICT DO NOTHING`, nameID, m.Value, m.N, time.Now()); err != nil {
+			 ON CONFLICT DO NOTHING`, nameID, m.Value, m.N, time.Now().UTC()); err != nil {
 			return err
 		}
 	}
@@ -256,10 +255,10 @@ func (d *StoreAction) HandleFullDump(dump *reporter.FullDumpReturn) error {
 		if nameID, err = d.upsertName(m.Name); err != nil {
 			return err
 		}
-		if _, err = d.exec(
+		if err = d.exec(
 			`INSERT INTO sum_per_duration (name_id, value, n, until, timestamp)
 			 VALUES ($1,$2,$3,$4,$5)
-			 ON CONFLICT DO NOTHING`, nameID, m.Value, m.N, m.Until, time.Now()); err != nil {
+			 ON CONFLICT DO NOTHING`, nameID, m.Value, m.N, m.Until, time.Now().UTC()); err != nil {
 			return err
 		}
 	}
@@ -279,8 +278,7 @@ func (d *StoreAction) upsertName(n string) (int, error) {
 	}
 
 	// If already known, cache and return.
-	r := d.queryRow("SELECT id FROM metric_name WHERE name=$1", n)
-	if err = r.Scan(&ret); err == nil {
+	if err = d.queryRow("SELECT id FROM metric_name WHERE name=$1", n).Scan(&ret); err == nil {
 		d.nameCache[n] = ret
 		return ret, nil
 	}
@@ -288,31 +286,31 @@ func (d *StoreAction) upsertName(n string) (int, error) {
 		return 0, err
 	}
 
-	// Need to add to table metric_name.
-	res, err := d.exec("INSERT INTO metric_name (name) VALUES ($1)", n)
-	if err != nil {
+	// Need to add to table metric_name. Unfortunately, LastInsertId() may not work well so we
+	// have to requery.
+	if err = d.exec("INSERT INTO metric_name (name) VALUES ($1)", n); err != nil {
 		return 0, err
 	}
-	ret64, err := res.LastInsertId()
-	if err != nil {
+	if err = d.queryRow("SELECT id FROM metric_name WHERE name=$1", n).Scan(&ret); err != nil {
 		return 0, err
 	}
-	d.nameCache[n] = int(ret64)
+	d.nameCache[n] = ret
 	return ret, nil
 }
 
 // compress takes care of compressing the datapoints.
 func (d *StoreAction) runCleanup() {
-	time.Sleep(d.cleanerInterval)
-
-	for i := 0; i < len(d.compressionInfo); i++ {
-		// If the period isn't stated, then the intention is to drop.
-		// Otherwise, compress entries between after and until into period-intervals.
-		if d.compressionInfo[i].period == 0 {
-			d.dropAfter(d.compressionInfo[i].after)
-		} else {
-			d.compress(compressionInfo[i].after, compressionInfo[i].until,
-				compressionInfo[i].period)
+	for {
+		time.Sleep(d.cleanerInterval)
+		for i := 0; i < len(d.compressionInfo); i++ {
+			// If the period isn't stated, then the intention is to drop.
+			// Otherwise, compress entries between after and until into period-intervals.
+			if d.compressionInfo[i].period == 0 {
+				d.dropAfter(d.compressionInfo[i].after)
+			} else {
+				d.compress(compressionInfo[i].after, compressionInfo[i].until,
+					compressionInfo[i].period)
+			}
 		}
 	}
 }
@@ -320,8 +318,8 @@ func (d *StoreAction) runCleanup() {
 // compress recalculates datapoints between its first two duration arguments into
 // periods given by the third argument.
 func (d *StoreAction) compress(after, until, period time.Duration) {
-	afterTime := time.Now().Add(-after)
-	untilTime := time.Now().Add(-until)
+	afterTime := time.Now().UTC().Add(-after)
+	untilTime := time.Now().UTC().Add(-until)
 	log.WithFields(log.Fields{
 		"after":  afterTime,
 		"until":  untilTime,
@@ -335,7 +333,7 @@ func (d *StoreAction) dropAfter(after time.Duration) {
 	var cutoff time.Time
 
 	// Drop entries that we no longer need
-	cutoff = time.Now().Add(-after)
+	cutoff = time.Now().UTC().Add(-after)
 	log.WithFields(log.Fields{"cutoff": cutoff}).Debug("drop-after cleanup")
 
 	for _, table := range []string{
