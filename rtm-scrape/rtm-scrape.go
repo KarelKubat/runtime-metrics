@@ -39,13 +39,14 @@ type CompressionInfo struct {
 
 var compressionInfo []CompressionInfo
 
+// init initializes the command's flags.
 func init() {
 	// Bind global flag variables
 	flag.StringVar(&flagRemoteAddress, "remote-address", ":1234", "address:port to scrape")
 	flag.IntVar(&flagRuns, "runs", 0, "times to run, 0 means forever")
 	flag.DurationVar(&flagInterval, "interval", time.Second*5, "delay between runs")
 	flag.StringVar(&flagAction, "action", "display",
-		"action to perform, one of 'display' or 'store'")
+		"action to perform, one of 'display' or 'store' or 'compress-only'")
 	flag.StringVar(&flagDataSource, "datasource", "",
 		"datasource string to open a storage database; something like "+
 			"'user=myuser database=mydb'")
@@ -67,6 +68,7 @@ func init() {
 	flag.BoolVar(&flagDebug, "debug", false, "turn debug logging on")
 }
 
+// main
 func main() {
 	// Check command line
 	flag.Parse()
@@ -74,18 +76,17 @@ func main() {
 
 	// Ensure that we can access the storage.
 	var handler ActionHandler
+	var db *sql.DB
+
 	switch flagAction {
 	case "display":
 		handler = &DisplayAction{}
+	case "compress-only":
+		storeHandler(openDB()).RunCompressions(CompressOnce)
 	case "store":
-		db, err := sql.Open("postgres", flagDataSource)
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "Failed to connect to data source: %v\n", err)
-		}
-		handler, err = NewStoreAction(db, compressionInfo, flagCleanerInterval)
-		if err != nil {
-			errorAndDie("Failed to initialize storage: %v\n", err)
-		}
+		db = openDB()
+		handler = storeHandler(openDB())
+		go handler.RunCompressions(CompressForever)
 	}
 
 	// Create the client.
@@ -117,6 +118,25 @@ func main() {
 	}
 }
 
+// openDB returns a handle on the postgres DB specified by flagDataSource, or errors out.
+func openDB() *sql.DB {
+	db, err := sql.Open("postgres", flagDataSource)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Failed to connect to data source: %v\n", err)
+	}
+	return db
+}
+
+// storeHandler returns a NewStoreAction or errors out.
+func storeHandler(db *sql.DB) *StoreHandler {
+	handler, err = NewStoreAction(db, compressionInfo, flagCleanerInterval)
+	if err != nil {
+		errorAndDie("Failed to initialize storage: %v\n", err)
+	}
+	return handler
+}
+
+// usage shows usage information and errors out.
 func usage() {
 	fmt.Fprintf(os.Stderr, `
 This is rtm-scrape, the real-time metrics scraper.
@@ -126,7 +146,7 @@ Supported flags:
 	flag.PrintDefaults()
 	fmt.Fprintf(os.Stderr, `
 At a minimum, --remote-address should be given.
-When --action=store, --datasource must be given.
+When --action=store or --action==compress-only, --datasource must be given.
 All durations (--compress-to-..., --drop-after, --interval, etc.) are expressed in hours,
 minutes and seconds, e.g. '12h30m10s'. Zeroed values can be left out, e.g. '10m'. To turn off
 compressing or dropping, set the respective flags to a zero-duration, such as '0s'.
@@ -155,12 +175,13 @@ func checkFlags() {
 	}
 
 	// Actions store and display are allowed.
-	if flagAction != "store" && flagAction != "display" {
-		errorAndDie("Unknown --action=%v (allowed: 'display' or 'store')\n", flagAction)
+	if flagAction != "store" && flagAction != "display" && flagAction != "compress-only" {
+		errorAndDie("Unknown --action=%v (allowed: 'display' or 'store' or 'compress-only)\n",
+			flagAction)
 	}
 
-	// When using --action=store, --datasource must be given.
-	if flagAction == "store" && flagDataSource == "" {
+	// When using --action=store/compress-only, --datasource must be given.
+	if (flagAction == "store" || flagAction == "compress-only") && flagDataSource == "" {
 		errorAndDie("Flag --datasource is required when --action=store\n")
 	}
 

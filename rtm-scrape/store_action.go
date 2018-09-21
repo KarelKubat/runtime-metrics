@@ -31,7 +31,6 @@ func NewStoreAction(db *sql.DB, compressionInfo []CompressionInfo,
 	if err := ret.createTables(); err != nil {
 		return nil, err
 	}
-	go ret.runCleanup()
 	return ret, nil
 }
 
@@ -117,7 +116,7 @@ func (d *StoreAction) createTables() error {
 		   name_id INTEGER NOT NULL REFERENCES metric_name(id),
 		   value REAL NOT NULL,
 		   n REAL NOT NULL,
-		   timestamp TEXT NOT NULL UNIQUE
+		   timestamp TIMESTAMP NOT NULL UNIQUE
 		 )`)); err != nil {
 		return fmt.Errorf("failed to initialize: %v", err)
 	}
@@ -128,7 +127,7 @@ func (d *StoreAction) createTables() error {
 		   value REAL NOT NULL,
 		   n REAL NOT NULL,
 		   until TEXT NOT NULL,
-		   timestamp TEXT NOT NULL UNIQUE,
+		   timestamp TIMESTAMP NOT NULL UNIQUE,
 		   UNIQUE (name_id, value, n, until)
 		 )`)); err != nil {
 		return fmt.Errorf("failed to initialize: %v", err)
@@ -140,7 +139,7 @@ func (d *StoreAction) createTables() error {
 		   id SERIAL PRIMARY KEY,
 		   name_id INTEGER NOT NULL REFERENCES metric_name(id),
 		   value INTEGER NOT NULL,
-		   timestamp TEXT NOT NULL UNIQUE
+		   timestamp TIMESTAMP NOT NULL UNIQUE
 		 )`)); err != nil {
 		return fmt.Errorf("failed to initialize: %v", err)
 	}
@@ -150,7 +149,7 @@ func (d *StoreAction) createTables() error {
 		   name_id INTEGER NOT NULL REFERENCES metric_name(id),
 		   value INTEGER NOT NULL,
 		   until TEXT NOT NULL,
-		   timestamp TEXT NOT NULL,
+		   timestamp TIMESTAMP NOT NULL,
 		   UNIQUE (name_id, value, until)
 		 )`)); err != nil {
 		return fmt.Errorf("failed to initialize: %v", err)
@@ -163,7 +162,7 @@ func (d *StoreAction) createTables() error {
 		   name_id INTEGER NOT NULL REFERENCES metric_name(id),
 		   value REAL NOT NULL,
 		   n REAL NOT NULL,
-		   timestamp TEXT NOT NULL UNIQUE
+		   timestamp TIMESTAMP NOT NULL UNIQUE
 		 )`)); err != nil {
 		return fmt.Errorf("failed to initialize: %v", err)
 	}
@@ -174,7 +173,7 @@ func (d *StoreAction) createTables() error {
 		   value REAL NOT NULL,
 		   n REAL NOT NULL,
 		   until TEXT NOT NULL,
-		   timestamp TEXT UNIQUE,
+		   timestamp TIMESTAMP UNIQUE,
 		   UNIQUE (name_id, value, n, until)
 		 )`)); err != nil {
 		return fmt.Errorf("failed to initialize: %v", err)
@@ -298,10 +297,21 @@ func (d *StoreAction) upsertName(n string) (int, error) {
 	return ret, nil
 }
 
-// compress takes care of compressing the datapoints.
-func (d *StoreAction) runCleanup() {
+type CompressSchedule int
+
+const (
+	CompressOnce CompressSchedule = iota
+	CompressForever
+)
+
+// RunCompressions takes care of compressing the datapoints. When the indicated schedule is
+// CompressForever, then (a) initially, cleanerInterval seconds is spent waiting (so that the
+// initial dump can be loaded and processed), (b) this loops as long as the program runs.
+func (d *StoreAction) RunCompressions(schedule CompressSchedule) {
 	for {
-		time.Sleep(d.cleanerInterval)
+		if schedule == CompressForever {
+			time.Sleep(d.cleanerInterval)
+		}
 		for i := 0; i < len(d.compressionInfo); i++ {
 			// If the period isn't stated, then the intention is to drop.
 			// Otherwise, compress entries between after and until into period-intervals.
@@ -312,19 +322,74 @@ func (d *StoreAction) runCleanup() {
 					compressionInfo[i].period)
 			}
 		}
+		if schedule == CompressOnce {
+			return
+		}
 	}
 }
 
 // compress recalculates datapoints between its first two duration arguments into
 // periods given by the third argument.
-func (d *StoreAction) compress(after, until, period time.Duration) {
+func (d *StoreAction) compress(after, until, period time.Duration) error {
 	afterTime := time.Now().UTC().Add(-after)
 	untilTime := time.Now().UTC().Add(-until)
+
 	log.WithFields(log.Fields{
 		"after":  afterTime,
 		"until":  untilTime,
 		"period": period,
 	}).Debug("compress-to cleanup")
+
+	var nameIDs []int
+	var err error
+	var rows sql.Rows
+
+	// Averages per duration compression.
+	if rows, err = d.query(`SELECT DISTINCT name_id FROM average
+					        WHERE timestamp BETWEEN $1 AND $2`, untilTime, afterTime); err != nil {
+		return err
+	}
+	nameIDs = []int{}
+	for rows.Next() {
+		var nameID int
+		if err = rows.Scan(&nameID); err != nil {
+			return err
+		}
+		IDs = append(nameIDs, nameID)
+	}
+	for t := untilTime; t <= afterTime.Add(-period); t = startTime.Add(period) {
+		endT := t.Add(period)
+		for nameID := range nameIDs {
+			totValue := 0.0
+			totN := 0.0
+			IDsSeen := []int{}
+			if rows, err = d.query(`SELECT id, value, n FROM averages_per_duration
+									WHERE timestamp BETWEEN $1 AND $2
+								 	AND name_id = $3`, t, endT, nameID); err != nil {
+				return err
+			}
+			for rows.Next() {
+				var ID int
+				var value float64
+				var n float64
+				if err = rows.Scan(&id, &value, &n); err != nil {
+					return err
+				}
+				IDsSeen = IDsSeen.append(ID)
+				totValue += value
+				totN += n
+			}
+			if len(IDsSeen) > 0 {
+				if err = d.exec(`DELETE FROM averages_per_duration
+								 WHERE timestamp BETWEEN $1 and $2
+								 AND name_id = $3`, t, endT, nameID); err != nil {
+					return err
+				}
+				if err = d.exec(`INSERT INTO averages_per_duration (name_id, value, n, timestamp)
+								 VALUES ($1, $2, $3, $4)`,
+			}
+		}
+	}
 
 }
 
@@ -344,6 +409,9 @@ func (d *StoreAction) dropAfter(after time.Duration) {
 		"sum",
 		"sum_per_duration",
 	} {
-		d.exec(fmt.Sprintf("DELETE FROM %s WHERE timestamp < $1", table), cutoff)
+		err := d.exec(fmt.Sprintf("DELETE FROM %s WHERE timestamp < $1", table), cutoff)
+		if err != nil {
+			return err
+		}
 	}
 }
